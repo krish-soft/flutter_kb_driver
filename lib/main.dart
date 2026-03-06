@@ -5,6 +5,7 @@ import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/constants/app_routes.dart';
 import 'package:kb_driver/core/controllers/locale_controller.dart';
 import 'package:kb_driver/core/lang/translations.dart';
+import 'package:kb_driver/core/services/driver_background_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // For secure storage
@@ -12,6 +13,8 @@ void main() async {
   await GetStorage.init();
 
   Get.put(LocaleController());
+
+  await DriverBackgroundService.initialize();
 
   runApp(const MyApp());
 }

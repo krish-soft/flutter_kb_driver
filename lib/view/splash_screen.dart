@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/constants/app_images.dart';
+import 'package:kb_driver/core/services/permission_service.dart';
 import 'package:kb_driver/utils/app_utils.dart';
 import 'package:kb_driver/utils/message_manager.dart';
 import 'package:kb_driver/utils/preference_manager.dart';
@@ -29,7 +30,20 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _boot());
+    // WidgetsBinding.instance.addPostFrameCallback((_) => _boot());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startApp();
+    });
+  }
+
+  Future<void> _startApp() async {
+    try {
+      await PermissionService.requestRequiredPermissions();
+    } catch (e) {
+      debugPrint("Permission error: $e");
+    }
+
+    await _boot();
   }
 
   Future<void> _boot() async {
@@ -90,7 +104,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final bool isLoggedIn = await AppUtils.isUserLoggedIn();
     final bool isTokenValid = await AppUtils.isTokenValid();
 
-    if (!mounted) return;     
+    if (!mounted) return;
 
     if (isLoggedIn && isTokenValid) {
       Get.offAllNamed('/home');

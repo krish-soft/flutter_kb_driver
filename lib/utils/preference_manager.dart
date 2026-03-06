@@ -54,6 +54,15 @@ class PreferenceManager {
     return await AppSecureStorage.read('_deviceId') ?? '';
   }
 
+  /// Driver status
+  static Future<void> setIsDriverOnline(bool value) async {
+    await _box.write('_is_driver_online', value);
+  }
+
+  static bool getIsDriverOnline() {
+    return _box.read('_is_driver_online') ?? false;
+  }
+
 
   //
 }

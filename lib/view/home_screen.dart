@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kb_driver/core/data/presentation/controllers/driver/driver_controller.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
+import 'package:kb_driver/core/services/driver_background_service.dart';
+import 'package:kb_driver/core/services/driver_service.dart';
+import 'package:kb_driver/core/services/permission_service.dart';
+import 'package:kb_driver/utils/preference_manager.dart';
 import 'package:kb_driver/view/screens/ActiveDeliveryScreen.dart';
 import 'package:kb_driver/view/screens/DashboardScreen.dart';
 import 'package:kb_driver/view/screens/MoreScreen.dart';
@@ -18,7 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   bool _isOnline = false;
 
+  bool _hasRequest = false;
+  bool _hasActiveDelivery = false;
+
   final VibrateManager _vibrateManager = VibrateManager();
+  final DriverController _driverController = Get.put(DriverController());
 
   final List<Widget> _screens = const [
     DashboardScreen(),
@@ -27,12 +36,104 @@ class _HomeScreenState extends State<HomeScreen> {
     MoreScreen(),
   ];
 
-  Future<void> _refresh() async {
-    await Future.delayed(const Duration(seconds: 1));
+  @override
+  void initState() {
+    super.initState();
+    _init();
   }
 
+  Future<void> _init() async {
+    await _checkPermissions();
+    await _restoreDriverState();
+  }
+
+  Future<void> _checkPermissions() async {
+    await PermissionService.requestRequiredPermissions();
+  }
+
+  /// RESTORE DRIVER STATUS
+  /// RESTORE DRIVER STATUS
+  Future<void> _restoreDriverState() async {
+    bool localStatus = PreferenceManager.getIsDriverOnline();
+
+    if (!mounted) return;
+
+    setState(() {
+      _isOnline = localStatus;
+    });
+
+    /// Start services if locally online
+    if (_isOnline) {
+      if (!DriverService.isRunning()) {
+        _startDriverService();
+      }
+
+      await DriverBackgroundService.startService();
+    } else {
+      /// ensure stopped if local says offline
+      _stopDriverService();
+      await DriverBackgroundService.stopService();
+    }
+
+    /// verify with server if local says offline
+    if (!localStatus) {
+      final res = await _driverController.getDriverOnlineStatus();
+
+      if (res.isSuccess == true) {
+        bool serverStatus = res.data?.isOnline ?? false;
+
+        if (!mounted) return;
+
+        setState(() {
+          _isOnline = serverStatus;
+        });
+
+        await PreferenceManager.setIsDriverOnline(serverStatus);
+
+        if (serverStatus) {
+          if (!DriverService.isRunning()) {
+            _startDriverService();
+          }
+
+          await DriverBackgroundService.startService();
+        } else {
+          /// stop services if server says offline
+          _stopDriverService();
+          await DriverBackgroundService.stopService();
+        }
+      }
+    }
+  }
+
+  /// START DRIVER SERVICE
+  void _startDriverService() {
+    if (DriverService.isRunning()) return;
+
+    DriverService.startService(() async {
+      print("Driver service running...");
+
+      /// CHECK NEW REQUEST
+      // final req = await _driverController.checkForNewRequests();
+
+      // /// CHECK ACTIVE DELIVERY
+      // final active = await _driverController.getActiveDelivery();
+
+      if (!mounted) return;
+
+      // setState(() {
+      //   _hasRequest = req.hasRequest;
+      //   _hasActiveDelivery = active != null;
+      // });
+    });
+  }
+
+  void _stopDriverService() {
+    DriverService.stopService();
+  }
+
+  /// TOGGLE ONLINE / OFFLINE
   Future<void> _toggleDriverStatus() async {
-    _vibrateManager.vibrateMedium();
+    await _vibrateManager.vibrateMedium();
 
     final confirm = await showDialog<bool>(
       context: context,
@@ -58,13 +159,36 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
 
-    if (confirm == true) {
+    if (confirm != true) return;
+
+    final res = await _driverController.updateDriverOnlineStatus(!_isOnline);
+
+    if (res.isSuccess == true) {
+      bool newStatus = !_isOnline;
+
+      if (!mounted) return;
+
       setState(() {
-        _isOnline = !_isOnline;
+        _isOnline = newStatus;
       });
+
+      await PreferenceManager.setIsDriverOnline(newStatus);
+
+      if (newStatus) {
+        _startDriverService();
+          await DriverBackgroundService.startService();
+      } else {
+        _stopDriverService();
+          await DriverBackgroundService.stopService();
+      }
     }
   }
 
+  Future<void> _refresh() async {
+    await Future.delayed(const Duration(seconds: 1));
+  }
+
+  /// UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,6 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Icon(
             _isOnline ? Icons.drive_eta : Icons.no_transfer,
             size: 28,
+            color: Colors.white,
           ),
         ),
       ),
@@ -101,7 +226,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-
         child: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           notchMargin: 12,
@@ -121,6 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icons.assignment_outlined,
                   AppStrings.screenRequests.tr,
                   1,
+                  showBadge: _hasRequest,
                 ),
 
                 const SizedBox(width: 40),
@@ -129,6 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icons.two_wheeler,
                   AppStrings.screenActiveDelivery.tr,
                   2,
+                  showBadge: _hasActiveDelivery,
                 ),
 
                 _navItem(Icons.menu, AppStrings.screenMore.tr, 3),
@@ -140,22 +266,52 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _navItem(IconData icon, String label, int index) {
+  /// NAV ITEM WITH BADGE
+  Widget _navItem(
+    IconData icon,
+    String label,
+    int index, {
+    bool showBadge = false,
+  }) {
     final isSelected = _currentIndex == index;
 
     return GestureDetector(
       onTap: () async {
-        _vibrateManager.vibrateButton();
+        await _vibrateManager.vibrateButton();
 
         setState(() {
           _currentIndex = index;
+
+          if (index == 1) _hasRequest = false;
+          if (index == 2) _hasActiveDelivery = false;
         });
       },
-
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 26, color: isSelected ? Colors.green : Colors.grey),
+          Stack(
+            children: [
+              Icon(
+                icon,
+                size: 26,
+                color: isSelected ? Colors.green : Colors.grey,
+              ),
+
+              if (showBadge)
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+            ],
+          ),
 
           const SizedBox(height: 4),
 
