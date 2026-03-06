@@ -27,6 +27,28 @@ const Map<String, String> enUS = {
   "textFullName": "Full Name",
   "textEnterOtp": "Enter OTP",
 
+  "textGetOnline": "Get Online",
+  "textGoOffline": "Go Offline",
+  "textMessageOnline": "You will start receiving delivery requests.",
+  "textMessageOffline": "You will stop receiving delivery requests.",
+
+  // screens
+  "screenHome": "Home",
+  "screenProfile": "Profile",
+  "screenActiveDelivery": "Active Delivery",
+  "screenDashboard": "Dashboard",
+  "screenMore": "More",
+  "screenRequests": "Requests",
+  
+
+
+
+
+
+
+
+
+
   // Errors
   "errTextInvalidMobileNumber": "Enter valid phone number",
   "errTextPasswordRequired": "Enter password",

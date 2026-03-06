@@ -6,6 +6,7 @@ import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/constants/app_images.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
 import 'package:kb_driver/core/data/presentation/controllers/signup_controller.dart';
+import 'package:kb_driver/utils/vibrate_manager.dart';
 
 import 'package:kb_driver/view/components/app_input_field.dart';
 import 'package:kb_driver/view/components/app_button.dart';
@@ -21,8 +22,10 @@ class SignUpScreen extends StatelessWidget {
   final _password = TextEditingController();
 
   final SignUpController c = Get.put(SignUpController());
+  VibrateManager _vibrateManager = VibrateManager();
 
   void sendOtp() {
+    _vibrateManager.vibrateButton();
     if (_mobile.text.length != 10) {
       MessageManager.showError(AppStrings.errTextInvalidMobileNumber.tr);
       return;
@@ -31,12 +34,15 @@ class SignUpScreen extends StatelessWidget {
   }
 
   void resendOtp() {
+    _vibrateManager.vibrateButton();
     if (c.resendSeconds.value == 0) {
       c.sendOtp(_mobile.text.trim());
     }
   }
 
   Future<void> verifyOtp() async {
+    _vibrateManager.vibrateButton();
+
     if (_otp.text.length != 6) {
       MessageManager.showError(AppStrings.errTextInvalidOtp.tr);
       return;
@@ -180,7 +186,10 @@ class SignUpScreen extends StatelessWidget {
                       children: [
                         Text(AppStrings.textAlreadyHaveAccount.tr),
                         TextButton(
-                          onPressed: () => Get.offNamed('/signin'),
+                          onPressed: () => {
+                            _vibrateManager.vibrateButton(),
+                            Get.offNamed('/signin'),
+                          },
                           child: Text(AppStrings.textSignin.tr),
                         ),
                       ],

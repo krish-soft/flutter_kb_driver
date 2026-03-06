@@ -32,7 +32,19 @@ class AppStrings {
   static const textEnterOtp = "textEnterOtp";
 
 
+  // Screens
+  static const screenHome = "screenHome";
+  static const screenProfile = "screenProfile";
+  static const screenActiveDelivery = "screenActiveDelivery";
+  static const screenDashboard = "screenDashboard";
+  static const screenMore = "screenMore";
+  static const screenRequests = "screenRequests";
 
+  // 
+  static const textGetOnline = "textGetOnline";
+  static const textGoOffline = "textGoOffline";
+  static const textMessageOnline = "textMessageOnline";
+  static const textMessageOffline = "textMessageOffline";
 
 
   // Errors

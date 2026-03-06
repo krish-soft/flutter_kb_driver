@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/constants/app_routes.dart';
 import 'package:kb_driver/core/controllers/locale_controller.dart';
-import 'package:kb_driver/core/lang/app_strings.dart';
 import 'package:kb_driver/core/lang/translations.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // For secure storage
+
+  await GetStorage.init();
+
   Get.put(LocaleController());
 
   runApp(const MyApp());

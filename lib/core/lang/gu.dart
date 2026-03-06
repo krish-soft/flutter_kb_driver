@@ -28,6 +28,14 @@ const Map<String, String> guIN = {
   "textFullName": "પૂર્ણ નામ",
   "textEnterOtp": "OTP દાખલ કરો",
 
+  "screenHome": "હોમ",
+  "screenProfile": "પ્રોફાઇલ",
+  "screenActiveDelivery": "સક્રિય ડિલિવરી",
+  "screenDashboard": "ડેશબોર્ડ",
+  "screenMore": "વધુ",
+  "screenRequests": "વિનંતીઓ",
+
+  //
   "errTextInvalidOtp": "માન્ય OTP દાખલ કરો",
   "errTextPasswordTooShort": "પાસવર્ડ ઓછામાં ઓછા 6 અક્ષરોનો હોવો જોઈએ",
 

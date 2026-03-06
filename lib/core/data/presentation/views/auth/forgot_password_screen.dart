@@ -7,6 +7,7 @@ import 'package:kb_driver/constants/app_images.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
 
 import 'package:kb_driver/core/data/presentation/controllers/forgot_password_controller.dart';
+import 'package:kb_driver/utils/vibrate_manager.dart';
 
 import 'package:kb_driver/view/components/app_input_field.dart';
 import 'package:kb_driver/view/components/app_button.dart';
@@ -15,7 +16,7 @@ import 'package:kb_driver/view/components/language_switcher.dart';
 import 'package:kb_driver/utils/message_manager.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
-
+  
   ForgotPasswordScreen({super.key});
 
   final _mobile = TextEditingController();
@@ -23,9 +24,11 @@ class ForgotPasswordScreen extends StatelessWidget {
   final _password = TextEditingController();
 
   final ForgotPasswordController c = Get.put(ForgotPasswordController());
+  VibrateManager _vibrateManager = VibrateManager();
 
   // ================= SEND OTP =================
   void sendOtp() {
+     _vibrateManager.vibrateButton();
     if (_mobile.text.length != 10) {
       MessageManager.showError(AppStrings.errTextInvalidMobileNumber.tr);
       return;
@@ -35,6 +38,8 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   // ================= RESEND OTP =================
   void resendOtp() {
+    _vibrateManager.vibrateButton();
+
     if (c.resendSeconds.value == 0) {
       c.sendOtp(_mobile.text.trim());
     }
@@ -42,6 +47,8 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   // ================= VERIFY =================
   Future<void> verify() async {
+     _vibrateManager.vibrateButton();
+
     if (_otp.text.length != 6) {
       MessageManager.showError(AppStrings.errTextInvalidOtp.tr);
       return;
@@ -136,7 +143,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                         hint: AppStrings.textEnterOtp.tr,
                         prefixIcon: Icons.security,
                         maxLength: 6,
-                     
+
                         keyboardType: TextInputType.number,
                         focusColor: AppColors.primary,
                         formatters: [FilteringTextInputFormatter.digitsOnly],
@@ -167,7 +174,9 @@ class ForgotPasswordScreen extends StatelessWidget {
                           child: Text(
                             c.resendSeconds.value == 0
                                 ? AppStrings.textResendOtp.tr
-                                : AppStrings.textResendInSeconds.trParams({'seconds': c.resendSeconds.value.toString()}),
+                                : AppStrings.textResendInSeconds.trParams({
+                                    'seconds': c.resendSeconds.value.toString(),
+                                  }),
                           ),
                         ),
                       ),

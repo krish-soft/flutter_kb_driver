@@ -27,6 +27,14 @@ const Map<String, String> hiIN = {
   "textFullName": "पूरा नाम",
   "textEnterOtp": "OTP दर्ज करें",
 
+  "screenHome": "होम",
+  "screenProfile": "प्रोफ़ाइल",
+  "screenActiveDelivery": "सक्रिय डिलीवरी",
+  "screenDashboard": "डैशबोर्ड",
+  "screenMore": "अधिक",
+  "screenRequests": "अनुरोध",
+
+  //
   "errTextInvalidOtp": "मान्य OTP दर्ज करें",
   "errTextPasswordTooShort": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए",
 

@@ -6,6 +6,7 @@ import 'package:kb_driver/constants/app_images.dart';
 import 'package:kb_driver/core/data/presentation/controllers/auth_controller.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
 import 'package:kb_driver/utils/preference_manager.dart';
+import 'package:kb_driver/utils/vibrate_manager.dart';
 
 import 'package:kb_driver/view/components/app_input_field.dart';
 import 'package:kb_driver/view/components/app_button.dart';
@@ -23,6 +24,8 @@ class _SignInScreenState extends State<SignInScreen> {
   final _mobileController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  VibrateManager _vibrateManager = VibrateManager();
+
   final AuthController _authController = Get.put(AuthController());
 
   bool _obscurePassword = true;
@@ -31,6 +34,8 @@ class _SignInScreenState extends State<SignInScreen> {
   // SIGN IN ACTION
   // =====================================================
   Future<void> _signIn() async {
+    _vibrateManager.vibrateButton();
+
     if (_mobileController.text.length != 10) {
       MessageManager.showError(AppStrings.errTextInvalidMobileNumber.tr);
       return;
@@ -52,10 +57,9 @@ class _SignInScreenState extends State<SignInScreen> {
     }
 
     PreferenceManager.setAccessToken(res.data?['access_token']);
-    PreferenceManager.setTokenExpiryTime(
-      res.data!['expires_in_minutes'].toString(),
-    );
+    PreferenceManager.setTokenExpiryTime(res.data['expires_at']);
     PreferenceManager.setDeviceId(res.data?['device_id']);
+    PreferenceManager.setIsAuth(true);
 
     // Need to pull its
 
@@ -174,6 +178,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     children: [
                       TextButton(
                         onPressed: () {
+                          _vibrateManager.vibrateButton();
                           Get.toNamed('/forgot-password');
                         },
                         child: Text(
@@ -186,6 +191,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       ),
                       TextButton(
                         onPressed: () {
+                          _vibrateManager.vibrateButton();
                           Get.offAllNamed('/signup');
                         },
                         child: Text(

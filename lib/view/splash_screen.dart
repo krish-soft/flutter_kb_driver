@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/constants/app_images.dart';
 import 'package:kb_driver/utils/app_utils.dart';
+import 'package:kb_driver/utils/message_manager.dart';
 import 'package:kb_driver/utils/preference_manager.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,8 +33,10 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _boot() async {
-    await Future.delayed(const Duration(seconds: 2));
-    Get.offAllNamed('/signin');
+    // await Future.delayed(const Duration(seconds: 2));
+    // Get.offAllNamed('/signin');
+
+    await _navigateByAuth();
 
     // final bool isLoggedIn = await AppUtils.isUserLoggedIn();
 
@@ -87,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final bool isLoggedIn = await AppUtils.isUserLoggedIn();
     final bool isTokenValid = await AppUtils.isTokenValid();
 
-    if (!mounted) return;
+    if (!mounted) return;     
 
     if (isLoggedIn && isTokenValid) {
       Get.offAllNamed('/home');
