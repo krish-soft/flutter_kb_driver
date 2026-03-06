@@ -107,28 +107,30 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// START DRIVER SERVICE
   void _startDriverService() {
-    if (DriverService.isRunning()) return;
+    // if (DriverService.isRunning()) return;
 
-    DriverService.startService(() async {
-      print("Driver service running...");
+    // DriverService.startService(() async {
+    //   print("Driver service running...");
 
-      /// CHECK NEW REQUEST
-      // final req = await _driverController.checkForNewRequests();
+    //   /// CHECK NEW REQUEST
+    //   // final req = await _driverController.checkForNewRequests();
 
-      // /// CHECK ACTIVE DELIVERY
-      // final active = await _driverController.getActiveDelivery();
+    //   // /// CHECK ACTIVE DELIVERY
+    //   // final active = await _driverController.getActiveDelivery();
 
-      if (!mounted) return;
+    //   if (!mounted) return;
 
-      // setState(() {
-      //   _hasRequest = req.hasRequest;
-      //   _hasActiveDelivery = active != null;
-      // });
-    });
+    //   // setState(() {
+    //   //   _hasRequest = req.hasRequest;
+    //   //   _hasActiveDelivery = active != null;
+    //   // });
+    // });
   }
 
   void _stopDriverService() {
-    DriverService.stopService();
+    if (DriverService.isRunning()) {
+      DriverService.stopService();
+    }
   }
 
   /// TOGGLE ONLINE / OFFLINE
@@ -176,10 +178,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (newStatus) {
         _startDriverService();
-          await DriverBackgroundService.startService();
+        await DriverBackgroundService.startService();
       } else {
         _stopDriverService();
-          await DriverBackgroundService.stopService();
+        await DriverBackgroundService.stopService();
       }
     }
   }

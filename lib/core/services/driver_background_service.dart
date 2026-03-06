@@ -11,8 +11,8 @@ class DriverBackgroundService {
   static Future<void> initialize() async {
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'driver_service',
-      'Driver Background Service',
-      description: 'Driver service running',
+      'Driver Online Service',
+      description: 'Keeps driver connected to receive delivery requests',
       importance: Importance.low,
     );
 
@@ -29,11 +29,19 @@ class DriverBackgroundService {
         onStart: onStart,
         autoStart: false,
         isForegroundMode: true,
+
         notificationChannelId: 'driver_service',
-        initialNotificationTitle: 'Driver Online',
-        initialNotificationContent: 'Waiting for delivery requests',
+
+        /// Notification title
+        initialNotificationTitle: 'Driver Service Running',
+
+        /// Notification message
+        initialNotificationContent: 'Driver background service is active',
+
+        /// notification id
         foregroundServiceNotificationId: 1001,
       ),
+
       iosConfiguration: IosConfiguration(),
     );
   }
