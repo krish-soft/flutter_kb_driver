@@ -34,6 +34,15 @@ const Map<String, String> hiIN = {
   "screenMore": "अधिक",
   "screenRequests": "अनुरोध",
 
+  "textGetOnline": "ऑनलाइन जाएँ",
+  "textGoOffline": "ऑफ़लाइन जाएँ",
+  "textMessageOnline": "आप डिलीवरी अनुरोध प्राप्त करना शुरू करेंगे।",
+  "textMessageOffline": "आप डिलीवरी अनुरोध प्राप्त करना बंद करेंगे।",
+
+  "textConfirm": "पुष्टि करें",
+  "textCancel": "रद्द करें",
+  "textOk": "ठीक है",
+
   //
   "errTextInvalidOtp": "मान्य OTP दर्ज करें",
   "errTextPasswordTooShort": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए",

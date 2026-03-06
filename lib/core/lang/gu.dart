@@ -35,6 +35,15 @@ const Map<String, String> guIN = {
   "screenMore": "વધુ",
   "screenRequests": "વિનંતીઓ",
 
+  "textGetOnline": "ઓનલાઇન જાઓ",
+  "textGoOffline": "ઓફલાઇન જાઓ",
+  "textMessageOnline": "તમે ડિલિવરી વિનંતીઓ પ્રાપ્ત કરવાનું શરૂ કરી દો છો.",
+  "textMessageOffline": "તમે ડિલિવરી વિનંતીઓ પ્રાપ્ત કરવાનું બંધ કરી દો છો.",
+
+  "textConfirm": "પુષ્ટિ કરો",
+  "textCancel": "રદ કરો",
+  "textOk": "ઠીક છે",
+
   //
   "errTextInvalidOtp": "માન્ય OTP દાખલ કરો",
   "errTextPasswordTooShort": "પાસવર્ડ ઓછામાં ઓછા 6 અક્ષરોનો હોવો જોઈએ",

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kb_driver/view/bottom/ActiveDeliveryScreen.dart';
-import 'package:kb_driver/view/bottom/DashboardScreen.dart';
-import 'package:kb_driver/view/bottom/MoreScreen.dart';
-import 'package:kb_driver/view/bottom/RequestsScreen.dart';
+import 'package:get/get.dart';
+import 'package:kb_driver/core/lang/app_strings.dart';
+import 'package:kb_driver/view/screens/ActiveDeliveryScreen.dart';
+import 'package:kb_driver/view/screens/DashboardScreen.dart';
+import 'package:kb_driver/view/screens/MoreScreen.dart';
+import 'package:kb_driver/view/screens/RequestsScreen.dart';
 import 'package:kb_driver/utils/vibrate_manager.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -35,20 +37,22 @@ class _HomeScreenState extends State<HomeScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text(_isOnline ? "Go Offline?" : "Go Online?"),
+        title: Text(
+          _isOnline ? AppStrings.textGoOffline.tr : AppStrings.textGetOnline.tr,
+        ),
         content: Text(
           _isOnline
-              ? "You will stop receiving delivery requests."
-              : "You will start receiving delivery requests.",
+              ? AppStrings.textMessageOffline.tr
+              : AppStrings.textMessageOnline.tr,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text("Cancel"),
+            child: Text(AppStrings.textCancel.tr),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text("Confirm"),
+            child: Text(AppStrings.textConfirm.tr),
           ),
         ],
       ),
@@ -71,10 +75,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
       /// FAB
       floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 6),
+        margin: const EdgeInsets.only(bottom: 8),
         child: FloatingActionButton(
           shape: const CircleBorder(),
-          elevation: 10,
+          elevation: 12,
           backgroundColor: _isOnline ? Colors.green : Colors.red,
           onPressed: _toggleDriverStatus,
           child: Icon(
@@ -101,21 +105,33 @@ class _HomeScreenState extends State<HomeScreen> {
         child: BottomAppBar(
           shape: const CircularNotchedRectangle(),
           notchMargin: 12,
-          elevation: 0,
+          elevation: 6,
           child: SizedBox(
             height: 70,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _navItem(Icons.dashboard_customize, "Dashboard", 0),
+                _navItem(
+                  Icons.dashboard_customize,
+                  AppStrings.screenDashboard.tr,
+                  0,
+                ),
 
-                _navItem(Icons.assignment_outlined, "Requests", 1),
+                _navItem(
+                  Icons.assignment_outlined,
+                  AppStrings.screenRequests.tr,
+                  1,
+                ),
 
                 const SizedBox(width: 40),
 
-                _navItem(Icons.two_wheeler, "Active", 2),
+                _navItem(
+                  Icons.two_wheeler,
+                  AppStrings.screenActiveDelivery.tr,
+                  2,
+                ),
 
-                _navItem(Icons.menu, "More", 3),
+                _navItem(Icons.menu, AppStrings.screenMore.tr, 3),
               ],
             ),
           ),

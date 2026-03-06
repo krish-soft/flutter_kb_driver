@@ -46,6 +46,11 @@ class AppStrings {
   static const textMessageOnline = "textMessageOnline";
   static const textMessageOffline = "textMessageOffline";
 
+  // 
+  static const textConfirm = "textConfirm";
+  static const textCancel = "textCancel";
+  static const textOk = "textOk";
+
 
   // Errors
   static const errTextInvalidMobileNumber = "errTextInvalidMobileNumber";

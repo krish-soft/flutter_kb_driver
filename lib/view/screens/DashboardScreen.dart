@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:kb_driver/core/lang/app_strings.dart';
 import 'package:kb_driver/view/components/cmp_app_bar.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -7,7 +9,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CommonAppBar(title: "Dashboard"),
+      appBar: CommonAppBar(title: AppStrings.screenDashboard.tr),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: const [

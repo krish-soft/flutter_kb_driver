@@ -32,6 +32,10 @@ const Map<String, String> enUS = {
   "textMessageOnline": "You will start receiving delivery requests.",
   "textMessageOffline": "You will stop receiving delivery requests.",
 
+  "textConfirm": "Confirm",
+  "textCancel": "Cancel",
+  "textOk": "Ok",
+
   // screens
   "screenHome": "Home",
   "screenProfile": "Profile",
@@ -39,20 +43,11 @@ const Map<String, String> enUS = {
   "screenDashboard": "Dashboard",
   "screenMore": "More",
   "screenRequests": "Requests",
-  
-
-
-
-
-
-
-
-
 
   // Errors
   "errTextInvalidMobileNumber": "Enter valid phone number",
   "errTextPasswordRequired": "Enter password",
-  
+
   "errTextInvalidOtp": "Enter valid OTP",
   "errTextPasswordTooShort": "Password must be at least 6 characters",
 };
