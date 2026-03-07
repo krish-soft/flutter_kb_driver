@@ -23,7 +23,8 @@ class ApiRoutes {
 
   // Shipments
   static const String checkForNewRequests = "$shipmentPrefix/requested";
-  static const String getRequestedShipments = "$shipmentPrefix/list/need-to-deliver";
+  static const String getRequestedShipments =
+      "$shipmentPrefix/list/need-to-deliver";
   static const String getNeedToDeliver = "$shipmentPrefix/list/need-to-deliver";
 
   static const String acceptShipment = "$shipmentPrefix/accept";
@@ -31,9 +32,13 @@ class ApiRoutes {
   static const String startShipment = "$shipmentPrefix/start";
   static const String completeShipment = "$shipmentPrefix/complete";
 
-
-
-
+  // update package staus
+  static const String updatePkgBuyerStatus =
+      "$shipmentPrefix/package/update-status/buyer";
+  static const String updatePkgSellerStatus =
+      "$shipmentPrefix/package/update-status/seller";
+  static const String updatePkgTransferStatus =
+      "$shipmentPrefix/package/update-status/transfer";
 
   //
 }

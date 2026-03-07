@@ -50,7 +50,7 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
                   /// BACK BUTTON
                   if (showBack)
                     IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new),
+                      icon: const Icon(Icons.arrow_back),
                       onPressed: () => Navigator.pop(context),
                     )
                   else if (leading != null)

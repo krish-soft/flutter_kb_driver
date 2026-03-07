@@ -109,5 +109,46 @@ class ShipmentRepository extends BaseRepository {
     );
   }
 
+  // package status update methods will be here in future
+
+  Future<ApiResponseModel> updatePkgBuyerStatus(payload) {
+    return execute(
+      () async =>
+          (await _api.request(
+                url: ApiRoutes.updatePkgBuyerStatus,
+                method: ApiMethod.post,
+                body: payload,
+                requireAuth: true,
+              ))
+              as Map<String, dynamic>,
+    );
+  }
+
+  Future<ApiResponseModel> updatePkgSellerStatus(payload) {
+    return execute(
+      () async =>
+          (await _api.request(
+                url: ApiRoutes.updatePkgSellerStatus,
+                method: ApiMethod.post,
+                body: payload,
+                requireAuth: true,
+              ))
+              as Map<String, dynamic>,
+    );
+  }
+
+  Future<ApiResponseModel> updatePkgTransferStatus(payload) {
+    return execute(
+      () async =>
+          (await _api.request(
+                url: ApiRoutes.updatePkgTransferStatus,
+                method: ApiMethod.post,
+                body: payload,
+                requireAuth: true,
+              ))
+              as Map<String, dynamic>,
+    );
+  }
+
   //
 }

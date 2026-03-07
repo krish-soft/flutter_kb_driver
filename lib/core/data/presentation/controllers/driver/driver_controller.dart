@@ -25,7 +25,6 @@ class DriverController extends GetxController {
   }
 
   Future<ApiResponseModel> updateDriverOnlineStatus(bool isOnline) async {
-    
     isLoading.value = true;
     ApiResponseModel res = await _repo.updateDriverOnlineStatus(isOnline);
 

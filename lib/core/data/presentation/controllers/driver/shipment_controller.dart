@@ -151,4 +151,88 @@ class ShipmentController extends GetxController {
       MessageManager.showError(res.message.toString());
     }
   }
+
+  // Package status update (pickup/delivery)
+  Future<ApiResponseModel> updatePkgBuyerStatus(
+    int driverShipmentId,
+    int shipmentPackageId,
+    String status,
+  ) async {
+    isLoading.value = true;
+
+    final Map<String, dynamic> payload = {
+      'driver_shipment_id': driverShipmentId,
+      'shipment_package_id': shipmentPackageId,
+      'status': status,
+    };
+
+    ApiResponseModel res = await _repo.updatePkgBuyerStatus(payload);
+
+    isLoading.value = false;
+
+    if (res.isSuccess == true) {
+      MessageManager.showSuccess(res.message.toString());
+    } else {
+      MessageManager.showError(res.message.toString());
+    }
+
+    return res;
+  }
+
+  Future<ApiResponseModel> updatePkgSellerStatus(
+    int driverShipmentId,
+    int shipmentPackageId,
+    String status,
+  ) async {
+    isLoading.value = true;
+
+    final Map<String, dynamic> payload = {
+      'driver_shipment_id': driverShipmentId,
+      'shipment_package_id': shipmentPackageId,
+      'status': status,
+    };
+
+    ApiResponseModel res = await _repo.updatePkgSellerStatus(payload);
+
+    isLoading.value = false;
+
+    if (res.isSuccess == true) {
+      MessageManager.showSuccess(res.message.toString());
+    } else {
+      MessageManager.showError(res.message.toString());
+    }
+
+    return res;
+  }
+
+  Future<ApiResponseModel> updatePkgTransferStatus(
+    int driverShipmentId,
+    int shipmentPackageId,
+    String status,
+  ) async {
+    isLoading.value = true;
+
+    final Map<String, dynamic> payload = {
+      'driver_shipment_id': driverShipmentId,
+      'shipment_package_id': shipmentPackageId,
+      'status': status,
+    };
+
+    ApiResponseModel res = await _repo.updatePkgTransferStatus(payload);
+
+    isLoading.value = false;
+
+    if (res.isSuccess == true) {
+      MessageManager.showSuccess(res.message.toString());
+    } else {
+      MessageManager.showError(res.message.toString());
+    }
+
+    return res;
+
+  }
+
+
+
+  //
 }
