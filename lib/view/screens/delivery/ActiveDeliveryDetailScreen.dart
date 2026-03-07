@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kb_driver/core/lang/app_strings.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:kb_driver/constants/app_colors.dart';
@@ -8,7 +9,7 @@ import 'package:kb_driver/core/data/presentation/controllers/driver/shipment_con
 import 'package:kb_driver/view/components/app_button.dart';
 import 'package:kb_driver/view/components/common_chip.dart';
 import 'package:kb_driver/view/components/cmp_app_bar.dart';
-import 'package:kb_driver/view/screens/ShipmentPackagesScreen.dart';
+import 'package:kb_driver/view/screens/delivery/ShipmentPackagesScreen.dart';
 
 class ActiveDeliveryDetailScreen extends StatelessWidget {
   final dynamic shipment;
@@ -116,7 +117,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
 
           /// Pickup Address
           _addressCard(
-            title: "Pickup Address",
+            title: AppStrings.textPickupAddress.tr,
             icon: Icons.store,
             color: AppColors.primary,
             address: buildAddress(origin),
@@ -128,7 +129,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
 
           /// Delivery Address
           _addressCard(
-            title: "Delivery Address",
+            title: AppStrings.textDeliveryAddress.tr,
             icon: Icons.home,
             color: AppColors.success,
             address: buildAddress(destination),
@@ -151,16 +152,28 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
-                const Text(
-                  "Shipment Information",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                Text(
+                  AppStrings.textShipmentInformation.tr,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
 
                 const SizedBox(height: 10),
 
-                _infoRow("Total Packages", "${shipment["total_packages"]}"),
-                _infoRow("Total Weight", "${payable["total_weight"]} kg"),
-                _infoRow("Total Quantity", "${payable["total_quantity"]}"),
+                _infoRow(
+                  AppStrings.textTotalPackages.tr,
+                  "${shipment["total_packages"]}",
+                ),
+                _infoRow(
+                  AppStrings.textTotalWeight.tr,
+                  "${payable["total_weight"]} kg",
+                ),
+                _infoRow(
+                  AppStrings.textTotalQuantity.tr,
+                  "${payable["total_quantity"]}",
+                ),
               ],
             ),
           ),
@@ -169,7 +182,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
 
           /// Packages Screen Button
           AppButton(
-            title: "View Packages",
+            title: AppStrings.textViewPackages.tr,
             background: AppColors.info,
             onPressed: () {
               Get.to(() => ShipmentPackagesScreen(shipment: shipment));
@@ -180,7 +193,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
 
           /// Start Delivery
           AppButton(
-            title: "Start Delivery",
+            title: AppStrings.textStartDelivery.tr,
             background: canStart ? AppColors.success : AppColors.textDisabled,
             onPressed: canStart
                 ? () {
@@ -193,7 +206,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
 
           /// Complete Delivery
           AppButton(
-            title: "Complete Delivery",
+            title: AppStrings.textCompleteDelivery.tr,
             background: canComplete ? AppColors.danger : AppColors.textDisabled,
             onPressed: canComplete
                 ? () async {

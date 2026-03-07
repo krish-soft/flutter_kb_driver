@@ -37,7 +37,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
         if (controller.shipments.isEmpty) {
           return Center(
             child: Text(
-              "No shipment requests",
+              AppStrings.textNoRequests.tr,
               style: TextStyle(color: AppColors.textSecondary, fontSize: 16),
             ),
           );
@@ -138,7 +138,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                             children: [
                               /// PICKUP
                               Text(
-                                "${origin["line1"]}, ${origin["city"]}",
+                                "${origin["line1"]}, ${origin["village"]}, ${origin["city"]}",
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.textPrimary,
@@ -150,7 +150,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                               /// DROP
                               Text(
                                 destination != null
-                                    ? "${destination["line1"]}, ${destination["city"]}"
+                                    ? "${destination["line1"]},  ${destination["village"]}, ${destination["city"]}"
                                     : "Destination not provided",
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
@@ -184,7 +184,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                         const SizedBox(width: 10),
 
                         Text(
-                          "${shipment["total_packages"]} Packages",
+                          "${shipment["total_packages"]} ${AppStrings.textTotalPackages.tr}",
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
                             color: AppColors.textSecondary,
@@ -230,7 +230,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                       children: [
                         Expanded(
                           child: AppButton(
-                            title: "Reject",
+                            title: AppStrings.textReject.tr,
                             background: AppColors.danger,
                             onPressed: () {
                               controller.rejectShipment(
@@ -244,7 +244,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
 
                         Expanded(
                           child: AppButton(
-                            title: "Accept",
+                            title: AppStrings.textAccept.tr,
                             background: AppColors.primary,
                             onPressed: () {
                               controller.acceptShipment(

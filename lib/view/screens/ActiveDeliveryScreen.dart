@@ -4,7 +4,8 @@ import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/shipment_controller.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
 import 'package:kb_driver/view/components/cmp_app_bar.dart';
-import 'package:kb_driver/view/screens/ActiveDeliveryDetailScreen.dart';
+import 'package:kb_driver/view/components/common_chip.dart';
+import 'package:kb_driver/view/screens/delivery/ActiveDeliveryDetailScreen.dart';
 
 class ActiveDeliveryScreen extends StatefulWidget {
   const ActiveDeliveryScreen({super.key});
@@ -34,7 +35,7 @@ class _ActiveDeliveryScreenState extends State<ActiveDeliveryScreen> {
         }
 
         if (controller.activeShipments.isEmpty) {
-          return const Center(child: Text("No active deliveries"));
+          return Center(child: Text(AppStrings.textNoShipments.tr));
         }
 
         return ListView.builder(
@@ -85,26 +86,27 @@ class _ActiveDeliveryScreenState extends State<ActiveDeliveryScreen> {
                             ),
                           ),
 
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 4,
-                            ),
+                          CommonChip(text: shipment["shipment_status"]),
+                          // Container(
+                          //   padding: const EdgeInsets.symmetric(
+                          //     horizontal: 10,
+                          //     vertical: 4,
+                          //   ),
 
-                            decoration: BoxDecoration(
-                              color: AppColors.tripAssigned.withOpacity(.15),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
+                          //   decoration: BoxDecoration(
+                          //     color: AppColors.tripAssigned.withOpacity(.15),
+                          //     borderRadius: BorderRadius.circular(20),
+                          //   ),
 
-                            child: Text(
-                              shipment["shipment_status"],
-                              style: const TextStyle(
-                                color: AppColors.tripAssigned,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                          //   child: Text(
+                          //     shipment["shipment_status"],
+                          //     style: const TextStyle(
+                          //       color: AppColors.tripAssigned,
+                          //       fontSize: 12,
+                          //       fontWeight: FontWeight.bold,
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
 
@@ -144,7 +146,7 @@ class _ActiveDeliveryScreenState extends State<ActiveDeliveryScreen> {
                               children: [
                                 /// PICKUP
                                 Text(
-                                  "${origin["line1"]}, ${origin["city"]}",
+                                  "${origin["line1"]}, ${origin["village"]}, ${origin["city"]}",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.textPrimary,
@@ -155,7 +157,7 @@ class _ActiveDeliveryScreenState extends State<ActiveDeliveryScreen> {
 
                                 /// DELIVERY
                                 Text(
-                                  "${destination["line1"]}, ${destination["city"]}",
+                                  "${destination["line1"]}, ${destination["village"]}, ${destination["city"]}",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: AppColors.textPrimary,
@@ -174,26 +176,30 @@ class _ActiveDeliveryScreenState extends State<ActiveDeliveryScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           /// TYPE
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
-                            ),
-
-                            decoration: BoxDecoration(
-                              color: AppColors.tripPickup.withOpacity(.15),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-
-                            child: Text(
-                              shipment["shipment_type"].toUpperCase(),
-                              style: const TextStyle(
-                                color: AppColors.tripPickup,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
-                              ),
-                            ),
+                          CommonChip(
+                            text: shipment["shipment_type"].toUpperCase(),
+                            isType: true,
                           ),
+                          // Container(
+                          //   padding: const EdgeInsets.symmetric(
+                          //     horizontal: 10,
+                          //     vertical: 6,
+                          //   ),
+
+                          //   decoration: BoxDecoration(
+                          //     color: AppColors.tripPickup.withOpacity(.15),
+                          //     borderRadius: BorderRadius.circular(20),
+                          //   ),
+
+                          //   child: Text(
+                          //     shipment["shipment_type"].toUpperCase(),
+                          //     style: const TextStyle(
+                          //       color: AppColors.tripPickup,
+                          //       fontWeight: FontWeight.w600,
+                          //       fontSize: 12,
+                          //     ),
+                          //   ),
+                          // ),
 
                           /// PACKAGES
                           Row(

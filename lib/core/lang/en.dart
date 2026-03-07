@@ -50,4 +50,30 @@ const Map<String, String> enUS = {
 
   "errTextInvalidOtp": "Enter valid OTP",
   "errTextPasswordTooShort": "Password must be at least 6 characters",
+
+  //
+  "textAccept": "Accept",
+  "textReject": "Reject",
+  "textStart": "Start",
+  "textComplete": "Complete",
+  "textOrigin": "Origin",
+  "textDestination": "Destination",
+  "textPickupAddress": "Pickup Address",
+  "textDeliveryAddress": "Delivery Address",
+
+  "textNoRequests": "No delivery requests",
+  "textNoShipments": "No active deliveries",
+
+  "textShipmentInformation": "Shipment Information",
+  "textShipmentPackages": "Shipment Packages",
+  "textShipmentDetails": "Shipment Details",
+  "textViewPackages": "View Packages",
+  "textStartDelivery": "Start Delivery",
+  "textCompleteDelivery": "Complete Delivery",
+
+  "textTotalPackages": "Total Packages",
+  "textTotalWeight": "Total Weight",
+  "textTotalQuantity": "Total Quantity",
+
+  //
 };

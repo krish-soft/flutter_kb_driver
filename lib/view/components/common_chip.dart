@@ -23,6 +23,7 @@ class CommonChip extends StatelessWidget {
     if (value == "in_transit") return AppColors.tripInTransit;
     if (value == "delivered") return AppColors.tripDelivered;
     if (value == "failed") return AppColors.tripFailed;
+    if (value == "completed") return AppColors.tripCompleted;
 
     return AppColors.textSecondary;
   }

@@ -68,6 +68,7 @@ class AppColors {
   static const Color tripInTransit = Color(0xFF7E57C2);
   static const Color tripDelivered = Color(0xFF16A34A);
   static const Color tripFailed = Color(0xFFDC2626);
+  static const Color tripCompleted = Color(0xFF16A34A);
 
   // =========================================================
   // OVERLAYS & SHADOWS

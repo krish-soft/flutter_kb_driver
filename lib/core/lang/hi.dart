@@ -48,4 +48,28 @@ const Map<String, String> hiIN = {
   "errTextPasswordTooShort": "पासवर्ड कम से कम 6 अक्षरों का होना चाहिए",
 
   //
+  "textAccept": "स्वीकार करें",
+  "textReject": "अस्वीकार करें",
+  "textStart": "प्रारंभ करें",
+  "textComplete": "पूर्ण करें",
+  "textOrigin": "मूल",
+  "textDestination": "गंतव्य",
+  "textPickupAddress": "पिकअप पता",
+  "textDeliveryAddress": "डिलिवरी पता",
+
+  "textNoRequests": "कोई डिलिवरी अनुरोध नहीं",
+  "textNoShipments": "कोई सक्रिय डिलिवरी नहीं",
+
+  "textShipmentInformation": "शिपमेंट जानकारी",
+  "textShipmentPackages": "शिपमेंट पैकेज",
+  "textShipmentDetails": "शिपमेंट विवरण",
+  "textViewPackages": "पैकेज देखें",
+  "textStartDelivery": "डिलिवरी शुरू करें",
+  "textCompleteDelivery": "डिलिवरी पूरी करें",
+
+  "textTotalPackages": "कुल पैकेज",
+  "textTotalWeight": "कुल वजन",
+  "textTotalQuantity": "कुल मात्रा",
+
+  //
 };

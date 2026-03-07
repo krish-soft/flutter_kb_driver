@@ -48,5 +48,29 @@ const Map<String, String> guIN = {
   "errTextInvalidOtp": "માન્ય OTP દાખલ કરો",
   "errTextPasswordTooShort": "પાસવર્ડ ઓછામાં ઓછા 6 અક્ષરોનો હોવો જોઈએ",
 
+  //
+  "textAccept": "સ્વીકારો",
+  "textReject": "નકારો",
+  "textStart": "પ્રારંભ કરો",
+  "textComplete": "પૂર્ણ કરો",
+  "textOrigin": "મૂળ",
+  "textDestination": "ગંતવ્ય",
+  "textPickupAddress": "પિકઅપ સરનામું",
+  "textDeliveryAddress": "ડિલિવરી સરનામું",
+
+  "textNoRequests": "ડિલિવરી વિનંતીઓ નથી",
+  "textNoShipments": "સક્રિય ડિલિવરી નથી",
+
+  "textShipmentInformation": "શિપમેન્ટ માહિતી",
+  "textShipmentPackages": "શિપમેન્ટ પેકેજેસ",
+  "textShipmentDetails": "શિપમેન્ટ વિગતો",
+  "textViewPackages": "પેકેજેસ જુઓ",
+  "textStartDelivery": "ડિલિવરી શરૂ કરો",
+  "textCompleteDelivery": "ડિલિવરી પૂર્ણ કરો",
+
+  "textTotalPackages": "કુલ પેકેજેસ",
+  "textTotalWeight": "કુલ વજન",
+  "textTotalQuantity": "કુલ માત્રા",
+
   ///
 };

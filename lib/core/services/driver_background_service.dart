@@ -19,7 +19,7 @@ class DriverBackgroundService {
       android: androidInit,
     );
 
-    await flutterLocalNotificationsPlugin.initialize(settings:localSettings);
+    await flutterLocalNotificationsPlugin.initialize(settings: localSettings);
 
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'driver_service',
@@ -75,6 +75,7 @@ void onStart(ServiceInstance service) async {
     print("Foreground service enabled");
   }
 
+  /// Init notification plugin inside isolate
   const AndroidInitializationSettings androidInit =
       AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -82,36 +83,14 @@ void onStart(ServiceInstance service) async {
     android: androidInit,
   );
 
-  await flutterLocalNotificationsPlugin.initialize(settings:localSettings);
+  await flutterLocalNotificationsPlugin.initialize(settings: localSettings);
 
   final Set<int> knownShipmentIds = {};
 
-  service.on("stopService").listen((event) {
-    print("Stopping background service");
-    service.stopSelf();
-  });
-
-  /// LOCATION TIMER (every 30 sec)
-  Timer.periodic(const Duration(seconds: 30), (timer) async {
-    try {
-      final position = await DriverLocationService.getCurrentLocation();
-
-      print("Location sent: ${position?.latitude}, ${position?.longitude}");
-
-      if (position != null) {
-        // TODO: send location API
-        // await driverController.updateDriverLocation(...)
-      }
-    } catch (e) {
-      print("Location timer error: $e");
-    }
-  });
-
-  /// SHIPMENT CHECK TIMER (every 60 sec)
   Timer.periodic(const Duration(seconds: 60), (timer) async {
-    try {
-      print("Checking shipment requests...");
+    print("Checking shipment requests...");
 
+    try {
       ApiResponseModel resp = await shipmentController
           .checkForNewShipmentRequests();
 
@@ -126,49 +105,38 @@ void onStart(ServiceInstance service) async {
         for (var id in shipmentIds) {
           if (!knownShipmentIds.contains(id)) {
             knownShipmentIds.add(id);
-
-            print("NEW SHIPMENT DETECTED → $id");
-
             hasNewShipment = true;
+            print("NEW SHIPMENT DETECTED → $id");
           }
         }
 
         if (hasNewShipment) {
-          print("Triggering shipment notification");
-
-          service.invoke("newShipment", {"data": resp.data});
+          print("Sending vibration + notification");
 
           await vibrateManager.vibrateHeavy();
 
-          if (service is AndroidServiceInstance) {
-            service.setForegroundNotificationInfo(
-              title: "New Shipment Request",
-              content: "You have new delivery requests",
-            );
-          }
-
+          /// popup notification
           await flutterLocalNotificationsPlugin.show(
-            id: 2001,
+            id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
             title: "New Shipment Request",
             body: "You have new delivery requests",
             notificationDetails: const NotificationDetails(
               android: AndroidNotificationDetails(
-                "driver_service",
-                "Driver Online Service",
-                channelDescription: "Driver shipment alerts",
+                "driver_alerts",
+                "Driver Alerts",
+                channelDescription: "Delivery request alerts",
                 importance: Importance.max,
                 priority: Priority.high,
                 playSound: true,
                 enableVibration: true,
+                fullScreenIntent: true,
+                ticker: "New shipment request",
               ),
             ),
-            payload: "new_shipment",
           );
 
-          print("Notification displayed");
+          print("Notification sent successfully");
         }
-      } else {
-        print("No new shipments");
       }
     } catch (e) {
       print("Shipment check error: $e");

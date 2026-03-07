@@ -1,8 +1,13 @@
-
-
 class AppStrings {
   //
   static const appName = 'appName';
+
+  // Errors
+  static const errTextInvalidMobileNumber = "errTextInvalidMobileNumber";
+  static const errTextPasswordRequired = "errTextPasswordRequired";
+
+  static const errTextInvalidOtp = "errTextInvalidOtp";
+  static const errTextPasswordTooShort = "errTextPasswordTooShort";
 
   static const textSignin = "textSignin";
   static const textSignup = "textSignup";
@@ -31,7 +36,6 @@ class AppStrings {
   static const textFullName = "textFullName";
   static const textEnterOtp = "textEnterOtp";
 
-
   // Screens
   static const screenHome = "screenHome";
   static const screenProfile = "screenProfile";
@@ -40,26 +44,41 @@ class AppStrings {
   static const screenMore = "screenMore";
   static const screenRequests = "screenRequests";
 
-  // 
+  //
   static const textGetOnline = "textGetOnline";
   static const textGoOffline = "textGoOffline";
   static const textMessageOnline = "textMessageOnline";
   static const textMessageOffline = "textMessageOffline";
 
-  // 
+  //
   static const textConfirm = "textConfirm";
   static const textCancel = "textCancel";
   static const textOk = "textOk";
 
+  //
+  static const textAccept = "textAccept";
+  static const textReject = "textReject";
+  static const textStart = "textStart";
+  static const textComplete = "textComplete";
+  static const textOrigin = "textOrigin";
+  static const textDestination = "textDestination";
+  static const textStatus = "textStatus";
+  static const textPickupAddress = "textPickupAddress";
+  static const textDeliveryAddress = "textDeliveryAddress";
 
-  // Errors
-  static const errTextInvalidMobileNumber = "errTextInvalidMobileNumber";
-  static const errTextPasswordRequired = "errTextPasswordRequired";
-  
-  static const errTextInvalidOtp = "errTextInvalidOtp";
-  static const errTextPasswordTooShort = "errTextPasswordTooShort";
+  static const textNoRequests = "textNoRequests";
+  static const textNoShipments = "textNoShipments";
+  static const textShipmentInformation = "textShipmentInformation";
+  static const textShipmentPackages = "textShipmentPackages";
 
-  
+  static const textShipmentDetails = "textShipmentDetails";
+  static const textViewPackages = "textViewPackages";
+  static const textStartDelivery = "textStartDelivery";
+  static const textCompleteDelivery = "textCompleteDelivery";
+
+  static const textTotalPackages = "textTotalPackages";
+  static const textTotalWeight = "textTotalWeight";
+  static const textTotalQuantity = "textTotalQuantity";
 
   //
 }
