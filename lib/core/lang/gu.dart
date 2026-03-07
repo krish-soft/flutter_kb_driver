@@ -72,5 +72,13 @@ const Map<String, String> guIN = {
   "textTotalWeight": "કુલ વજન",
   "textTotalQuantity": "કુલ માત્રા",
 
+  "textTapToUpdateStatus": "સ્થિતિ અપડેટ કરવા માટે ટૅપ કરો",
+  "textSelectStatus": "સ્થિતિ પસંદ કરો",
+
+  "textConfirmDelivery": "ડિલિવરી પુષ્ટિ કરો",
+  "textPhotoRequired": "ફોટો જરૂરી છે",
+  "textOtpRequired": "OTP જરૂરી છે",
+  "textCapturePhoto": "ફોટો કૅપ્ચર કરો",
+
   ///
 };

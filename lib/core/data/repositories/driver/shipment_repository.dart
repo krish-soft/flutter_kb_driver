@@ -43,6 +43,7 @@ class ShipmentRepository extends BaseRepository {
                 url: ApiRoutes.getNeedToDeliver,
                 method: ApiMethod.get,
                 requireAuth: true,
+                queryParams: {"status_not_in": "requested"},
               ))
               as Map<String, dynamic>,
     );

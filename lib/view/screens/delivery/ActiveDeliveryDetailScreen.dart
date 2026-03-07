@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,6 +20,9 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
 
   final ShipmentController controller = Get.find<ShipmentController>();
 
+  /// Enable OTP validation (optional)
+  final bool otpEnabled = true;
+
   /// Open Google Maps
   void openDirection(String? lat, String? lng) async {
     if (lat == null || lng == null) return;
@@ -27,7 +32,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
     await launchUrl(Uri.parse(url));
   }
 
-  /// Capture delivery proof photo (compressed)
+  /// Capture delivery photo
   Future<String?> capturePhoto() async {
     final picker = ImagePicker();
 
@@ -40,6 +45,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
     return file?.path;
   }
 
+  /// Build address string
   String buildAddress(dynamic addr) {
     return [
       addr["addr_name"],
@@ -52,18 +58,129 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
     ].where((e) => e != null && e.toString().isNotEmpty).join(", ");
   }
 
+  /// DELIVERY CONFIRMATION SHEET
+  void openDeliveryConfirmSheet() {
+    final TextEditingController otpController = TextEditingController();
+
+    String? imagePath;
+
+    Get.bottomSheet(
+      StatefulBuilder(
+        builder: (context, setStateSheet) {
+          return Container(
+            padding: const EdgeInsets.all(20),
+            decoration: const BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  AppStrings.textCompleteDelivery.tr,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                /// PHOTO PREVIEW
+                if (imagePath != null)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.file(
+                      File(imagePath!),
+                      height: 150,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+
+                const SizedBox(height: 10),
+
+                /// TAKE PHOTO
+                AppButton(
+                  title: AppStrings.textCapturePhoto.tr,
+                  background: AppColors.info,
+                  onPressed: () async {
+                    final path = await capturePhoto();
+
+                    if (path != null) {
+                      setStateSheet(() {
+                        imagePath = path;
+                      });
+                    }
+                  },
+                ),
+
+                const SizedBox(height: 15),
+
+                /// OTP FIELD (OPTIONAL)
+                if (otpEnabled)
+                  TextField(
+                    controller: otpController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: AppStrings.textEnterOtp.tr,
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+
+                const SizedBox(height: 20),
+
+                /// CONFIRM BUTTON
+                AppButton(
+                  title: AppStrings.textConfirmDelivery.tr,
+                  background: AppColors.success,
+                  onPressed: () async {
+                    if (imagePath == null) {
+                      Get.snackbar("Error", AppStrings.textPhotoRequired.tr);
+                      return;
+                    }
+
+                    if (otpEnabled && otpController.text.isEmpty) {
+                      Get.snackbar("Error", AppStrings.textOtpRequired.tr);
+                      return;
+                    }
+
+                    Get.back();
+
+                    await controller.completeShipment(
+                      shipment["driver_shipment_id"],
+                      imagePath!,
+                      otpEnabled ? otpController.text.trim() : null,
+                    );
+
+                    /// Refresh shipment list
+                    controller.loadNeedToDeliverShipments();
+
+                    Get.back();
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      isScrollControlled: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final origin = shipment["origin"];
     final destination = shipment["destination"];
     final payable = shipment["shipment_payable"];
 
-    /// BUTTON STATUS LOGIC
     final status = shipment["driver_shipment_status"].toString().toLowerCase();
 
     final bool canStart = status == "pending" || status == "accepted";
 
     final bool canComplete = status == "in_transit";
+
+    final bool delivered = status == "delivered" || status == "completed";
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -77,7 +194,6 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
           /// Shipment Header
           Container(
             padding: const EdgeInsets.all(16),
-
             decoration: BoxDecoration(
               color: AppColors.white,
               borderRadius: BorderRadius.circular(12),
@@ -85,10 +201,8 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
                 BoxShadow(color: AppColors.shadow, blurRadius: 5),
               ],
             ),
-
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
                 Text(
                   shipment["shipment_number"],
@@ -103,9 +217,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
                 Row(
                   children: [
                     CommonChip(text: shipment["shipment_type"], isType: true),
-
                     const SizedBox(width: 8),
-
                     CommonChip(text: shipment["driver_shipment_status"]),
                   ],
                 ),
@@ -115,42 +227,40 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          /// Pickup Address
-          _addressCard(
-            title: AppStrings.textPickupAddress.tr,
-            icon: Icons.store,
-            color: AppColors.primary,
-            address: buildAddress(origin),
-            lat: origin["lat"],
-            lng: origin["lng"],
-          ),
+          /// Hide address when delivered
+          if (!delivered) ...[
+            _addressCard(
+              title: AppStrings.textPickupAddress.tr,
+              icon: Icons.store,
+              color: AppColors.primary,
+              address: buildAddress(origin),
+              lat: origin["lat"],
+              lng: origin["lng"],
+            ),
 
-          const SizedBox(height: 12),
+            const SizedBox(height: 12),
 
-          /// Delivery Address
-          _addressCard(
-            title: AppStrings.textDeliveryAddress.tr,
-            icon: Icons.home,
-            color: AppColors.success,
-            address: buildAddress(destination),
-            lat: destination["lat"],
-            lng: destination["lng"],
-          ),
+            _addressCard(
+              title: AppStrings.textDeliveryAddress.tr,
+              icon: Icons.home,
+              color: AppColors.success,
+              address: buildAddress(destination),
+              lat: destination["lat"],
+              lng: destination["lng"],
+            ),
 
-          const SizedBox(height: 16),
+            const SizedBox(height: 16),
+          ],
 
           /// Shipment Information
           Container(
             padding: const EdgeInsets.all(16),
-
             decoration: BoxDecoration(
               color: AppColors.white,
               borderRadius: BorderRadius.circular(12),
             ),
-
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-
               children: [
                 Text(
                   AppStrings.textShipmentInformation.tr,
@@ -166,10 +276,12 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
                   AppStrings.textTotalPackages.tr,
                   "${shipment["total_packages"]}",
                 ),
+
                 _infoRow(
                   AppStrings.textTotalWeight.tr,
                   "${payable["total_weight"]} kg",
                 ),
+
                 _infoRow(
                   AppStrings.textTotalQuantity.tr,
                   "${payable["total_quantity"]}",
@@ -180,7 +292,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          /// Packages Screen Button
+          /// View Packages
           AppButton(
             title: AppStrings.textViewPackages.tr,
             background: AppColors.info,
@@ -209,15 +321,8 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
             title: AppStrings.textCompleteDelivery.tr,
             background: canComplete ? AppColors.danger : AppColors.textDisabled,
             onPressed: canComplete
-                ? () async {
-                    final path = await capturePhoto();
-
-                    if (path != null) {
-                      controller.completeShipment(
-                        shipment["driver_shipment_id"],
-                        path,
-                      );
-                    }
+                ? () {
+                    openDeliveryConfirmSheet();
                   }
                 : null,
           ),
@@ -236,26 +341,19 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
-
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
       ),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
           Row(
             children: [
               Icon(icon, color: color),
-
               const SizedBox(width: 8),
-
               Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-
               const Spacer(),
-
               IconButton(
                 icon: const Icon(Icons.map),
                 onPressed: () {
@@ -276,7 +374,6 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
   Widget _infoRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-
       child: Row(
         children: [
           Expanded(
@@ -285,7 +382,6 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
               style: const TextStyle(color: AppColors.textSecondary),
             ),
           ),
-
           Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
         ],
       ),

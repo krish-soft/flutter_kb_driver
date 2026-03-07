@@ -72,23 +72,16 @@ void onStart(ServiceInstance service) async {
 
   if (service is AndroidServiceInstance) {
     service.setAsForegroundService();
-    print("Foreground service enabled");
   }
-
-  /// Init notification plugin inside isolate
-  const AndroidInitializationSettings androidInit =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-
-  const InitializationSettings localSettings = InitializationSettings(
-    android: androidInit,
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(settings: localSettings);
 
   final Set<int> knownShipmentIds = {};
 
-  Timer.periodic(const Duration(seconds: 60), (timer) async {
-    print("Checking shipment requests...");
+  service.on("stopService").listen((event) {
+    service.stopSelf();
+  });
+
+  Timer.periodic(const Duration(seconds: 15), (timer) async {
+    print("Checking shipments...");
 
     try {
       ApiResponseModel resp = await shipmentController
@@ -100,42 +93,42 @@ void onStart(ServiceInstance service) async {
           resp.data?['shipment_ids'] ?? [],
         );
 
+        service.invoke("newShipment", {"data": resp.data});
+
         bool hasNewShipment = false;
 
         for (var id in shipmentIds) {
           if (!knownShipmentIds.contains(id)) {
             knownShipmentIds.add(id);
             hasNewShipment = true;
+
             print("NEW SHIPMENT DETECTED → $id");
           }
         }
 
         if (hasNewShipment) {
-          print("Sending vibration + notification");
+          print("Trigger vibration + notification");
 
-          await vibrateManager.vibrateHeavy();
+          // await vibrateManager.vibrateHeavy();
 
-          /// popup notification
+          /// send event to UI
+
+          /// local notification
           await flutterLocalNotificationsPlugin.show(
             id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
             title: "New Shipment Request",
             body: "You have new delivery requests",
             notificationDetails: const NotificationDetails(
               android: AndroidNotificationDetails(
-                "driver_alerts",
-                "Driver Alerts",
-                channelDescription: "Delivery request alerts",
+                "driver_service",
+                "Driver Online Service",
                 importance: Importance.max,
                 priority: Priority.high,
                 playSound: true,
                 enableVibration: true,
-                fullScreenIntent: true,
-                ticker: "New shipment request",
               ),
             ),
           );
-
-          print("Notification sent successfully");
         }
       }
     } catch (e) {

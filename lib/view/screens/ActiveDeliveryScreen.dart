@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/shipment_controller.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
+import 'package:kb_driver/utils/vibrate_manager.dart';
 import 'package:kb_driver/view/components/cmp_app_bar.dart';
 import 'package:kb_driver/view/components/common_chip.dart';
 import 'package:kb_driver/view/screens/delivery/ActiveDeliveryDetailScreen.dart';
@@ -16,6 +17,8 @@ class ActiveDeliveryScreen extends StatefulWidget {
 
 class _ActiveDeliveryScreenState extends State<ActiveDeliveryScreen> {
   final ShipmentController controller = Get.put(ShipmentController());
+
+  final VibrateManager _vibrateManager = VibrateManager();
 
   @override
   void initState() {
@@ -49,6 +52,7 @@ class _ActiveDeliveryScreenState extends State<ActiveDeliveryScreen> {
 
             return GestureDetector(
               onTap: () {
+                _vibrateManager.vibrateButton();
                 Get.to(() => ActiveDeliveryDetailScreen(shipment: shipment));
               },
 

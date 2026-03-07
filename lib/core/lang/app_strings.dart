@@ -80,5 +80,16 @@ class AppStrings {
   static const textTotalWeight = "textTotalWeight";
   static const textTotalQuantity = "textTotalQuantity";
 
+  static const textTapToUpdateStatus = "textTapToUpdateStatus";
+  
+  //
+  static const textSelectStatus = "textSelectStatus";
+
+  // 
+  static const textConfirmDelivery  = "textConfirmDelivery";
+  static const textPhotoRequired  = "textPhotoRequired";
+  static const textOtpRequired  = "textOtpRequired";
+  static const textCapturePhoto  = "textCapturePhoto";
+
   //
 }

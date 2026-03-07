@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
+import 'package:kb_driver/utils/vibrate_manager.dart';
 import 'package:kb_driver/view/components/cmp_app_bar.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/shipment_controller.dart';
 
@@ -16,6 +17,8 @@ class ShipmentPackagesScreen extends StatefulWidget {
 
 class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
   final ShipmentController controller = Get.find<ShipmentController>();
+
+  final VibrateManager _vibrateManager = VibrateManager();
 
   late List packages;
   late String shipmentType;
@@ -113,9 +116,16 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
         title: const Text("Confirm Status"),
         content: Text("Update package ${pkg["package_number"]} to '$status'?"),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text("Cancel")),
+          TextButton(
+            onPressed: () {
+              _vibrateManager.vibrateMedium();
+              Get.back();
+            },
+            child: Text(AppStrings.textCancel.tr),
+          ),
           ElevatedButton(
             onPressed: () async {
+              _vibrateManager.vibrateMedium();
               Get.back();
               await updateStatus(
                 widget.shipment["driver_shipment_id"],
@@ -124,7 +134,7 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
                 index,
               );
             },
-            child: const Text("Confirm"),
+            child: Text(AppStrings.textConfirm.tr),
           ),
         ],
       ),
@@ -145,9 +155,9 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "Select Status",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Text(
+              AppStrings.textSelectStatus.tr,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 15),
@@ -157,6 +167,7 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
                 title: Text(status),
                 leading: Icon(Icons.circle, color: statusColor(status)),
                 onTap: () {
+                  _vibrateManager.vibrateButton();
                   Get.back();
                   confirmUpdate(pkg, status, index);
                 },
@@ -247,7 +258,10 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
           return GestureDetector(
             onTap: shipmentCompleted
                 ? null
-                : () => openStatusSelector(pkg, index),
+                : () {
+                    _vibrateManager.vibrateButton();
+                    openStatusSelector(pkg, index);
+                  },
 
             child: Container(
               margin: const EdgeInsets.only(bottom: 12),
@@ -295,8 +309,8 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
                   const SizedBox(height: 6),
 
                   if (!shipmentCompleted)
-                    const Text(
-                      "Tap to update status",
+                    Text(
+                      AppStrings.textTapToUpdateStatus.tr,
                       style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                 ],

@@ -75,5 +75,14 @@ const Map<String, String> enUS = {
   "textTotalWeight": "Total Weight",
   "textTotalQuantity": "Total Quantity",
 
+  "textTapToUpdateStatus": "Tap to update status",
+  "textSelectStatus": "Select Status",
+
+  // Delivery Confirmation
+  "textConfirmDelivery": "Confirm Delivery",
+  "textPhotoRequired": "Photo Required",
+  "textOtpRequired": "OTP Required",
+  "textCapturePhoto": "Capture Photo",
+
   //
 };

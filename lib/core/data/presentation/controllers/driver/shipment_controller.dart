@@ -132,6 +132,7 @@ class ShipmentController extends GetxController {
   Future<void> completeShipment(
     int driverShipmentId,
     String proofImagePath,
+    String? otp,
   ) async {
     isLoading.value = true;
 
@@ -229,10 +230,7 @@ class ShipmentController extends GetxController {
     }
 
     return res;
-
   }
-
-
 
   //
 }

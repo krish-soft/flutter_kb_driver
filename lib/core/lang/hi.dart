@@ -71,5 +71,13 @@ const Map<String, String> hiIN = {
   "textTotalWeight": "कुल वजन",
   "textTotalQuantity": "कुल मात्रा",
 
+  "textTapToUpdateStatus": "स्थिति अपडेट करने के लिए टैप करें",
+  "textSelectStatus": "स्थिति चुनें",
+
+  "textConfirmDelivery": "डिलिवरी पुष्टि करें",
+  "textPhotoRequired": "फोटो आवश्यक है",
+  "textOtpRequired": "OTP आवश्यक है",
+  "textCapturePhoto": "फोटो कैप्चर करें",
+
   //
 };
