@@ -24,6 +24,7 @@ class ApiRoutes {
   // Shipments
   static const String checkForNewRequests = "$shipmentPrefix/requested";
   static const String getRequestedShipments = "$shipmentPrefix/list/need-to-deliver";
+  static const String getNeedToDeliver = "$shipmentPrefix/list/need-to-deliver";
 
   static const String acceptShipment = "$shipmentPrefix/accept";
   static const String rejectShipment = "$shipmentPrefix/reject";

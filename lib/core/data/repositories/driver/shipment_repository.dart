@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:kb_driver/constants/api_routes.dart';
 import 'package:kb_driver/core/data/models/api_response_model.dart';
 import 'package:kb_driver/core/data/repositories/base_repository.dart';
@@ -29,6 +31,18 @@ class ShipmentRepository extends BaseRepository {
                 queryParams: {
                   "status": "requested",
                 }, // because we want only requested shipments
+              ))
+              as Map<String, dynamic>,
+    );
+  }
+
+  Future<ApiResponseModel> getNeedToDeliverShipments() {
+    return execute(
+      () async =>
+          (await _api.request(
+                url: ApiRoutes.getNeedToDeliver,
+                method: ApiMethod.get,
+                requireAuth: true,
               ))
               as Map<String, dynamic>,
     );
@@ -70,12 +84,25 @@ class ShipmentRepository extends BaseRepository {
     );
   }
 
-  Future<ApiResponseModel> completeShipment(int driverShipmentId) {
+  Future<ApiResponseModel> completeShipment(
+    int driverShipmentId,
+    String proofImagePath,
+  ) {
     return execute(
       () async =>
           (await _api.request(
                 url: "${ApiRoutes.completeShipment}/$driverShipmentId",
                 method: ApiMethod.post,
+
+                /// NORMAL FIELDS
+                body: {},
+
+                /// FILES
+                files: {"proof_image": File(proofImagePath)},
+
+                /// IMPORTANT
+                bodyType: BodyType.multipart,
+
                 requireAuth: true,
               ))
               as Map<String, dynamic>,
