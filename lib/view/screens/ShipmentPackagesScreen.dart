@@ -30,7 +30,10 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
     packages = widget.shipment["shipmentPackages"];
   }
 
-  bool get isCompleted => driverShipmentStatus == "completed";
+  /// shipment completed check
+  bool get shipmentCompleted =>
+      driverShipmentStatus == "completed" ||
+      driverShipmentStatus == "delivered";
 
   /// options based on shipment type
   List<String> getStatusOptions() {
@@ -45,28 +48,35 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
     return ["received", "not_received"];
   }
 
-  /// secondary status
+  /// get type status
   String getTypeStatus(dynamic pkg) {
     if (shipmentType == "pickup") {
-      return pkg["shipment_package_seller_status"];
+      return pkg["shipment_package_seller_status"] ?? "pending";
     }
 
     if (shipmentType == "dispatch") {
-      return pkg["shipment_package_buyer_status"];
+      return pkg["shipment_package_buyer_status"] ?? "pending";
     }
 
-    return pkg["shipment_package_transfer_status"];
+    return pkg["shipment_package_transfer_status"] ?? "pending";
   }
 
   /// main package status
   String getMainStatus(dynamic pkg) {
-    return pkg["shipment_package_status"];
+    return pkg["shipment_package_status"] ?? "pending";
   }
 
+  /// completed check
+  bool isStatusCompleted(String status) {
+    return status == "picked_up" ||
+        status == "delivered" ||
+        status == "received";
+  }
+
+  /// status color
   Color getStatusColor(String status) {
     if (status.contains("not")) return AppColors.danger;
     if (status.contains("pending")) return AppColors.warning;
-
     return AppColors.success;
   }
 
@@ -77,7 +87,7 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
     String status,
     int index,
   ) async {
-    if (isCompleted) return;
+    if (shipmentCompleted) return;
 
     if (shipmentType == "pickup") {
       await controller.updatePkgSellerStatus(
@@ -126,6 +136,8 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
 
           final mainStatus = getMainStatus(pkg);
           final typeStatus = getTypeStatus(pkg);
+
+          final typeCompleted = isStatusCompleted(typeStatus);
 
           return Container(
             margin: const EdgeInsets.only(bottom: 14),
@@ -179,11 +191,23 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
                         style: TextStyle(fontWeight: FontWeight.w600),
                       ),
 
-                      Text(
-                        mainStatus,
-                        style: TextStyle(
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+
+                        decoration: BoxDecoration(
                           color: getStatusColor(mainStatus),
-                          fontWeight: FontWeight.bold,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+
+                        child: Text(
+                          mainStatus,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
@@ -199,11 +223,23 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
                         style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
 
-                      Text(
-                        typeStatus,
-                        style: TextStyle(
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+
+                        decoration: BoxDecoration(
                           color: getStatusColor(typeStatus),
-                          fontWeight: FontWeight.bold,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+
+                        child: Text(
+                          typeStatus,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
@@ -211,39 +247,38 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
 
                   const SizedBox(height: 12),
 
-                  /// OPTIONS
-                  Wrap(
-                    spacing: 10,
+                  /// UPDATE OPTIONS
+                  if (!shipmentCompleted && !typeCompleted)
+                    Wrap(
+                      spacing: 10,
 
-                    children: getStatusOptions().map((status) {
-                      final selected = typeStatus == status;
+                      children: getStatusOptions().map((status) {
+                        final selected = typeStatus == status;
 
-                      return ChoiceChip(
-                        label: Text(status),
+                        return ChoiceChip(
+                          label: Text(status),
 
-                        selected: selected,
+                          selected: selected,
 
-                        selectedColor: getStatusColor(status),
+                          selectedColor: getStatusColor(status),
 
-                        labelStyle: TextStyle(
-                          color: selected
-                              ? Colors.white
-                              : AppColors.textSecondary,
-                        ),
+                          labelStyle: TextStyle(
+                            color: selected
+                                ? Colors.white
+                                : AppColors.textSecondary,
+                          ),
 
-                        onSelected: isCompleted
-                            ? null
-                            : (_) {
-                                updateStatus(
-                                  driverShipmentId,
-                                  pkg["shipment_package_id"],
-                                  status,
-                                  index,
-                                );
-                              },
-                      );
-                    }).toList(),
-                  ),
+                          onSelected: (_) {
+                            updateStatus(
+                              driverShipmentId,
+                              pkg["shipment_package_id"],
+                              status,
+                              index,
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
                 ],
               ),
             ),
