@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get/get.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/driver_controller.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isOnline = false;
 
   bool _hasRequest = false;
+  int _numberOfRequests = 0;
   bool _hasActiveDelivery = false;
 
   final VibrateManager _vibrateManager = VibrateManager();
@@ -40,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _init();
+    _listenForNewShipments();
   }
 
   Future<void> _init() async {
@@ -131,6 +134,21 @@ class _HomeScreenState extends State<HomeScreen> {
     if (DriverService.isRunning()) {
       DriverService.stopService();
     }
+  }
+
+  void _listenForNewShipments() {
+    FlutterBackgroundService().on("newShipment").listen((event) {
+      final data = event?["data"];
+
+      if (data['has_requested_shipments'] == true) {
+        if (!mounted) return;
+
+        setState(() {
+          _hasRequest = true;
+          _numberOfRequests = data['number_of_requested_shipments'] ?? 0;
+        });
+      }
+    });
   }
 
   /// TOGGLE ONLINE / OFFLINE
@@ -248,6 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   AppStrings.screenRequests.tr,
                   1,
                   showBadge: _hasRequest,
+                  badgeCount: _numberOfRequests,
                 ),
 
                 const SizedBox(width: 40),
@@ -269,11 +288,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// NAV ITEM WITH BADGE
+  ///
   Widget _navItem(
     IconData icon,
     String label,
     int index, {
     bool showBadge = false,
+    int? badgeCount, // optional count
   }) {
     final isSelected = _currentIndex == index;
 
@@ -292,6 +313,7 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Stack(
+            clipBehavior: Clip.none,
             children: [
               Icon(
                 icon,
@@ -301,15 +323,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
               if (showBadge)
                 Positioned(
-                  right: 0,
-                  top: 0,
+                  right: -4,
+                  top: -2,
                   child: Container(
-                    width: 10,
-                    height: 10,
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
+                    padding: badgeCount != null
+                        ? const EdgeInsets.symmetric(horizontal: 5, vertical: 2)
+                        : EdgeInsets.zero,
+                    constraints: const BoxConstraints(
+                      minWidth: 10,
+                      minHeight: 10,
                     ),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    alignment: Alignment.center,
+                    child: badgeCount != null
+                        ? Text(
+                            badgeCount > 99 ? '99+' : badgeCount.toString(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : null,
                   ),
                 ),
             ],
@@ -329,4 +367,64 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  // Widget _navItem(
+  //   IconData icon,
+  //   String label,
+  //   int index, {
+  //   bool showBadge = false,
+  // }) {
+  //   final isSelected = _currentIndex == index;
+
+  //   return GestureDetector(
+  //     onTap: () async {
+  //       await _vibrateManager.vibrateButton();
+
+  //       setState(() {
+  //         _currentIndex = index;
+
+  //         if (index == 1) _hasRequest = false;
+  //         if (index == 2) _hasActiveDelivery = false;
+  //       });
+  //     },
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: [
+  //         Stack(
+  //           children: [
+  //             Icon(
+  //               icon,
+  //               size: 26,
+  //               color: isSelected ? Colors.green : Colors.grey,
+  //             ),
+
+  //             if (showBadge)
+  //               Positioned(
+  //                 right: 0,
+  //                 top: 0,
+  //                 child: Container(
+  //                   width: 10,
+  //                   height: 10,
+  //                   decoration: const BoxDecoration(
+  //                     color: Colors.red,
+  //                     shape: BoxShape.circle,
+  //                   ),
+  //                 ),
+  //               ),
+  //           ],
+  //         ),
+
+  //         const SizedBox(height: 4),
+
+  //         Text(
+  //           label,
+  //           style: TextStyle(
+  //             fontSize: 12,
+  //             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+  //             color: isSelected ? Colors.green : Colors.grey,
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

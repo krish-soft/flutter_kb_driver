@@ -32,5 +32,18 @@ class DriverRepository extends BaseRepository {
     );
   }
 
+  // check requested
+  Future<ApiResponseModel> checkForNewRequests() {
+    return execute(
+      () async =>
+          (await _api.request(
+                url: ApiRoutes.checkForNewRequests,
+                method: ApiMethod.get,
+                requireAuth: true,
+              ))
+              as Map<String, dynamic>,
+    );
+  }
+
   //
 }

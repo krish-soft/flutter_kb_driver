@@ -3,7 +3,8 @@ import 'package:kb_driver/constants/app_constants.dart';
 class ApiRoutes {
   static const String baseUrl = "${AppConstants.BASE_URL}/api/v1";
 
-  static const String deliveryPrfix = "$baseUrl/delivery";
+  static const String deliveryPrefix = "$baseUrl/delivery";
+  static const String shipmentPrefix = "$deliveryPrefix/shipment";
 
   // Auth
 
@@ -15,8 +16,22 @@ class ApiRoutes {
   static const String forgotPasswordVerify = "$baseUrl/forget/reset";
 
   // Driver
-    static const String getDriverOnlineStatus = "$deliveryPrfix/driver/online-status";
-    static const String updateDriverOnlineStatus = "$deliveryPrfix/driver/online-status/update";
+  static const String getDriverOnlineStatus =
+      "$deliveryPrefix/driver/online-status";
+  static const String updateDriverOnlineStatus =
+      "$deliveryPrefix/driver/online-status/update";
+
+  // Shipments
+  static const String checkForNewRequests = "$shipmentPrefix/requested";
+  static const String getRequestedShipments = "$shipmentPrefix/list/need-to-deliver";
+
+  static const String acceptShipment = "$shipmentPrefix/accept";
+  static const String rejectShipment = "$shipmentPrefix/reject";
+  static const String startShipment = "$shipmentPrefix/start";
+  static const String completeShipment = "$shipmentPrefix/complete";
+
+
+
 
 
   //
