@@ -155,5 +155,25 @@ class AppStrings {
   static const textExistingBankAccount = "textExistingBankAccount";
   static const textAccountHolderName = "textAccountHolderName";
 
+  // 
+  static const textDashboard = "textDashboard";
+  static const textWelcomeBack = "textWelcomeBack";
+  static const textDeliveryOverview = "textDeliveryOverview";
+
+  static const textRating = "textRating";
+  static const textReviews = "textReviews";
+
+  static const textOnline = "textOnline"; 
+  static const textOffline = "textOffline"; 
+  static const textReadyToReceiveDeliveryRequests = "textReadyToReceiveDeliveryRequests";
+  static const textSwitchOnlineToReceiveDeliveries = "textSwitchOnlineToReceiveDeliveries";
+
+    static const textTotalDeliveries = "textTotalDeliveries"; 
+
+  static const textAvailableEarnings = "textAvailableEarnings";
+  static const textPendingSettlement = "textPendingSettlement";
+  
+
+
   //
 }

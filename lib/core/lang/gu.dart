@@ -141,5 +141,23 @@ const Map<String, String> guIN = {
   "textExistingBankAccount": "મોજુદ બેંક એકાઉન્ટ",
   "textAccountHolderName": "એકાઉન્ટ ધારકનું નામ",
 
+  //
+  "textDashboard": "ડેશબોર્ડ",
+  "textWelcomeBack": "ફરીથી સ્વાગત છે",
+  "textDeliveryOverview": "આ રહી તમારી ડિલિવરીની સમીક્ષા",
+
+  "textRating": "રેટિંગ",
+  "textReviews": "સમીક્ષાઓ",
+
+  "textOnline": "ઓનલાઇન",
+  "textOffline": "ઓફલાઇન",
+
+  "textReadyToReceiveDeliveryRequests": "ડિલિવરી વિનંતીઓ પ્રાપ્ત કરવા માટે તૈયાર",
+  "textSwitchOnlineToReceiveDeliveries": "ડિલિવરી પ્રાપ્ત કરવા માટે ઑનલાઇન સ્વિચ કરો",
+
+  "textTotalDeliveries": "કુલ ડિલિવરી",
+  "textAvailableEarnings": "ઉપલબ્ધ આવક",
+  "textPendingSettlement": "બાકી નિકાલ",
+
   ///
 };

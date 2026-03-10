@@ -125,7 +125,6 @@ const Map<String, String> hiIN = {
   "textAppVersion": "एप संस्करण",
   "textAccount": "खाता",
 
-
   "textIfscCode": "कृपया IFSC कोड दर्ज करें",
   "textBankName": "कृपया बैंक का नाम दर्ज करें",
   "textBranchName": "कृपया शाखा का नाम दर्ज करें",
@@ -136,10 +135,28 @@ const Map<String, String> hiIN = {
   "textEnterAccountNumber": "कृपया खाता संख्या दर्ज करें",
   "textEnterAccountHolderName": "कृपया खाता धारक का नाम दर्ज करें",
   "textUpdateBankDetails": "बैंक विवरण अपडेट करें",
-  "textConfirmUpdateBankDetails": "क्या आप वाकई बैंक विवरण अपडेट करना चाहते हैं?",
+  "textConfirmUpdateBankDetails":
+      "क्या आप वाकई बैंक विवरण अपडेट करना चाहते हैं?",
   "textExistingBankAccount": "मौजूदा बैंक खाता",
   "textAccountHolderName": "खाता धारक का नाम",
 
+  //
+  "textDashboard": "डैशबोर्ड",
+  "textWelcomeBack": "फिर से स्वागत है",
+  "textDeliveryOverview": "यहाँ आपकी डिलीवरी का अवलोकन है",
+
+  "textRating": "रेटिंग",
+  "textReviews": "समीक्षाएँ",
+
+  "textOnline": "ऑनलाइन",
+  "textOffline": "ऑफलाइन",
+
+  "textReadyToReceiveDeliveryRequests": "डिलिवरी अनुरोध प्राप्त करने के लिए तैयार",
+  "textSwitchOnlineToReceiveDeliveries": "डिलिवरी प्राप्त करने के लिए ऑनलाइन स्विच करें",
+
+  "textTotalDeliveries": "कुल डिलिवरी",
+  "textAvailableEarnings": "उपलब्ध आय",
+  "textPendingSettlement": "बकाया निपटान",
 
   //
 };

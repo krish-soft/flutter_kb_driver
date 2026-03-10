@@ -140,9 +140,28 @@ const Map<String, String> enUS = {
   "textEnterAccountNumber": "Please enter account number",
   "textEnterAccountHolderName": "Please enter account holder name",
   "textUpdateBankDetails": "Update Bank Details",
-  "textConfirmUpdateBankDetails": "Are you sure you want to update bank details?",
+  "textConfirmUpdateBankDetails":
+      "Are you sure you want to update bank details?",
   "textExistingBankAccount": "Existing Bank Account",
   "textAccountHolderName": "Account Holder Name",
+
+  //
+  "textDashboard": "Dashboard",
+  "textWelcomeBack": "Welcome back",
+  "textDeliveryOverview": "Here is your delivery overview",
+
+  "textRating": "Rating",
+  "textReviews": "Reviews",
+
+  "textOnline": "Online",
+  "textOffline": "Offline",
+
+  "textReadyToReceiveDeliveryRequests": "Ready to receive delivery requests",
+  "textSwitchOnlineToReceiveDeliveries": "Switch online to receive deliveries",
+
+  "textTotalDeliveries": "Total Deliveries",
+  "textAvailableEarnings": "Available Earnings",
+  "textPendingSettlement": "Pending Settlement",
 
   //
 };

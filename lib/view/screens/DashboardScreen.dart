@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver_status_controller.dart';
 import 'package:kb_driver/core/data/presentation/controllers/user/dashboard_controller.dart';
+import 'package:kb_driver/core/lang/app_strings.dart';
 import 'package:kb_driver/view/components/cmp_app_bar.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -19,7 +20,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CommonAppBar(title: "Dashboard"),
+      appBar: CommonAppBar(title: AppStrings.textDashboard.tr),
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
@@ -29,15 +30,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
           padding: const EdgeInsets.all(16),
           children: [
             /// WELCOME
-            const Text(
-              "Welcome back",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            Text(
+              AppStrings.textWelcomeBack.tr,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 4),
 
-            const Text(
-              "Here is your delivery overview",
+            Text(
+              AppStrings.textDeliveryOverview.tr,
               style: TextStyle(color: Colors.grey),
             ),
 
@@ -58,7 +59,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               children: [
                 Expanded(
                   child: _statCard(
-                    "Rating",
+                   AppStrings.textRating.tr,
                     controller.averageRating.value.toStringAsFixed(1),
                     Icons.star,
                     Colors.orange,
@@ -69,7 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                 Expanded(
                   child: _statCard(
-                    "Reviews",
+                    AppStrings.textReviews.tr,
                     controller.totalRatings.value.toString(),
                     Icons.rate_review,
                     Colors.blue,
@@ -115,7 +116,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  online ? "Online" : "Offline",
+                  online ? AppStrings.textOnline.tr : AppStrings.textOffline.tr,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -127,8 +128,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                 Text(
                   online
-                      ? "Ready to receive delivery requests"
-                      : "Switch online to receive deliveries",
+                      ? AppStrings.textReadyToReceiveDeliveryRequests.tr
+                      : AppStrings.textSwitchOnlineToReceiveDeliveries.tr,
                   style: const TextStyle(color: Colors.white70, fontSize: 13),
                 ),
               ],
@@ -163,7 +164,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
           const SizedBox(height: 4),
 
-          const Text("Total Deliveries", style: TextStyle(color: Colors.grey)),
+          Text(AppStrings.textTotalDeliveries.tr, style: const TextStyle(color: Colors.grey)),
         ],
       ),
     );
@@ -213,9 +214,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Available Earnings",
-              style: TextStyle(color: Colors.white70),
+            Text(
+              AppStrings.textAvailableEarnings.tr,
+              style: const TextStyle(color: Colors.white70),
             ),
 
             const SizedBox(height: 6),
@@ -232,7 +233,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 10),
 
             Text(
-              "Pending Settlement ₹${controller.pendingBalance.value.toStringAsFixed(2)}",
+              "${AppStrings.textPendingSettlement.tr} ₹${controller.pendingBalance.value.toStringAsFixed(2)}",
               style: const TextStyle(color: Colors.white70),
             ),
           ],
