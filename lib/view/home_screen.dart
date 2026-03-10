@@ -31,7 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final VibrateManager _vibrateManager = VibrateManager();
   final DriverController _driverController = Get.put(DriverController());
-  final DriverStatusController _driverStatusController = Get.find<DriverStatusController>();
+  final DriverStatusController _driverStatusController =
+      Get.find<DriverStatusController>();
 
   final List<Widget> _screens = const [
     DashboardScreen(),
@@ -85,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final res = await _driverController.getDriverOnlineStatus();
 
       if (res.isSuccess == true) {
-        bool serverStatus = res.data?.isOnline ?? false;
+        bool serverStatus = res.data?['isOnline'] ?? false;
 
         if (!mounted) return;
 
@@ -93,7 +94,6 @@ class _HomeScreenState extends State<HomeScreen> {
           _isOnline = serverStatus;
         });
 
-        // await PreferenceManager.setIsDriverOnline(serverStatus);
         _driverStatusController.updateStatus(serverStatus);
 
         if (serverStatus) {
@@ -103,11 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
           await DriverBackgroundService.startService();
         } else {
-          /// stop services if server says offline
           _stopDriverService();
           await DriverBackgroundService.stopService();
         }
       }
+      //
     }
   }
 

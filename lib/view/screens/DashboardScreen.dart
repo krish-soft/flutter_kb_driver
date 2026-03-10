@@ -102,7 +102,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           gradient: LinearGradient(
             colors: online
                 ? [const Color(0xff22c55e), const Color(0xff16a34a)]
-                : [const Color(0xff9ca3af), const Color(0xff6b7280)],
+                : [const Color.fromARGB(255, 239, 26, 26), const Color.fromARGB(255, 242, 109, 109)],
           ),
           borderRadius: BorderRadius.circular(16),
         ),
