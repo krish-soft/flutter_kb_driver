@@ -185,7 +185,7 @@ class _MoreScreenState extends State<MoreScreen> {
           ),
 
           const SizedBox(height: 4),
-          Text("Account"),
+          Text(AppStrings.textAccount.tr),
           const SizedBox(height: 4),
 
           /// PROFILE
@@ -200,19 +200,19 @@ class _MoreScreenState extends State<MoreScreen> {
           settingItem(
             icon: Icons.account_balance,
             iconColor: Colors.green,
-            title: "Bank Details",
+            title: AppStrings.textBankDetails.tr,
             onTap: () => Get.toNamed('/user-bank'),
           ),
 
           const SizedBox(height: 4),
-          Text("About"),
+          Text(AppStrings.textAbout.tr),
           const SizedBox(height: 4),
 
           /// RATE APP
           settingItem(
             icon: Icons.star_rate,
             iconColor: Colors.orange,
-            title: "Rate App",
+            title: AppStrings.textRateApp.tr,
             onTap: rateApp,
           ),
 
@@ -220,7 +220,7 @@ class _MoreScreenState extends State<MoreScreen> {
           settingItem(
             icon: Icons.public,
             iconColor: Colors.purple,
-            title: "About us",
+            title: AppStrings.textAboutUs.tr,
             onTap: openAbout,
           ),
 
@@ -230,7 +230,7 @@ class _MoreScreenState extends State<MoreScreen> {
           settingItem(
             icon: Icons.info,
             iconColor: Colors.teal,
-            title: "App Version $version",
+            title: "${AppStrings.textAppVersion.tr} $version",
           ),
         ],
       ),

@@ -4,7 +4,7 @@ const Map<String, String> enUS = {
   // Auth
   "textSignin": "Sign In",
   "textSignup": "Sign Up",
-  "textLogout" : "Logout",
+  "textLogout": "Logout",
 
   "textSigninSubtitle": "Login using your phone number and password",
   "textPhoneNumber": "Phone Number",
@@ -119,9 +119,30 @@ const Map<String, String> enUS = {
   "textCity": "City",
   "textState": "State",
   "textPostalCode": "Postal Code",
-  
+
   "textMessageLogout": "Are you sure you want to logout?",
 
+  //
+  "textBankDetails": "Bank Details",
+  "textAbout": "About",
+  "textRateApp": "Rate App",
+  "textAboutUs": "About Us",
+  "textAppVersion": "App Version",
+  "textAccount": "Account",
+
+  "textIfscCode": "Please enter IFSC code",
+  "textBankName": "Please enter bank name",
+  "textBranchName": "Please enter branch name",
+  "textAccountType": "Please enter account type",
+  "textPrimaryBankAccount": "Primary Bank Account",
+
+  "textFillAllRequiredFields": "Please fill all required fields",
+  "textEnterAccountNumber": "Please enter account number",
+  "textEnterAccountHolderName": "Please enter account holder name",
+  "textUpdateBankDetails": "Update Bank Details",
+  "textConfirmUpdateBankDetails": "Are you sure you want to update bank details?",
+  "textExistingBankAccount": "Existing Bank Account",
+  "textAccountHolderName": "Account Holder Name",
 
   //
 };

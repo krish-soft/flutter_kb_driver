@@ -132,7 +132,28 @@ class AppStrings {
 
   static const textMessageLogout = "textMessageLogout";
 
+  //
 
+  static const textAccount = "textAccount";
+  static const textBankDetails = "textBankDetails";
+  static const textRateApp = "textRateApp";
+  static const textAboutUs = "textAboutUs";
+  static const textAbout = "textAbout";
+  static const textAppVersion = "textAppVersion";
+
+  static const textIfscCode = "textIfscCode";
+  static const textBankName = "textBankName";
+  static const textBranchName = "textBranchName";
+  static const textAccountType = "textAccountType";
+  static const textPrimaryBankAccount = "textPrimaryBankAccount";
+
+  static const textFillAllRequiredFields = "textFillAllRequiredFields";
+  static const textEnterAccountNumber = "textEnterAccountNumber";
+  static const textUpdateBankDetails = "textUpdateBankDetails";
+  static const textConfirmUpdateBankDetails = "textConfirmUpdateBankDetails";
+
+  static const textExistingBankAccount = "textExistingBankAccount";
+  static const textAccountHolderName = "textAccountHolderName";
 
   //
 }

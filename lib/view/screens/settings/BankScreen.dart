@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/core/data/models/user/bank_model.dart';
 import 'package:kb_driver/core/data/presentation/controllers/user/bank_controller.dart';
+import 'package:kb_driver/core/lang/app_strings.dart';
 
 import 'package:kb_driver/utils/message_manager.dart';
 import 'package:kb_driver/utils/vibrate_manager.dart';
@@ -84,28 +85,28 @@ class _BankScreenState extends State<BankScreen> {
     if (_holderName.text.isEmpty ||
         _ifsc.text.isEmpty ||
         _bankName.text.isEmpty) {
-      MessageManager.showError("Please fill required fields");
+      MessageManager.showError(AppStrings.textFillAllRequiredFields.tr);
       return;
     }
 
     if (_accountNumber.text.isEmpty && accountLast4.isEmpty) {
-      MessageManager.showError("Enter account number");
+      MessageManager.showError(AppStrings.textEnterAccountNumber.tr);
       return;
     }
 
     Get.dialog(
       AlertDialog(
-        title: const Text("Update Bank Details"),
-        content: const Text("Confirm update bank details?"),
+        title: Text(AppStrings.textUpdateBankDetails.tr),
+        content: Text(AppStrings.textConfirmUpdateBankDetails.tr),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: const Text("Cancel")),
+          TextButton(onPressed: () => Get.back(), child: Text(AppStrings.textCancel.tr)),
 
           ElevatedButton(
             onPressed: () {
               Get.back();
               _updateBank();
             },
-            child: const Text("Confirm"),
+            child: Text(AppStrings.textConfirm.tr),
           ),
         ],
       ),
@@ -131,10 +132,7 @@ class _BankScreenState extends State<BankScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CommonAppBar(title: "Bank Details"),
-
-      backgroundColor: const Color(0xFFF5F5F5),
-
+      appBar: CommonAppBar(title: AppStrings.textBankDetails.tr, showBack: true,),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -169,9 +167,9 @@ class _BankScreenState extends State<BankScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Existing Bank Account",
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          Text(
+            AppStrings.textExistingBankAccount.tr,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 10),
@@ -197,13 +195,13 @@ class _BankScreenState extends State<BankScreen> {
             ),
 
           if (isPrimary)
-            const Padding(
-              padding: EdgeInsets.only(top: 6),
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
               child: Row(
                 children: [
-                  Icon(Icons.star, color: Colors.orange, size: 18),
-                  SizedBox(width: 6),
-                  Text("Primary Bank Account"),
+                  const Icon(Icons.star, color: Colors.orange, size: 18),
+                  const SizedBox(width: 6),
+                  Text(AppStrings.textPrimaryBankAccount.tr),
                 ],
               ),
             ),
@@ -224,16 +222,16 @@ class _BankScreenState extends State<BankScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Update Bank Details",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              AppStrings.textUpdateBankDetails.tr,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 16),
 
             AppInputField(
               controller: _holderName,
-              hint: "Account Holder Name *",
+              hint: AppStrings.textAccountHolderName.tr,
               prefixIcon: Icons.person,
             ),
 
@@ -241,7 +239,7 @@ class _BankScreenState extends State<BankScreen> {
 
             AppInputField(
               controller: _accountNumber,
-              hint: "Enter Full Account Number",
+              hint: AppStrings.textEnterAccountNumber.tr,
               prefixIcon: Icons.lock,
               obscure: !_showAccountNumber,
               suffix: IconButton(
@@ -260,7 +258,7 @@ class _BankScreenState extends State<BankScreen> {
 
             AppInputField(
               controller: _ifsc,
-              hint: "IFSC Code *",
+              hint: AppStrings.textIfscCode.tr,
               prefixIcon: Icons.account_balance,
             ),
 
@@ -268,7 +266,7 @@ class _BankScreenState extends State<BankScreen> {
 
             AppInputField(
               controller: _bankName,
-              hint: "Bank Name *",
+              hint: AppStrings.textBankName.tr,
               prefixIcon: Icons.account_balance_wallet,
             ),
 
@@ -276,7 +274,7 @@ class _BankScreenState extends State<BankScreen> {
 
             AppInputField(
               controller: _branch,
-              hint: "Branch Name",
+              hint: AppStrings.textBranchName.tr,
               prefixIcon: Icons.location_city,
             ),
 
@@ -284,14 +282,14 @@ class _BankScreenState extends State<BankScreen> {
 
             AppInputField(
               controller: _accountType,
-              hint: "Account Type (Savings/Current)",
+              hint: AppStrings.textAccountType.tr,
               prefixIcon: Icons.credit_card,
             ),
 
             const SizedBox(height: 20),
 
             AppButton(
-              title: "Update Bank Details",
+              title: AppStrings.textUpdateBankDetails.tr,
               loading: _controller.isLoading.value,
               background: AppColors.primary,
               onPressed: confirmUpdate,

@@ -118,4 +118,28 @@ const Map<String, String> hiIN = {
   "textMessageLogout": "क्या आप वाकई लॉगआउट करना चाहते हैं?",
 
   //
+  "textBankDetails": "बैंक विवरण",
+  "textAbout": "के बारे में",
+  "textRateApp": "एप रेट करें",
+  "textAboutUs": "हमारे बारे में",
+  "textAppVersion": "एप संस्करण",
+  "textAccount": "खाता",
+
+
+  "textIfscCode": "कृपया IFSC कोड दर्ज करें",
+  "textBankName": "कृपया बैंक का नाम दर्ज करें",
+  "textBranchName": "कृपया शाखा का नाम दर्ज करें",
+  "textAccountType": "कृपया खाता प्रकार दर्ज करें",
+  "textPrimaryBankAccount": "प्राथमिक बैंक खाता",
+
+  "textFillAllRequiredFields": "कृपया सभी आवश्यक फ़ील्ड भरें",
+  "textEnterAccountNumber": "कृपया खाता संख्या दर्ज करें",
+  "textEnterAccountHolderName": "कृपया खाता धारक का नाम दर्ज करें",
+  "textUpdateBankDetails": "बैंक विवरण अपडेट करें",
+  "textConfirmUpdateBankDetails": "क्या आप वाकई बैंक विवरण अपडेट करना चाहते हैं?",
+  "textExistingBankAccount": "मौजूदा बैंक खाता",
+  "textAccountHolderName": "खाता धारक का नाम",
+
+
+  //
 };

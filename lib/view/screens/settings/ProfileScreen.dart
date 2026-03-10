@@ -9,6 +9,7 @@ import 'package:kb_driver/utils/vibrate_manager.dart';
 
 import 'package:kb_driver/view/components/app_input_field.dart';
 import 'package:kb_driver/view/components/app_button.dart';
+import 'package:kb_driver/view/components/cmp_app_bar.dart';
 import 'package:kb_driver/view/components/language_switcher.dart';
 
 import 'package:kb_driver/utils/message_manager.dart';
@@ -205,18 +206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppStrings.textProfile.tr,
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: AppColors.primary,
-        iconTheme: const IconThemeData(color: Colors.white),
-        actions: const [LanguageSwitcher()],
-      ),
-
-      backgroundColor: const Color(0xFFF5F5F5),
-
+      appBar: CommonAppBar(title: AppStrings.textProfile.tr, showBack: true),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(

@@ -118,6 +118,28 @@ const Map<String, String> guIN = {
 
   "textMessageLogout": "શું તમે ખરેખર લૉગઆઉટ કરવા માંગો છો?",
 
+  //
+  "textBankDetails": "બેંક વિગતો",
+  "textAbout": "વિશે",
+  "textRateApp": "એપ રેટ કરો",
+  "textAboutUs": "અમારા વિશે",
+  "textAppVersion": "એપ વર્ઝન",
+  "textAccount": "એકાઉન્ટ",
+
+  "textIfscCode": "કૃપા કરીને IFSC કોડ દાખલ કરો",
+  "textBankName": "કૃપા કરીને બેંકનું નામ દાખલ કરો",
+  "textBranchName": "કૃપા કરીને શાખાનું નામ દાખલ કરો",
+  "textAccountType": "કૃપા કરીને એકાઉન્ટ પ્રકાર દાખલ કરો",
+  "textPrimaryBankAccount": "મુખ્ય બેંક એકાઉન્ટ",
+
+  "textFillAllRequiredFields": "કૃપા કરીને તમામ જરૂરી ફીલ્ડ ભરો",
+  "textEnterAccountNumber": "કૃપા કરીને એકાઉન્ટ નંબર દાખલ કરો",
+  "textEnterAccountHolderName": "કૃપા કરીને એકાઉન્ટ ધારકનું નામ દાખલ કરો",
+  "textUpdateBankDetails": "બેંક વિગતો અપડેટ કરો",
+  "textConfirmUpdateBankDetails":
+      "શું તમે ખરેખર બેંક વિગતો અપડેટ કરવા માંગો છો?",
+  "textExistingBankAccount": "મોજુદ બેંક એકાઉન્ટ",
+  "textAccountHolderName": "એકાઉન્ટ ધારકનું નામ",
 
   ///
 };

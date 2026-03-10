@@ -3,50 +3,57 @@ import 'package:get/get.dart';
 
 class MessageManager {
   static void showSuccess(String message) {
-    Get.snackbar(
-      'Success',
-      message,
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-      margin: EdgeInsets.only(bottom: 20, left: 16, right: 16),
-      icon: Icon(Icons.check_circle, color: Colors.white),
+    _showMessage(
+      title: "Success",
+      message: message,
+      color: Colors.green,
+      icon: Icons.check_circle,
     );
   }
 
   static void showError(String message) {
-    Get.snackbar(
-      'Error',
-      message,
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-      margin: EdgeInsets.only(bottom: 20, left: 16, right: 16),
-      icon: Icon(Icons.error, color: Colors.white),
+    _showMessage(
+      title: "Error",
+      message: message,
+      color: Colors.red,
+      icon: Icons.error,
     );
   }
 
   static void showWarning(String message) {
-    Get.snackbar(
-      'Warning',
-      message,
-      backgroundColor: Colors.orange,
-      colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-      margin: EdgeInsets.only(bottom: 20, left: 16, right: 16),
-      icon: Icon(Icons.warning, color: Colors.white),
+    _showMessage(
+      title: "Warning",
+      message: message,
+      color: Colors.orange,
+      icon: Icons.warning,
     );
   }
 
   static void showInfo(String message) {
+    _showMessage(
+      title: "Info",
+      message: message,
+      color: Colors.blue,
+      icon: Icons.info,
+    );
+  }
+
+  static void _showMessage({
+    required String title,
+    required String message,
+    required Color color,
+    required IconData icon,
+  }) {
     Get.snackbar(
-      'Info',
+      title,
       message,
-      backgroundColor: Colors.blue,
+      backgroundColor: color,
       colorText: Colors.white,
-      snackPosition: SnackPosition.BOTTOM,
-      margin: EdgeInsets.only(bottom: 20, left: 16, right: 16),
-      icon: Icon(Icons.info, color: Colors.white),
+      snackPosition: SnackPosition.TOP,
+      margin: EdgeInsets.only(top: kToolbarHeight + 20, left: 16, right: 16),
+      borderRadius: 10,
+      icon: Icon(icon, color: Colors.white),
+      duration: Duration(seconds: 3),
     );
   }
 }

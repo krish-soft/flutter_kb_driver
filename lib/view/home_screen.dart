@@ -272,7 +272,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 40),
 
                 _navItem(
-                  Icons.two_wheeler,
+                  Icons.local_shipping_outlined,
                   AppStrings.screenActiveDelivery.tr,
                   2,
                   showBadge: _hasActiveDelivery,
