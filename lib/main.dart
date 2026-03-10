@@ -27,9 +27,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final LocaleController localeController = Get.find();
+
     return GetMaterialApp(
       translations: AppTranslations(),
-      locale: const Locale('en', 'US'),
+      // locale: const Locale('en', 'US'),
+      locale: localeController.locale.value,
+
       fallbackLocale: const Locale('en', 'US'),
 
       debugShowCheckedModeBanner: false, // Remove debug banner

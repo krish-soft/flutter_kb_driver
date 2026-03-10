@@ -59,7 +59,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               children: [
                 Expanded(
                   child: _statCard(
-                   AppStrings.textRating.tr,
+                    AppStrings.textRating.tr,
                     controller.averageRating.value.toStringAsFixed(1),
                     Icons.star,
                     Colors.orange,
@@ -164,7 +164,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
           const SizedBox(height: 4),
 
-          Text(AppStrings.textTotalDeliveries.tr, style: const TextStyle(color: Colors.grey)),
+          Text(
+            AppStrings.textTotalDeliveries.tr,
+            style: const TextStyle(color: Colors.grey),
+          ),
         ],
       ),
     );
@@ -200,15 +203,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  LinearGradient _balanceGradient(double balance) {
+    if (balance > 0) {
+      return const LinearGradient(
+        colors: [Color(0xff22c55e), Color(0xff16a34a)],
+      );
+    } else if (balance < 0) {
+      return const LinearGradient(
+        colors: [Color(0xffef4444), Color(0xffb91c1c)],
+      );
+    } else {
+      return const LinearGradient(
+        colors: [Color(0xff6b7280), Color(0xff374151)],
+      );
+    }
+  }
+
   /// EARNINGS CARD
   Widget _earningsCard() {
     return Obx(() {
       return Container(
         padding: const EdgeInsets.all(22),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppColors.primary, AppColors.secondary],
-          ),
+          // color: AppColors.primary,
+          gradient: _balanceGradient(controller.availableBalance.value),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(

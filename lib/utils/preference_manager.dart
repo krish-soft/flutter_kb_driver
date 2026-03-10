@@ -63,6 +63,13 @@ class PreferenceManager {
     return _box.read('_is_driver_online') ?? false;
   }
 
+  static void setLanguage(String code) {
+    _box.write('app_language', code);
+  }
+
+  static String? getLanguage() {
+    return _box.read('app_language');
+  }
 
   //
 }
