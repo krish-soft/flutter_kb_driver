@@ -1,11 +1,10 @@
 import 'package:get/get.dart';
-import 'package:kb_driver/core/data/models/address_model.dart';
+import 'package:kb_driver/core/data/models/user/address_model.dart';
 import 'package:kb_driver/core/data/models/api_response_model.dart';
 import 'package:kb_driver/core/data/repositories/user/user_repository.dart';
 import 'package:kb_driver/utils/message_manager.dart';
 
 class UserController extends GetxController {
-
   final UserRepository _repo = UserRepository();
 
   var isLoading = false.obs;

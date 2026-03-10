@@ -3,6 +3,7 @@ import 'package:kb_driver/core/data/presentation/views/auth/forgot_password_scre
 import 'package:kb_driver/core/data/presentation/views/auth/signin_screen.dart';
 import 'package:kb_driver/core/data/presentation/views/auth/signup_screen.dart';
 import 'package:kb_driver/view/home_screen.dart';
+import 'package:kb_driver/view/screens/settings/BankScreen.dart';
 import 'package:kb_driver/view/screens/settings/ProfileScreen.dart';
 import 'package:kb_driver/view/splash_screen.dart';
 
@@ -46,6 +47,14 @@ class AppRoutes {
      GetPage(
       name: '/profile',
       page: () => ProfileScreen(),
+      transition: Transition.leftToRight,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+
+    
+     GetPage(
+      name: '/user-bank',
+      page: () => BankScreen(),
       transition: Transition.leftToRight,
       transitionDuration: Duration(milliseconds: 250),
     ),

@@ -49,5 +49,8 @@ class ApiRoutes {
   static const String updatePassword = "$baseUrl/user/profile/password";
   static const String updateAddress = "$baseUrl/user/profile/address";
 
+  static const String getBankDetails = "$baseUrl/userBank";
+  static const String updateBankDetails = "$baseUrl/userBank";
+
   //
 }

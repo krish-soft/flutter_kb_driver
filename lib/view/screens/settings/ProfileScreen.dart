@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:kb_driver/constants/app_colors.dart';
-import 'package:kb_driver/core/data/models/address_model.dart';
+import 'package:kb_driver/core/data/models/user/address_model.dart';
 import 'package:kb_driver/core/data/presentation/controllers/user/user_controller.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
 import 'package:kb_driver/utils/vibrate_manager.dart';
@@ -171,7 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   /// UPDATE ADDRESS
   void updateAddress() {
     _vibrateManager.vibrateButton();
-    
+
     if (_addrName.text.isEmpty ||
         _address1.text.isEmpty ||
         _city.text.isEmpty ||
