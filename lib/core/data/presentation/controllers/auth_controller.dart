@@ -34,4 +34,23 @@ class AuthController extends GetxController {
   }
 
   //
+  Future<ApiResponseModel> signOutAll() async {
+    isLoading.value = true;
+
+    final res = await _repo.signOutAll();
+
+    isLoading.value = false;
+
+    if (res.message != null && res.message.toString().isNotEmpty) {
+      if (res.isSuccess == true) {
+        MessageManager.showSuccess(res.message.toString());
+      } else {
+        MessageManager.showError(res.message.toString());
+      }
+    }
+
+    return res;
+  }
+
+  //
 }

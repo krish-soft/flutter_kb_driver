@@ -4,6 +4,8 @@ const Map<String, String> guIN = {
   // Auth
   "textSignin": "સાઇન ઇન",
   "textSignup": "સાઇન અપ",
+  "textLogout": "લૉગઆઉટ",
+
   "textSigninSubtitle": "તમારા ફોન નંબર અને પાસવર્ડનો ઉપયોગ કરીને લૉગિન કરો",
   "textPhoneNumber": "ફોન નંબર",
   "textPassword": "પાસવર્ડ",
@@ -79,6 +81,43 @@ const Map<String, String> guIN = {
   "textPhotoRequired": "ફોટો જરૂરી છે",
   "textOtpRequired": "OTP જરૂરી છે",
   "textCapturePhoto": "ફોટો કૅપ્ચર કરો",
+
+  //
+  "textProfile": "પ્રોફાઇલ",
+
+  "textUpdateProfile": "પ્રોફાઇલ અપડેટ કરો",
+  "textUpdateProfileMessage": "શું તમે ખરેખર પ્રોફાઇલ અપડેટ કરવા માંગો છો?",
+  "textEmailRequired": "ઈમેલ જરૂરી છે",
+
+  "textChangePassword": "પાસવર્ડ બદલો",
+  "textChangePasswordMessage": "શું તમે ખરેખર પાસવર્ડ બદલો માંગો છો?",
+  "textCurrentPasswordRequired": "વર્તમાન પાસવર્ડ જરૂરી છે",
+  "textPasswordConfirmationMismatch": "પાસવર્ડ પુષ્ટિ મેળ ખાતું નથી",
+  "textPasswordTooShort": "પાસવર્ડ ઓછામાં ઓછા 8 અક્ષરોનો હોવો જોઈએ",
+
+  "textUpdateAddress": "સરનામું અપડેટ કરો",
+  "textUpdateAddressMessage": "શું તમે ખરેખર સરનામું અપડેટ કરવા માંગો છો?",
+  "textAddressFieldRequired": "કૃપા કરીને જરૂરી સરનામાના ફીલ્ડ ભરો",
+
+  "textProfileInformation": "પ્રોફાઇલ માહિતી",
+  "textMobile": "મોબાઇલ",
+  "textEmail": "ઈમેલ",
+
+  "textUpdatePassword": "પાસવર્ડ અપડેટ કરો",
+  "textConfirmNewPassword": "નવો પાસવર્ડ પુષ્ટિ કરો",
+
+  "textAddress": "સરનામું",
+  "textAddressName": "સરનામું નામ",
+  "textAddressLine1": "સરનામું લાઇન 1",
+  "textAddressLine2": "સરનામું લાઇન 2",
+  "textVillage": "ગામ",
+  "textTaluka": "તાલુકા",
+  "textCity": "શહેર",
+  "textState": "રાજ્ય",
+  "textPostalCode": "પોસ્ટલ કોડ",
+
+  "textMessageLogout": "શું તમે ખરેખર લૉગઆઉટ કરવા માંગો છો?",
+
 
   ///
 };

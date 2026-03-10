@@ -80,5 +80,17 @@ class AuthRepository extends BaseRepository {
     );
   }
 
+  Future<ApiResponseModel> signOutAll() {
+    return execute(
+      () async =>
+          (await _api.request(
+                url: ApiRoutes.signOutAll,
+                method: ApiMethod.post,
+                requireAuth: true,
+              ))
+              as Map<String, dynamic>,
+    );
+  }
+
   //
 }

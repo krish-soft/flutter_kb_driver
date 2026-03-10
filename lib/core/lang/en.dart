@@ -4,6 +4,8 @@ const Map<String, String> enUS = {
   // Auth
   "textSignin": "Sign In",
   "textSignup": "Sign Up",
+  "textLogout" : "Logout",
+
   "textSigninSubtitle": "Login using your phone number and password",
   "textPhoneNumber": "Phone Number",
   "textPassword": "Password",
@@ -83,6 +85,43 @@ const Map<String, String> enUS = {
   "textPhotoRequired": "Photo Required",
   "textOtpRequired": "OTP Required",
   "textCapturePhoto": "Capture Photo",
+
+  //
+  "textProfile": "Profile",
+
+  "textUpdateProfile": "Update Profile",
+  "textUpdateProfileMessage": "Are you sure you want to update profile?",
+  "textEmailRequired": "Email required",
+
+  "textChangePassword": "Change Password",
+  "textChangePasswordMessage": "Are you sure you want to change password?",
+  "textCurrentPasswordRequired": "Current password required",
+  "textPasswordConfirmationMismatch": "Password confirmation does not match",
+  "textPasswordTooShort": "Password must be minimum 8 characters",
+
+  "textUpdateAddress": "Update Address",
+  "textUpdateAddressMessage": "Are you sure you want to update address?",
+  "textAddressFieldRequired": "Please fill required address fields",
+
+  "textProfileInformation": "Profile Information",
+  "textMobile": "Mobile",
+  "textEmail": "Email",
+
+  "textUpdatePassword": "Update Password",
+  "textConfirmNewPassword": "Confirm New Password",
+
+  "textAddress": "Address",
+  "textAddressName": "Address Name",
+  "textAddressLine1": "Address Line 1",
+  "textAddressLine2": "Address Line 2",
+  "textVillage": "Village",
+  "textTaluka": "Taluka",
+  "textCity": "City",
+  "textState": "State",
+  "textPostalCode": "Postal Code",
+  
+  "textMessageLogout": "Are you sure you want to logout?",
+
 
   //
 };

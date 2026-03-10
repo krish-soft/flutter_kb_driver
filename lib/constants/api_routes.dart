@@ -12,6 +12,9 @@ class ApiRoutes {
   static const String signUpSendOtp = "$baseUrl/signup/otp/send";
   static const String signUpVerify = "$baseUrl/signup/register";
 
+  static const String signOut = "$baseUrl/signout";
+  static const String signOutAll = "$baseUrl/signout/all";
+
   static const String forgotPasswordSendOtp = "$baseUrl/forget/otp/send";
   static const String forgotPasswordVerify = "$baseUrl/forget/reset";
 
@@ -39,6 +42,12 @@ class ApiRoutes {
       "$shipmentPrefix/package/update-status/seller";
   static const String updatePkgTransferStatus =
       "$shipmentPrefix/package/update-status/transfer";
+
+  // user profile
+  static const String getProfile = "$baseUrl/user/profile";
+  static const String updateProfile = "$baseUrl/user/profile/update";
+  static const String updatePassword = "$baseUrl/user/profile/password";
+  static const String updateAddress = "$baseUrl/user/profile/address";
 
   //
 }

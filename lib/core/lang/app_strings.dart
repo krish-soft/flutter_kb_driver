@@ -12,6 +12,7 @@ class AppStrings {
   static const textSignin = "textSignin";
   static const textSignup = "textSignup";
   static const textForgotPassword = "textForgotPassword";
+  static const textLogout = "textLogout";
 
   static const textSigninSubtitle = "textSigninSubtitle";
   static const textPhoneNumber = "textPhoneNumber";
@@ -81,15 +82,57 @@ class AppStrings {
   static const textTotalQuantity = "textTotalQuantity";
 
   static const textTapToUpdateStatus = "textTapToUpdateStatus";
-  
+
   //
   static const textSelectStatus = "textSelectStatus";
 
-  // 
-  static const textConfirmDelivery  = "textConfirmDelivery";
-  static const textPhotoRequired  = "textPhotoRequired";
-  static const textOtpRequired  = "textOtpRequired";
-  static const textCapturePhoto  = "textCapturePhoto";
+  //
+  static const textConfirmDelivery = "textConfirmDelivery";
+  static const textPhotoRequired = "textPhotoRequired";
+  static const textOtpRequired = "textOtpRequired";
+  static const textCapturePhoto = "textCapturePhoto";
+
+  // profile
+
+  static const textUpdateProfile = "textUpdateProfile";
+  static const textUpdateProfileMessage = "textUpdateProfileMessage";
+  static const textEmailRequired = "textEmailRequired";
+
+  static const textCurrentPasswordRequired = "textCurrentPasswordRequired";
+  static const textPasswordTooShort = "textPasswordTooShort";
+  static const textPasswordConfirmationMismatch =
+      "textPasswordConfirmationMismatch";
+  static const textChangePassword = "textChangePassword";
+  static const textChangePasswordMessage = "textChangePasswordMessage";
+
+  static const textUpdateAddress = "textUpdateAddress";
+  static const textUpdateAddressMessage = "textUpdateAddressMessage";
+  static const textAddressFieldRequired = "textAddressFieldRequired";
+
+  static const textProfile = "textProfile";
+  static const textProfileInformation = "textProfileInformation";
+
+  // static const textFullName = "textFullName";
+  static const textMobile = "textMobile";
+  static const textEmail = "textEmail";
+  static const textConfirmNewPassword = "textConfirmNewPassword";
+
+  static const textUpdatePassword = "textUpdatePassword";
+
+  static const textAddress = "textAddress";
+
+  static const textAddressName = "textAddressName";
+  static const textAddressLine1 = "textAddressLine1";
+  static const textAddressLine2 = "textAddressLine2";
+  static const textVillage = "textVillage";
+  static const textTaluka = "textTaluka";
+  static const textCity = "textCity";
+  static const textState = "textState";
+  static const textPostalCode = "textPostalCode";
+
+  static const textMessageLogout = "textMessageLogout";
+
+
 
   //
 }

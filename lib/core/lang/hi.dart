@@ -3,6 +3,8 @@ const Map<String, String> hiIN = {
 
   "textSignin": "साइन इन",
   "textSignup": "साइन अप",
+  "textLogout": "लॉगआउट",
+
   "textSigninSubtitle": "अपने फोन नंबर और पासवर्ड का उपयोग करके लॉगिन करें",
   "textPhoneNumber": "फोन नंबर",
   "textPassword": "पासवर्ड",
@@ -78,6 +80,42 @@ const Map<String, String> hiIN = {
   "textPhotoRequired": "फोटो आवश्यक है",
   "textOtpRequired": "OTP आवश्यक है",
   "textCapturePhoto": "फोटो कैप्चर करें",
+
+  //
+  "textProfile": "प्रोफ़ाइल",
+
+  "textUpdateProfile": "प्रोफ़ाइल अपडेट करें",
+  "textUpdateProfileMessage": "क्या आप वाकई प्रोफ़ाइल अपडेट करना चाहते हैं?",
+  "textEmailRequired": "ईमेल आवश्यक है",
+
+  "textChangePassword": "पासवर्ड बदलें",
+  "textChangePasswordMessage": "क्या आप वाकई पासवर्ड बदलना चाहते हैं?",
+  "textCurrentPasswordRequired": "वर्तमान पासवर्ड आवश्यक है",
+  "textPasswordConfirmationMismatch": "पासवर्ड पुष्टि मेल नहीं खाती",
+  "textPasswordTooShort": "पासवर्ड कम से कम 8 अक्षरों का होना चाहिए",
+
+  "textUpdateAddress": "पता अपडेट करें",
+  "textUpdateAddressMessage": "क्या आप वाकई पता अपडेट करना चाहते हैं?",
+  "textAddressFieldRequired": "कृपया आवश्यक पता फ़ील्ड भरें",
+
+  "textProfileInformation": "प्रोफ़ाइल जानकारी",
+  "textMobile": "मोबाइल",
+  "textEmail": "ईमेल",
+
+  "textUpdatePassword": "पासवर्ड अपडेट करें",
+  "textConfirmNewPassword": "नया पासवर्ड पुष्टि करें",
+
+  "textAddress": "पता",
+  "textAddressName": "पता नाम",
+  "textAddressLine1": "पता लाइन 1",
+  "textAddressLine2": "पता लाइन 2",
+  "textVillage": "गांव",
+  "textTaluka": "तालुका",
+  "textCity": "शहर",
+  "textState": "राज्य",
+  "textPostalCode": "पिन कोड",
+
+  "textMessageLogout": "क्या आप वाकई लॉगआउट करना चाहते हैं?",
 
   //
 };

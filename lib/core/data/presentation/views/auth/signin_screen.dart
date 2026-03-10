@@ -24,7 +24,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final _mobileController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  VibrateManager _vibrateManager = VibrateManager();
+  final VibrateManager _vibrateManager = VibrateManager();
 
   final AuthController _authController = Get.put(AuthController());
 
