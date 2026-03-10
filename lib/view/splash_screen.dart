@@ -30,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
   final KycController _kycController = Get.put(KycController());
 
   SplashState _state = SplashState.loading;
+
   String? _maintenanceMessage;
   String? _accountDisabledMessage;
 
@@ -49,7 +50,38 @@ class _SplashScreenState extends State<SplashScreen> {
       debugPrint("Permission error: $e");
     }
 
+    await appCheck();
+
+    if (_state != SplashState.loading) return;
+
     await _boot();
+  }
+
+  Future<void> appCheck() async {
+    final ApiResponseModel resp = await _metaRepo.getAppMeta();
+
+    if (resp.isSuccess != true) {
+      await _navigateByAuth();
+      return;
+    }
+
+    //
+
+    final data = resp.data;
+
+    final bool isMaintenance = data['is_maintenance_mode'] ?? false;
+    final bool isForceUpdate = data['is_force_android_update'] ?? false;
+    _maintenanceMessage = data['maintenance_message'];
+
+    if (isMaintenance) {
+      setState(() => _state = SplashState.maintenance);
+      return;
+    }
+
+    if (isForceUpdate) {
+      setState(() => _state = SplashState.forceUpdate);
+      return;
+    }
   }
 
   Future<void> _boot() async {
@@ -68,6 +100,16 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     final data = resp.data;
+
+    final bool isAccountDisabled = data['is_account_disabled'] ?? false;
+    _accountDisabledMessage = data['account_disabled_message'];
+
+    if (isAccountDisabled) {
+      setState(() => _state = SplashState.accountDisabled);
+      return;
+    }
+
+    // Kyc
 
     final bool isKycSubmitted = data['is_kyc_submitted'] ?? false;
     final bool isVehicleKycSubmitted =
