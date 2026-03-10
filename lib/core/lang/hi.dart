@@ -151,12 +151,20 @@ const Map<String, String> hiIN = {
   "textOnline": "ऑनलाइन",
   "textOffline": "ऑफलाइन",
 
-  "textReadyToReceiveDeliveryRequests": "डिलिवरी अनुरोध प्राप्त करने के लिए तैयार",
-  "textSwitchOnlineToReceiveDeliveries": "डिलिवरी प्राप्त करने के लिए ऑनलाइन स्विच करें",
+  "textReadyToReceiveDeliveryRequests":
+      "डिलिवरी अनुरोध प्राप्त करने के लिए तैयार",
+  "textSwitchOnlineToReceiveDeliveries":
+      "डिलिवरी प्राप्त करने के लिए ऑनलाइन स्विच करें",
 
   "textTotalDeliveries": "कुल डिलिवरी",
   "textAvailableEarnings": "उपलब्ध आय",
   "textPendingSettlement": "बकाया निपटान",
+
+  "textKycUnderReview": "KYC समीक्षा में है",
+  "textKycDetailsSubmitted":
+      "आपकी KYC विवरण सफलतापूर्वक सबमिट कर दी गई है।\n\n"
+      "हमारी टीम वर्तमान में आपके दस्तावेजों की समीक्षा कर रही है। "
+      "यह प्रक्रिया सत्यापन आवश्यकताओं के आधार पर कुछ समय ले सकती है।",
 
   //
 };

@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/constants/app_images.dart';
+import 'package:kb_driver/core/data/models/api_response_model.dart';
+import 'package:kb_driver/core/data/presentation/controllers/utils/kyc_controller.dart';
+import 'package:kb_driver/core/data/repositories/utils/meta_repository.dart';
 import 'package:kb_driver/core/services/permission_service.dart';
 import 'package:kb_driver/utils/app_utils.dart';
 import 'package:kb_driver/utils/message_manager.dart';
@@ -22,6 +25,9 @@ enum SplashState { loading, maintenance, forceUpdate, accountDisabled }
 
 class _SplashScreenState extends State<SplashScreen> {
   static const Duration _metaTimeout = Duration(seconds: 5);
+
+  final MetaRepository _metaRepo = MetaRepository();
+  final KycController _kycController = Get.put(KycController());
 
   SplashState _state = SplashState.loading;
   String? _maintenanceMessage;
@@ -47,57 +53,55 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _boot() async {
-    // await Future.delayed(const Duration(seconds: 2));
-    // Get.offAllNamed('/signin');
+    final bool isLoggedIn = await AppUtils.isUserLoggedIn();
 
+    if (!isLoggedIn) {
+      await _navigateByAuth();
+      return;
+    }
+
+    final ApiResponseModel resp = await _metaRepo.getUserMeta();
+
+    if (resp.isSuccess != true) {
+      await _navigateByAuth();
+      return;
+    }
+
+    final data = resp.data;
+
+    final bool isKycSubmitted = data['is_kyc_submitted'] ?? false;
+    final bool isVehicleKycSubmitted =
+        data['is_vehicle_kyc_submitted'] ?? false;
+    final bool isKycApproved = data['is_kyc_approved'] ?? false;
+    final bool isVehicleKycApproved = data['is_vehicle_kyc_approved'] ?? false;
+
+    /// 1️⃣ KYC not submitted → open KYC screen
+    if (!isKycSubmitted || !isVehicleKycSubmitted) {
+      String kycURL = "";
+
+      if (!isKycSubmitted) {
+        kycURL = await _kycController.getUserKycSignedURL() ?? "";
+      } else if (!isVehicleKycSubmitted) {
+        kycURL = await _kycController.getVehicleKycSignedURL() ?? "";
+      }
+
+      if (kycURL.isNotEmpty) {
+        Get.offAllNamed('/kyc', arguments: {'kycURL': kycURL});
+        return;
+      }
+
+      MessageManager.showError("Failed to get KYC URL. Please try again.");
+      return;
+    }
+
+    /// 2️⃣ KYC submitted but not approved → review screen
+    if (!isKycApproved || !isVehicleKycApproved) {
+      Get.offAllNamed('/kyc-review');
+      return;
+    }
+
+    /// 3️⃣ All approved → normal navigation
     await _navigateByAuth();
-
-    // final bool isLoggedIn = await AppUtils.isUserLoggedIn();
-
-    // try {
-    //   final ApiResponseModel response = await UtilsRepo()
-    //       .getMetaData(isLoggedIn)
-    //       .timeout(_metaTimeout);
-
-    //   final Map<String, dynamic> meta =
-    //       (response.data as Map<String, dynamic>?) ?? {};
-
-    //   await _storeRuntimeConfig(meta);
-
-    //   if (!mounted) return;
-
-    //   final app = meta['app'] ?? {};
-    //   final user = meta['user'];
-
-    //   if (app['maintenance']?['enabled'] == true) {
-    //     setState(() {
-    //       _maintenanceMessage = app['maintenance']?['message'];
-    //       _state = SplashState.maintenance;
-    //     });
-    //     return;
-    //   }
-
-    //   if (app['version']?['force_update'] == true) {
-    //     setState(() => _state = SplashState.forceUpdate);
-    //     return;
-    //   }
-
-    //   if (user != null && user['is_active'] == false) {
-    //     final String? reason = user['inactive_reason']?.toString().trim();
-
-    //     setState(() {
-    //       _accountDisabledMessage = (reason != null && reason.isNotEmpty)
-    //           ? reason
-    //           : 'Your account is currently disabled.\nPlease contact support.';
-    //       _state = SplashState.accountDisabled;
-    //     });
-    //     return;
-    //   }
-
-    //   await _navigateByAuth();
-    // } catch (_) {
-    //   await _navigateByAuth();
-    // }
   }
 
   Future<void> _navigateByAuth() async {

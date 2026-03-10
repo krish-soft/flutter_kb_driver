@@ -163,5 +163,11 @@ const Map<String, String> enUS = {
   "textAvailableEarnings": "Available Earnings",
   "textPendingSettlement": "Pending Settlement",
 
+  "textKycUnderReview": "KYC Under Review",
+  "textKycDetailsSubmitted":
+      "Your KYC details have been submitted successfully.\n\n"
+      "Our team is currently reviewing your documents. "
+      "This process may take some time depending on verification requirements.",
+
   //
 };

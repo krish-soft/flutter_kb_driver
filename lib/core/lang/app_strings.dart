@@ -172,6 +172,9 @@ class AppStrings {
 
   static const textAvailableEarnings = "textAvailableEarnings";
   static const textPendingSettlement = "textPendingSettlement";
+
+  static const textKycUnderReview = "textKycUnderReview";
+  static const textKycDetailsSubmitted = "textKycDetailsSubmitted";
   
 
 

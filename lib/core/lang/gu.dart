@@ -159,5 +159,11 @@ const Map<String, String> guIN = {
   "textAvailableEarnings": "ઉપલબ્ધ આવક",
   "textPendingSettlement": "બાકી નિકાલ",
 
+  "textKycUnderReview": "તમારી KYC વિગતો સમીક્ષા હેઠળ છે",
+  "textKycDetailsSubmitted":
+      "તમારી KYC વિગતો સફળતાપૂર્વક સબમિટ કરવામાં આવી છે.\n\n"
+      "અમારી ટીમ હાલમાં તમારા દસ્તાવેજોની સમીક્ષા કરી રહી છે. "
+      "આ પ્રક્રિયા ચકાસણીની જરૂરિયાતો પર આધાર રાખીને થોડો સમય લઈ શકે છે.",
+
   ///
 };

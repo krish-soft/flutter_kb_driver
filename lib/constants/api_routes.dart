@@ -6,6 +6,15 @@ class ApiRoutes {
   static const String deliveryPrefix = "$baseUrl/delivery";
   static const String shipmentPrefix = "$deliveryPrefix/shipment";
 
+  static const String appMeta = "$baseUrl/utils/app-meta";
+  static const String userMeta = "$baseUrl/user/meta";
+
+  // kyc
+
+    static const String getUserKycSignedURL = "$baseUrl/kyc/signed-url";
+    static const String getVehicleKycSignedURL = "$baseUrl/kyc/vehicle/signed-url";
+
+
   // Auth
 
   static const String signIn = "$baseUrl/signin";
