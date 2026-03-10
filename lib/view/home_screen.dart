@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get/get.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/driver_controller.dart';
+import 'package:kb_driver/core/data/presentation/controllers/driver_status_controller.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
 import 'package:kb_driver/core/services/driver_background_service.dart';
 import 'package:kb_driver/core/services/driver_service.dart';
@@ -30,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final VibrateManager _vibrateManager = VibrateManager();
   final DriverController _driverController = Get.put(DriverController());
+  final DriverStatusController _driverStatusController = Get.find<DriverStatusController>();
 
   final List<Widget> _screens = const [
     DashboardScreen(),
@@ -91,7 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
           _isOnline = serverStatus;
         });
 
-        await PreferenceManager.setIsDriverOnline(serverStatus);
+        // await PreferenceManager.setIsDriverOnline(serverStatus);
+        _driverStatusController.updateStatus(serverStatus);
 
         if (serverStatus) {
           if (!DriverService.isRunning()) {
@@ -192,7 +195,8 @@ class _HomeScreenState extends State<HomeScreen> {
         _isOnline = newStatus;
       });
 
-      await PreferenceManager.setIsDriverOnline(newStatus);
+      // await PreferenceManager.setIsDriverOnline(newStatus);
+      _driverStatusController.updateStatus(newStatus);
 
       if (newStatus) {
         _startDriverService();

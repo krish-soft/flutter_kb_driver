@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/constants/app_routes.dart';
 import 'package:kb_driver/core/controllers/locale_controller.dart';
+import 'package:kb_driver/core/data/presentation/controllers/driver_status_controller.dart';
 import 'package:kb_driver/core/lang/translations.dart';
 import 'package:kb_driver/core/services/driver_background_service.dart';
 
@@ -15,6 +16,7 @@ void main() async {
   Get.put(LocaleController());
 
   await DriverBackgroundService.initialize();
+  Get.put(DriverStatusController());
 
   runApp(const MyApp());
 }

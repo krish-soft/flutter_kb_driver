@@ -18,6 +18,8 @@ class ApiRoutes {
   static const String forgotPasswordSendOtp = "$baseUrl/forget/otp/send";
   static const String forgotPasswordVerify = "$baseUrl/forget/reset";
 
+  static const String getDashboardData = "$baseUrl/dashboard";
+
   // Driver
   static const String getDriverOnlineStatus =
       "$deliveryPrefix/driver/online-status";
