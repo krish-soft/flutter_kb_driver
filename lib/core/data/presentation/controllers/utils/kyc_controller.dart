@@ -28,7 +28,7 @@ class KycController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true && res.data != null) {
-      return res.data!['vehicle_kyc_signed_url'] ;
+      return res.data!['vehicle_kyc_signed_url'];
     } else {
       return null;
     }
