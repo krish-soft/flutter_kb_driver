@@ -173,6 +173,9 @@ class ShipmentController extends GetxController {
 
     if (res.isSuccess == true) {
       MessageManager.showSuccess(res.message.toString());
+
+      /// refresh active deliveries
+      loadNeedToDeliverShipments();
     } else {
       MessageManager.showError(res.message.toString());
     }
@@ -199,6 +202,9 @@ class ShipmentController extends GetxController {
 
     if (res.isSuccess == true) {
       MessageManager.showSuccess(res.message.toString());
+
+      /// refresh active deliveries
+      loadNeedToDeliverShipments();
     } else {
       MessageManager.showError(res.message.toString());
     }
@@ -225,6 +231,9 @@ class ShipmentController extends GetxController {
 
     if (res.isSuccess == true) {
       MessageManager.showSuccess(res.message.toString());
+
+      /// refresh active deliveries
+      loadNeedToDeliverShipments();
     } else {
       MessageManager.showError(res.message.toString());
     }
