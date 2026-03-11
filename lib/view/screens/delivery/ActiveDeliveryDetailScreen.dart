@@ -21,7 +21,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
   final ShipmentController controller = Get.find<ShipmentController>();
 
   /// Enable OTP validation (optional)
-  final bool otpEnabled = true;
+  final bool otpEnabled = false;
 
   /// Open Google Maps
   void openDirection(String? lat, String? lng) async {
