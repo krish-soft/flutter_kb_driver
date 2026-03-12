@@ -3,47 +3,31 @@ import 'package:permission_handler/permission_handler.dart';
 
 class PermissionService {
   static Future<bool> requestRequiredPermissions() async {
-    PermissionStatus location = await Permission.location.status;
-    PermissionStatus camera = await Permission.camera.status;
-    PermissionStatus notification = await Permission.notification.status;
+    PermissionStatus location = await Permission.location.request();
+    PermissionStatus camera = await Permission.camera.request();
+    PermissionStatus notification = await Permission.notification.request();
 
-    /// image / storage permission
-    PermissionStatus storage = await Permission.photos.status;
+    /// Storage / Image permission
+    PermissionStatus storage;
 
-    debugPrint("Location status: $location");
-    debugPrint("Camera status: $camera");
-    debugPrint("Notification status: $notification");
-    debugPrint("Storage status: $storage");
-
-    if (!location.isGranted) {
-      location = await Permission.location.request();
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      storage = await Permission.photos.request(); // Android 13+
+      if (!storage.isGranted) {
+        storage = await Permission.storage.request(); // Android <=12
+      }
+    } else {
+      storage = await Permission.photos.request(); // iOS
     }
 
-    if (!camera.isGranted) {
-      camera = await Permission.camera.request();
-    }
+    // debugPrint("Location: $location");
+    // debugPrint("Camera: $camera");
+    // debugPrint("Notification: $notification");
+    // debugPrint("Storage: $storage");
 
-    if (!notification.isGranted) {
-      notification = await Permission.notification.request();
-    }
-
-    /// request image/file permission
-    if (!storage.isGranted) {
-      storage = await Permission.photos.request();
-    }
-
-    debugPrint("Location after request: $location");
-    debugPrint("Camera after request: $camera");
-    debugPrint("Notification after request: $notification");
-    debugPrint("Storage after request: $storage");
-
-    /// check permanently denied
     if (location.isPermanentlyDenied ||
         camera.isPermanentlyDenied ||
         notification.isPermanentlyDenied ||
         storage.isPermanentlyDenied) {
-      debugPrint("Permission permanently denied → open settings");
-
       await openAppSettings();
       return false;
     }
@@ -54,7 +38,6 @@ class PermissionService {
         storage.isGranted;
   }
 }
-
 // import 'package:flutter/foundation.dart';
 // import 'package:permission_handler/permission_handler.dart';
 

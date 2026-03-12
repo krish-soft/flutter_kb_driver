@@ -4,6 +4,7 @@ class AppConstants {
 
   // static const String BASE_URL = "http://localhost:8007";
   static const String BASE_URL = "http://192.168.1.8:8007";
+  // static const String BASE_URL = "http://192.168.10.148:8880";
 
   //
 }
