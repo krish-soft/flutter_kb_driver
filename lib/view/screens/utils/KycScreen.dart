@@ -15,7 +15,7 @@ class _KycScreenState extends State<KycScreen> {
   late String kycURL;
 
   /// toggle here
-  bool useWebView = true;
+  bool useWebView = false;
 
   @override
   void initState() {
