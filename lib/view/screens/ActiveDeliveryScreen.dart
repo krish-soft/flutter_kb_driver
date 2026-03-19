@@ -114,65 +114,69 @@ class _ActiveDeliveryScreenState extends State<ActiveDeliveryScreen> {
                         ],
                       ),
 
-                      const SizedBox(height: 14),
+                      if (shipment["shipment_status"]
+                              .toString()
+                              .toLowerCase() !=
+                          "completed") ...[
+                        const SizedBox(height: 14),
 
-                      /// ROUTE VISUAL
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            children: [
-                              const Icon(
-                                Icons.circle,
-                                size: 10,
-                                color: AppColors.success,
-                              ),
-
-                              Container(
-                                width: 2,
-                                height: 30,
-                                color: AppColors.divider,
-                              ),
-
-                              const Icon(
-                                Icons.location_on,
-                                size: 16,
-                                color: AppColors.danger,
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(width: 10),
-
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                        /// ROUTE VISUAL
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
                               children: [
-                                /// PICKUP
-                                Text(
-                                  "${origin["line1"]}, ${origin["village"] ?? ''}, ${origin["city"] ?? ''}",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.textPrimary,
-                                  ),
+                                const Icon(
+                                  Icons.circle,
+                                  size: 10,
+                                  color: AppColors.success,
                                 ),
 
-                                const SizedBox(height: 12),
+                                Container(
+                                  width: 2,
+                                  height: 30,
+                                  color: AppColors.divider,
+                                ),
 
-                                /// DELIVERY
-                                Text(
-                                  "${destination["line1"] ?? ''}, ${destination["village"] ?? ''}, ${destination["city"] ?? ''}",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.textPrimary,
-                                  ),
+                                const Icon(
+                                  Icons.location_on,
+                                  size: 16,
+                                  color: AppColors.danger,
                                 ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
 
+                            const SizedBox(width: 10),
+
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  /// PICKUP
+                                  Text(
+                                    "${origin["line1"]}, ${origin["village"] ?? ''}, ${origin["city"] ?? ''}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 12),
+
+                                  /// DELIVERY
+                                  Text(
+                                    "${destination["line1"] ?? ''}, ${destination["village"] ?? ''}, ${destination["city"] ?? ''}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                       const SizedBox(height: 16),
 
                       /// FOOTER INFO
