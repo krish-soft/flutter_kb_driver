@@ -173,5 +173,9 @@ const Map<String, String> enUS = {
   "textRequestedDeliveries": "Requested Deliveries",
   "textActiveDeliveries": "Active Deliveries",
 
+  "textRequestOtp": "Request OTP",
+
+  "textAskReceiverOtp": "Ask receiver for OTP before confirming delivery",
+
   //
 };

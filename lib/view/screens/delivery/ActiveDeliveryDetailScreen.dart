@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kb_driver/core/data/models/api_response_model.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
 import 'package:kb_driver/utils/message_manager.dart';
 import 'package:kb_driver/utils/vibrate_manager.dart';
@@ -64,6 +65,17 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
   /// DELIVERY CONFIRMATION SHEET
   void openDeliveryConfirmSheet(bool otpEnabled) {
     final TextEditingController otpController = TextEditingController();
+    final TextEditingController requestIdController = TextEditingController();
+
+    requestDeliveryConfirmOtp() async {
+      ApiResponseModel res = await controller.requestDeliveryConfirmationOtp(
+        shipment["driver_shipment_id"],
+      );
+
+      if (res.isSuccess == true) {
+        requestIdController.text = res.data["request_id"];
+      } else {}
+    }
 
     String? imagePath;
 
@@ -122,13 +134,62 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
 
                 /// OTP FIELD (OPTIONAL)
                 if (otpEnabled)
-                  TextField(
-                    controller: otpController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: AppStrings.textEnterOtp.tr,
-                      border: const OutlineInputBorder(),
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          /// OTP INPUT
+                          Expanded(
+                            child: TextField(
+                              controller: otpController,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                labelText: AppStrings.textEnterOtp.tr,
+                                border: const OutlineInputBorder(),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 12,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          /// REQUEST OTP BUTTON
+                          SizedBox(
+                            height: 48,
+                            child: ElevatedButton(
+                              onPressed: requestDeliveryConfirmOtp,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
+                              ),
+                              child: Text(
+                                AppStrings.textRequestOtp.tr,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      Text(
+                        AppStrings.textAskReceiverOtp.tr,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
                   ),
 
                 const SizedBox(height: 20),
@@ -151,18 +212,27 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
                       return;
                     }
 
-                    Get.back();
+                    // Get.back();
 
-                    await controller.completeShipment(
-                      shipment["driver_shipment_id"],
-                      imagePath!,
-                      otpEnabled ? otpController.text.trim() : null,
-                    );
+                    final ApiResponseModel res = await controller
+                        .completeShipment(
+                          shipment["driver_shipment_id"],
+                          imagePath!,
+                          otpEnabled ? otpController.text.trim() : null,
+                          otpEnabled ? requestIdController.text.trim() : null,
+                        );
 
                     /// Refresh shipment list
-                    controller.loadNeedToDeliverShipments();
+                    // controller.loadNeedToDeliverShipments();
+                    if (res.isSuccess == true) {
+                      Get.back(); // close bottom sheet
 
-                    Get.back();
+                      controller.loadNeedToDeliverShipments();
+
+                      Get.back(); // go back screen ONLY on success
+                    } else {
+                      MessageManager.showError(res.message.toString());
+                    }
                   },
                 ),
               ],
@@ -183,9 +253,12 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
         orElse: () => shipment,
       );
 
+      // final bool otpEnabled =
+      //     updatedShipment["shipment_type"]?.toString().toLowerCase() ==
+      //     "dispatch";
+
       final bool otpEnabled =
-          updatedShipment["shipment_type"]?.toString().toLowerCase() ==
-          "dispatch";
+          updatedShipment['is_delivery_confirmation_otp_required'];
 
       final origin = updatedShipment["origin"];
       final destination = updatedShipment["destination"];

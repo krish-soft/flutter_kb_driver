@@ -170,5 +170,9 @@ const Map<String, String> guIN = {
   "textRequestedDeliveries": "વિનંતી કરેલી ડિલિવરીઝ",
   "textActiveDeliveries": "સક્રિય ડિલિવરીઝ",
 
+  "textRequestOtp": "OTP વિનંતી કરો",
+
+  "textAskReceiverOtp": "ડિલિવરી પુષ્ટિ કરતા પહેલા રિસીવરને OTP પૂછો",
+
   ///
 };

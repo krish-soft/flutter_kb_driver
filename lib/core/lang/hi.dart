@@ -169,5 +169,8 @@ const Map<String, String> hiIN = {
   "textRequestedDeliveries": "अनुरोधित डिलिवरी",
   "textActiveDeliveries": "सक्रिय डिलिवरी",
 
+  "textRequestOtp": "OTP अनुरोध करें",
+  "textAskReceiverOtp": "डिलिवरी पुष्टि करने से पहले रिसीवर से OTP पूछें",
+
   //
 };

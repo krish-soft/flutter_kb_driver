@@ -88,6 +88,8 @@ class ShipmentRepository extends BaseRepository {
   Future<ApiResponseModel> completeShipment(
     int driverShipmentId,
     String proofImagePath,
+    String? otp,
+    String? requestId,
   ) {
     return execute(
       () async =>
@@ -95,13 +97,16 @@ class ShipmentRepository extends BaseRepository {
                 url: "${ApiRoutes.completeShipment}/$driverShipmentId",
                 method: ApiMethod.post,
 
-                /// NORMAL FIELDS
-                body: {},
+                /// ✅ CLEAN BODY (NO NULLS)
+                body: {
+                  if (otp != null) 'otp': otp,
+                  if (requestId != null) 'request_id': requestId,
+                },
 
-                /// FILES
+                /// ✅ FILE
                 files: {"proof_image": File(proofImagePath)},
 
-                /// IMPORTANT
+                /// ✅ MULTIPART
                 bodyType: BodyType.multipart,
 
                 requireAuth: true,
@@ -143,6 +148,20 @@ class ShipmentRepository extends BaseRepository {
       () async =>
           (await _api.request(
                 url: ApiRoutes.updatePkgTransferStatus,
+                method: ApiMethod.post,
+                body: payload,
+                requireAuth: true,
+              ))
+              as Map<String, dynamic>,
+    );
+  }
+
+  // request otp for delivery completion to buyer
+  Future<ApiResponseModel> requestDeliveryConfirmationOtp(payload) {
+    return execute(
+      () async =>
+          (await _api.request(
+                url: ApiRoutes.requestDeliveryOtp,
                 method: ApiMethod.post,
                 body: payload,
                 requireAuth: true,

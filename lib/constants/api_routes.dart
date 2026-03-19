@@ -11,9 +11,9 @@ class ApiRoutes {
 
   // kyc
 
-    static const String getUserKycSignedURL = "$baseUrl/kyc/signed-url";
-    static const String getVehicleKycSignedURL = "$baseUrl/kyc/vehicle/signed-url";
-
+  static const String getUserKycSignedURL = "$baseUrl/kyc/signed-url";
+  static const String getVehicleKycSignedURL =
+      "$baseUrl/kyc/vehicle/signed-url";
 
   // Auth
 
@@ -44,7 +44,7 @@ class ApiRoutes {
   static const String acceptShipment = "$shipmentPrefix/accept";
   static const String rejectShipment = "$shipmentPrefix/reject";
   static const String startShipment = "$shipmentPrefix/start";
-  static const String completeShipment = "$shipmentPrefix/complete";
+  static const String completeShipment = "$shipmentPrefix/completed";
 
   // update package staus
   static const String updatePkgBuyerStatus =
@@ -62,6 +62,9 @@ class ApiRoutes {
 
   static const String getBankDetails = "$baseUrl/userBank";
   static const String updateBankDetails = "$baseUrl/userBank";
+
+  static const String requestDeliveryOtp =
+      "$shipmentPrefix/otp-request/delivery-confirmation";
 
   //
 }

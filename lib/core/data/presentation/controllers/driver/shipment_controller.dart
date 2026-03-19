@@ -7,8 +7,9 @@ import 'package:kb_driver/utils/message_manager.dart';
 class ShipmentController extends GetxController {
   final ShipmentRepository _repo = ShipmentRepository();
 
-  final DashboardController _dashboardController =
-      Get.put<DashboardController>(DashboardController());
+  final DashboardController _dashboardController = Get.put<DashboardController>(
+    DashboardController(),
+  );
 
   /// loading state
   var isLoading = false.obs;
@@ -52,7 +53,7 @@ class ShipmentController extends GetxController {
     if (res.isSuccess == true) {
       shipments.value = res.data ?? [];
     } else {
-      MessageManager.showError(res.message.toString());
+      MessageManager.showError(res.message);
     }
   }
 
@@ -70,7 +71,7 @@ class ShipmentController extends GetxController {
     if (res.isSuccess == true) {
       activeShipments.value = res.data ?? [];
     } else {
-      MessageManager.showError(res.message.toString());
+      MessageManager.showError(res.message);
     }
   }
 
@@ -86,7 +87,7 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      // MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message);
 
       /// refresh requests
       loadRequestedShipments();
@@ -97,7 +98,7 @@ class ShipmentController extends GetxController {
       /// refresh dashboard
       refreshDashboard();
     } else {
-      MessageManager.showError(res.message.toString());
+      MessageManager.showError(res.message);
     }
   }
 
@@ -113,7 +114,7 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      // MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message);
 
       /// refresh list
       loadRequestedShipments();
@@ -121,7 +122,7 @@ class ShipmentController extends GetxController {
       /// refresh dashboard
       refreshDashboard();
     } else {
-      MessageManager.showError(res.message.toString());
+      MessageManager.showError(res.message);
     }
   }
 
@@ -134,32 +135,35 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      // MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message);
 
       /// refresh active deliveries
       loadNeedToDeliverShipments();
     } else {
-      MessageManager.showError(res.message.toString());
+      MessageManager.showError(res.message);
     }
   }
 
   // complete
-  Future<void> completeShipment(
+  Future<ApiResponseModel> completeShipment(
     int driverShipmentId,
     String proofImagePath,
     String? otp,
+    String? requestId,
   ) async {
     isLoading.value = true;
 
     ApiResponseModel res = await _repo.completeShipment(
       driverShipmentId,
       proofImagePath,
+      otp,
+      requestId,
     );
 
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      // MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message);
 
       /// refresh active deliveries
       loadNeedToDeliverShipments();
@@ -167,8 +171,10 @@ class ShipmentController extends GetxController {
       /// refresh dashboard
       refreshDashboard();
     } else {
-      MessageManager.showError(res.message.toString());
+      MessageManager.showError(res.message);
     }
+
+    return res;
   }
 
   // Package status update (pickup/delivery)
@@ -190,12 +196,12 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      // MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message);
 
       /// refresh active deliveries
       loadNeedToDeliverShipments();
     } else {
-      MessageManager.showError(res.message.toString());
+      MessageManager.showError(res.message);
     }
 
     return res;
@@ -219,12 +225,12 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      // MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message);
 
       /// refresh active deliveries
       loadNeedToDeliverShipments();
     } else {
-      MessageManager.showError(res.message.toString());
+      MessageManager.showError(res.message);
     }
 
     return res;
@@ -248,12 +254,35 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      // MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message);
 
       /// refresh active deliveries
       loadNeedToDeliverShipments();
     } else {
-      MessageManager.showError(res.message.toString());
+      MessageManager.showError(res.message);
+    }
+
+    return res;
+  }
+
+  //  request delivery confirmation OTP for buyer
+  Future<ApiResponseModel> requestDeliveryConfirmationOtp(
+    int driverShipmentId,
+  ) async {
+    isLoading.value = true;
+
+    final Map<String, dynamic> payload = {
+      'driver_shipment_id': driverShipmentId,
+    };
+
+    ApiResponseModel res = await _repo.requestDeliveryConfirmationOtp(payload);
+
+    isLoading.value = false;
+
+    if (res.isSuccess == true) {
+      MessageManager.showSuccess(res.message);
+    } else {
+      MessageManager.showError(res.message);
     }
 
     return res;

@@ -80,6 +80,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             const SizedBox(height: 16),
 
+            /// EARNINGS
+            _earningsCard(),
+
+            const SizedBox(height: 16),
+
             /// RATINGS
             Row(
               children: [
@@ -104,11 +109,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 // ),
               ],
             ),
-
-            const SizedBox(height: 16),
-
-            /// EARNINGS
-            _earningsCard(),
 
             const SizedBox(height: 40),
           ],

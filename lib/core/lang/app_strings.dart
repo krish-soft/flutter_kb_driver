@@ -178,6 +178,8 @@ class AppStrings {
   
   static const textRequestedDeliveries = "textRequestedDeliveries";
   static const textActiveDeliveries = "textActiveDeliveries";
+  static const textRequestOtp = "textRequestOtp";
+  static const textAskReceiverOtp = "textAskReceiverOtp";
 
 
   //
