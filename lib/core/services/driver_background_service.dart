@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kb_driver/core/data/models/api_response_model.dart';
+import 'package:kb_driver/core/data/presentation/controllers/driver/driver_controller.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/shipment_controller.dart';
 import 'package:kb_driver/core/services/location_service.dart';
 
@@ -65,6 +66,7 @@ void onStart(ServiceInstance service) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final shipmentController = ShipmentController();
+  final driverController = DriverController();
 
   if (service is AndroidServiceInstance) {
     service.setAsForegroundService();
@@ -79,7 +81,7 @@ void onStart(ServiceInstance service) async {
   void startLocationTimer(bool isActiveDelivery) {
     locationTimer?.cancel();
 
-    final interval = isActiveDelivery ? 15 : 90;
+    final interval = isActiveDelivery ? 15 : 30;
 
     print("Starting location timer: $interval sec");
 
@@ -95,7 +97,7 @@ void onStart(ServiceInstance service) async {
         print("Lat: $lat, Lng: $lng");
 
         /// 👉 CALL YOUR API HERE
-        // await sendDriverLocation(lat, lng);
+        await driverController.updateLastLocation(lat, lng, null);
       } else {
         print("Location not available");
       }

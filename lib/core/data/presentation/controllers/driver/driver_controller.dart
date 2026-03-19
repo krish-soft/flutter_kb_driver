@@ -39,5 +39,26 @@ class DriverController extends GetxController {
     return res;
   }
 
+  Future<ApiResponseModel> updateLastLocation(
+    double lat,
+    double lng,
+    int? driverShipmentId,
+  ) async {
+    ApiResponseModel res = await _repo.updateLastLocation({
+      "latitude": lat,
+      "longitude": lng,
+      "driver_shipment_id":
+          driverShipmentId, // optional, can be used to associate location with a specific delivery
+    });
+    // no need to show message for location update
+    // if (res.isSuccess == true) {
+    //   // MessageManager.showSuccess(res!.message.toString());
+    // } else {
+    //   MessageManager.showError(res!.message.toString());
+    // }
+
+    return res;
+  }
+
   //
 }

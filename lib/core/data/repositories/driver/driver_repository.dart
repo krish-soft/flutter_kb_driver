@@ -45,5 +45,18 @@ class DriverRepository extends BaseRepository {
     );
   }
 
+  Future<ApiResponseModel> updateLastLocation(payload) {
+    return execute(
+      () async =>
+          (await _api.request(
+                url: ApiRoutes.updateLastLocation,
+                method: ApiMethod.post,
+                body: payload,
+                requireAuth: true,
+              ))
+              as Map<String, dynamic>,
+    );
+  }
+
   //
 }

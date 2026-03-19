@@ -34,6 +34,8 @@ class ApiRoutes {
       "$deliveryPrefix/driver/online-status";
   static const String updateDriverOnlineStatus =
       "$deliveryPrefix/driver/online-status/update";
+  static const String updateLastLocation =
+      "$deliveryPrefix/driver/location/update";
 
   // Shipments
   static const String checkForNewRequests = "$shipmentPrefix/requested";
