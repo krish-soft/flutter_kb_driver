@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
+import 'package:kb_driver/utils/message_manager.dart';
+import 'package:kb_driver/utils/vibrate_manager.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:kb_driver/constants/app_colors.dart';
@@ -19,6 +21,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
   ActiveDeliveryDetailScreen({super.key, required this.shipment});
 
   final ShipmentController controller = Get.find<ShipmentController>();
+  final VibrateManager _vibratorManager = VibrateManager();
 
   /// Enable OTP validation (optional)
   final bool otpEnabled = false;
@@ -135,13 +138,16 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
                   title: AppStrings.textConfirmDelivery.tr,
                   background: AppColors.success,
                   onPressed: () async {
+                    _vibratorManager.vibrateButton();
                     if (imagePath == null) {
-                      Get.snackbar("Error", AppStrings.textPhotoRequired.tr);
+                      // Get.snackbar("Error", AppStrings.textPhotoRequired.tr);
+                      MessageManager.showError(AppStrings.textPhotoRequired.tr);
                       return;
                     }
 
                     if (otpEnabled && otpController.text.isEmpty) {
-                      Get.snackbar("Error", AppStrings.textOtpRequired.tr);
+                      // Get.snackbar("Error", AppStrings.textOtpRequired.tr);
+                      MessageManager.showError(AppStrings.textOtpRequired.tr);
                       return;
                     }
 
@@ -297,6 +303,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
             title: AppStrings.textViewPackages.tr,
             background: AppColors.info,
             onPressed: () {
+              _vibratorManager.vibrateButton();
               Get.to(() => ShipmentPackagesScreen(shipment: shipment));
             },
           ),
@@ -309,6 +316,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
             background: canStart ? AppColors.success : AppColors.textDisabled,
             onPressed: canStart
                 ? () {
+                    _vibratorManager.vibrateButton();
                     controller.startShipment(shipment["driver_shipment_id"]);
                   }
                 : null,
@@ -322,6 +330,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
             background: canComplete ? AppColors.danger : AppColors.textDisabled,
             onPressed: canComplete
                 ? () {
+                    _vibratorManager.vibrateButton();
                     openDeliveryConfirmSheet();
                   }
                 : null,

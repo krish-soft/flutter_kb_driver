@@ -16,7 +16,7 @@ class DriverController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      MessageManager.showSuccess(res!.message.toString());
+      // MessageManager.showSuccess(res!.message.toString());
     } else {
       MessageManager.showError(res!.message.toString());
     }
@@ -31,7 +31,7 @@ class DriverController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      MessageManager.showSuccess(res!.message.toString());
+      // MessageManager.showSuccess(res!.message.toString());
     } else {
       MessageManager.showError(res!.message.toString());
     }

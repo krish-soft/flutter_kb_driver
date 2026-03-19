@@ -77,7 +77,7 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message.toString());
 
       /// refresh requests
       loadRequestedShipments();
@@ -101,7 +101,7 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message.toString());
 
       /// refresh list
       loadRequestedShipments();
@@ -119,7 +119,7 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message.toString());
 
       /// refresh active deliveries
       loadNeedToDeliverShipments();
@@ -144,7 +144,7 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message.toString());
 
       /// refresh active deliveries
       loadNeedToDeliverShipments();
@@ -172,7 +172,7 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message.toString());
 
       /// refresh active deliveries
       loadNeedToDeliverShipments();
@@ -201,7 +201,7 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message.toString());
 
       /// refresh active deliveries
       loadNeedToDeliverShipments();
@@ -230,7 +230,7 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     if (res.isSuccess == true) {
-      MessageManager.showSuccess(res.message.toString());
+      // MessageManager.showSuccess(res.message.toString());
 
       /// refresh active deliveries
       loadNeedToDeliverShipments();
