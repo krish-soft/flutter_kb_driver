@@ -24,7 +24,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
   final VibrateManager _vibratorManager = VibrateManager();
 
   /// Enable OTP validation (optional)
-  final bool otpEnabled = false;
+  // final bool otpEnabled = false;
 
   /// Open Google Maps
   void openDirection(String? lat, String? lng) async {
@@ -62,7 +62,7 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
   }
 
   /// DELIVERY CONFIRMATION SHEET
-  void openDeliveryConfirmSheet() {
+  void openDeliveryConfirmSheet(bool otpEnabled) {
     final TextEditingController otpController = TextEditingController();
 
     String? imagePath;
@@ -176,168 +176,192 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final origin = shipment["origin"];
-    final destination = shipment["destination"];
-    final payable = shipment["shipment_payable"];
+    return Obx(() {
+      /// ✅ GET UPDATED SHIPMENT FROM CONTROLLER
+      final updatedShipment = controller.activeShipments.firstWhere(
+        (e) => e["driver_shipment_id"] == shipment["driver_shipment_id"],
+        orElse: () => shipment,
+      );
 
-    final status = shipment["driver_shipment_status"].toString().toLowerCase();
+      final bool otpEnabled =
+          updatedShipment["shipment_type"]?.toString().toLowerCase() ==
+          "dispatch";
 
-    final bool canStart = status == "pending" || status == "accepted";
+      final origin = updatedShipment["origin"];
+      final destination = updatedShipment["destination"];
+      final payable = updatedShipment["shipment_payable"];
 
-    final bool canComplete = status == "in_transit";
+      final status = updatedShipment["driver_shipment_status"]
+          .toString()
+          .toLowerCase();
 
-    final bool delivered = status == "delivered" || status == "completed";
+      final bool canStart = status == "pending" || status == "accepted";
+      final bool canComplete = status == "in_transit";
+      final bool delivered = status == "delivered" || status == "completed";
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
+      return Scaffold(
+        backgroundColor: AppColors.background,
 
-      appBar: CommonAppBar(title: shipment["shipment_number"], showBack: true),
+        appBar: CommonAppBar(
+          title: updatedShipment["shipment_number"],
+          showBack: true,
+        ),
 
-      body: ListView(
-        padding: const EdgeInsets.all(16),
+        body: ListView(
+          padding: const EdgeInsets.all(16),
 
-        children: [
-          /// Shipment Header
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: const [
-                BoxShadow(color: AppColors.shadow, blurRadius: 5),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  shipment["shipment_number"],
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+          children: [
+            /// Shipment Header
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(color: AppColors.shadow, blurRadius: 5),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    updatedShipment["shipment_number"],
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
 
-                const SizedBox(height: 6),
+                  const SizedBox(height: 6),
 
-                Row(
-                  children: [
-                    CommonChip(text: shipment["shipment_type"], isType: true),
-                    const SizedBox(width: 8),
-                    CommonChip(text: shipment["driver_shipment_status"]),
-                  ],
-                ),
-              ],
+                  Row(
+                    children: [
+                      CommonChip(
+                        text: updatedShipment["shipment_type"],
+                        isType: true,
+                      ),
+                      const SizedBox(width: 8),
+                      CommonChip(
+                        text: updatedShipment["driver_shipment_status"],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-          /// Hide address when delivered
-          if (!delivered) ...[
-            _addressCard(
-              title: AppStrings.textPickupAddress.tr,
-              icon: Icons.store,
-              color: AppColors.primary,
-              address: buildAddress(origin),
-              lat: origin["lat"],
-              lng: origin["lng"],
+            /// Hide address when delivered
+            if (!delivered) ...[
+              _addressCard(
+                title: AppStrings.textPickupAddress.tr,
+                icon: Icons.store,
+                color: AppColors.primary,
+                address: buildAddress(origin),
+                lat: origin["lat"],
+                lng: origin["lng"],
+              ),
+
+              const SizedBox(height: 12),
+
+              _addressCard(
+                title: AppStrings.textDeliveryAddress.tr,
+                icon: Icons.home,
+                color: AppColors.success,
+                address: buildAddress(destination),
+                lat: destination["lat"],
+                lng: destination["lng"],
+              ),
+
+              const SizedBox(height: 16),
+            ],
+
+            /// Shipment Information
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    AppStrings.textShipmentInformation.tr,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  _infoRow(
+                    AppStrings.textTotalPackages.tr,
+                    "${updatedShipment["total_packages"]}",
+                  ),
+
+                  _infoRow(
+                    AppStrings.textTotalWeight.tr,
+                    "${payable["total_weight"]} kg",
+                  ),
+
+                  _infoRow(
+                    AppStrings.textTotalQuantity.tr,
+                    "${payable["total_quantity"]}",
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            /// View Packages
+            AppButton(
+              title: AppStrings.textViewPackages.tr,
+              background: AppColors.info,
+              onPressed: () {
+                _vibratorManager.vibrateButton();
+                Get.to(() => ShipmentPackagesScreen(shipment: updatedShipment));
+              },
+            ),
+
+            const SizedBox(height: 20),
+
+            /// Start Delivery
+            AppButton(
+              title: AppStrings.textStartDelivery.tr,
+              background: canStart ? AppColors.success : AppColors.textDisabled,
+              onPressed: canStart
+                  ? () {
+                      _vibratorManager.vibrateButton();
+                      controller.startShipment(
+                        updatedShipment["driver_shipment_id"],
+                      );
+                    }
+                  : null,
             ),
 
             const SizedBox(height: 12),
 
-            _addressCard(
-              title: AppStrings.textDeliveryAddress.tr,
-              icon: Icons.home,
-              color: AppColors.success,
-              address: buildAddress(destination),
-              lat: destination["lat"],
-              lng: destination["lng"],
+            /// Complete Delivery
+            AppButton(
+              title: AppStrings.textCompleteDelivery.tr,
+              background: canComplete
+                  ? AppColors.danger
+                  : AppColors.textDisabled,
+              onPressed: canComplete
+                  ? () {
+                      _vibratorManager.vibrateButton();
+                      openDeliveryConfirmSheet(otpEnabled);
+                    }
+                  : null,
             ),
-
-            const SizedBox(height: 16),
           ],
-
-          /// Shipment Information
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  AppStrings.textShipmentInformation.tr,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                _infoRow(
-                  AppStrings.textTotalPackages.tr,
-                  "${shipment["total_packages"]}",
-                ),
-
-                _infoRow(
-                  AppStrings.textTotalWeight.tr,
-                  "${payable["total_weight"]} kg",
-                ),
-
-                _infoRow(
-                  AppStrings.textTotalQuantity.tr,
-                  "${payable["total_quantity"]}",
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 16),
-
-          /// View Packages
-          AppButton(
-            title: AppStrings.textViewPackages.tr,
-            background: AppColors.info,
-            onPressed: () {
-              _vibratorManager.vibrateButton();
-              Get.to(() => ShipmentPackagesScreen(shipment: shipment));
-            },
-          ),
-
-          const SizedBox(height: 20),
-
-          /// Start Delivery
-          AppButton(
-            title: AppStrings.textStartDelivery.tr,
-            background: canStart ? AppColors.success : AppColors.textDisabled,
-            onPressed: canStart
-                ? () {
-                    _vibratorManager.vibrateButton();
-                    controller.startShipment(shipment["driver_shipment_id"]);
-                  }
-                : null,
-          ),
-
-          const SizedBox(height: 12),
-
-          /// Complete Delivery
-          AppButton(
-            title: AppStrings.textCompleteDelivery.tr,
-            background: canComplete ? AppColors.danger : AppColors.textDisabled,
-            onPressed: canComplete
-                ? () {
-                    _vibratorManager.vibrateButton();
-                    openDeliveryConfirmSheet();
-                  }
-                : null,
-          ),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 
   Widget _addressCard({

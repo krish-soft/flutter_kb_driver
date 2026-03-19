@@ -152,8 +152,10 @@ const Map<String, String> guIN = {
   "textOnline": "ઓનલાઇન",
   "textOffline": "ઓફલાઇન",
 
-  "textReadyToReceiveDeliveryRequests": "ડિલિવરી વિનંતીઓ પ્રાપ્ત કરવા માટે તૈયાર",
-  "textSwitchOnlineToReceiveDeliveries": "ડિલિવરી પ્રાપ્ત કરવા માટે ઑનલાઇન સ્વિચ કરો",
+  "textReadyToReceiveDeliveryRequests":
+      "ડિલિવરી વિનંતીઓ પ્રાપ્ત કરવા માટે તૈયાર",
+  "textSwitchOnlineToReceiveDeliveries":
+      "ડિલિવરી પ્રાપ્ત કરવા માટે ઑનલાઇન સ્વિચ કરો",
 
   "textTotalDeliveries": "કુલ ડિલિવરી",
   "textAvailableEarnings": "ઉપલબ્ધ આવક",
@@ -164,6 +166,9 @@ const Map<String, String> guIN = {
       "તમારી KYC વિગતો સફળતાપૂર્વક સબમિટ કરવામાં આવી છે.\n\n"
       "અમારી ટીમ હાલમાં તમારા દસ્તાવેજોની સમીક્ષા કરી રહી છે. "
       "આ પ્રક્રિયા ચકાસણીની જરૂરિયાતો પર આધાર રાખીને થોડો સમય લઈ શકે છે.",
+
+  "textRequestedDeliveries": "વિનંતી કરેલી ડિલિવરીઝ",
+  "textActiveDeliveries": "સક્રિય ડિલિવરીઝ",
 
   ///
 };

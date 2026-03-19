@@ -9,6 +9,10 @@ class DashboardController extends GetxController {
   var isLoading = true.obs;
 
   var totalDeliveries = 0.obs;
+  var requestedDeliveries = 0.obs;
+  var activeDeliveries = 0.obs;
+
+
   var totalRatings = 0.obs;
   var averageRating = 0.0.obs;
 
@@ -28,6 +32,8 @@ class DashboardController extends GetxController {
       final data = res.data;
 
       totalDeliveries.value = data['summary']['total_deliveries'] ?? 0;
+      requestedDeliveries.value = data['summary']['requested_deliveries'] ?? 0;
+      activeDeliveries.value = data['summary']['active_deliveries'] ?? 0;
 
       totalRatings.value = data['summary']['total_ratings'] ?? 0;
 

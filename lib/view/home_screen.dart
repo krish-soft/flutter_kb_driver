@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get/get.dart';
+import 'package:kb_driver/core/data/models/api_response_model.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/driver_controller.dart';
+import 'package:kb_driver/core/data/presentation/controllers/driver/shipment_controller.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver_status_controller.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
 import 'package:kb_driver/core/services/driver_background_service.dart';
@@ -28,9 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _hasRequest = false;
   int _numberOfRequests = 0;
   bool _hasActiveDelivery = false;
+  int _numberOfActiveDelivery = 0;
 
   final VibrateManager _vibrateManager = VibrateManager();
   final DriverController _driverController = Get.put(DriverController());
+  final ShipmentController _shipmentController = Get.put(ShipmentController());
   final DriverStatusController _driverStatusController =
       Get.find<DriverStatusController>();
 
@@ -46,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _init();
     _listenForNewShipments();
+    _listenForActiveDeliveries();
   }
 
   Future<void> _init() async {
@@ -119,17 +124,20 @@ class _HomeScreenState extends State<HomeScreen> {
     //   print("Driver service running...");
 
     //   /// CHECK NEW REQUEST
-    //   // final req = await _driverController.checkForNewRequests();
+    //   final ApiResponseModel res = await _shipmentController
+    //       .checkForNewShipmentRequests();
 
     //   // /// CHECK ACTIVE DELIVERY
     //   // final active = await _driverController.getActiveDelivery();
 
     //   if (!mounted) return;
 
-    //   // setState(() {
-    //   //   _hasRequest = req.hasRequest;
-    //   //   _hasActiveDelivery = active != null;
-    //   // });
+    //   setState(() {
+    //     _hasRequest = true;
+    //     _numberOfRequests = res.data['number_of_requested_shipments'] ?? 0;
+    //     _hasActiveDelivery = res.data['has_active_shipments'] ?? 0;
+    //     _numberOfActiveDelivery = res.data['active_shipments_count'] ?? 0;
+    //   });
     // });
   }
 
@@ -149,6 +157,23 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _hasRequest = true;
           _numberOfRequests = data['number_of_requested_shipments'] ?? 0;
+          _hasActiveDelivery = data['has_active_shipments'] ?? 0;
+          _numberOfActiveDelivery = data['active_shipments_count'] ?? 0;
+        });
+      }
+    });
+  }
+
+  void _listenForActiveDeliveries() {
+    FlutterBackgroundService().on("activeShipments").listen((event) {
+      final data = event?["data"];
+
+      if (data['has_active_shipments'] == true) {
+        if (!mounted) return;
+
+        setState(() {
+          _hasActiveDelivery = data['has_active_shipments'] ?? 0;
+          _numberOfActiveDelivery = data['active_shipments_count'] ?? 0;
         });
       }
     });
@@ -280,6 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   AppStrings.screenActiveDelivery.tr,
                   2,
                   showBadge: _hasActiveDelivery,
+                  badgeCount: _numberOfActiveDelivery,
                 ),
 
                 _navItem(Icons.menu, AppStrings.screenMore.tr, 3),

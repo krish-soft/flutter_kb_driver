@@ -4,8 +4,6 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kb_driver/core/data/models/api_response_model.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/shipment_controller.dart';
-import 'package:kb_driver/core/services/location_service.dart';
-import 'package:kb_driver/utils/vibrate_manager.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -65,9 +63,9 @@ class DriverBackgroundService {
 void onStart(ServiceInstance service) async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  print("BACKGROUND SERVICE STARTED");
+  // print("BACKGROUND SERVICE STARTED");
 
-  final vibrateManager = VibrateManager();
+  // final vibrateManager = VibrateManager();
   final shipmentController = ShipmentController();
 
   if (service is AndroidServiceInstance) {
@@ -81,11 +79,17 @@ void onStart(ServiceInstance service) async {
   });
 
   Timer.periodic(const Duration(seconds: 15), (timer) async {
-    print("Checking shipments...");
+    print("Background checking shipments...");
 
     try {
       ApiResponseModel resp = await shipmentController
           .checkForNewShipmentRequests();
+
+      // Check for active deliveries
+      if (resp.isSuccess == true &&
+          resp.data?['has_active_shipments'] == true) {
+        service.invoke("activeShipments", {"data": resp.data});
+      }
 
       if (resp.isSuccess == true &&
           resp.data?['has_requested_shipments'] == true) {
@@ -107,9 +111,7 @@ void onStart(ServiceInstance service) async {
         }
 
         if (hasNewShipment) {
-          print("Trigger vibration + notification");
-
-          // await vibrateManager.vibrateHeavy();
+          // print("Trigger vibration + notification");
 
           /// send event to UI
 

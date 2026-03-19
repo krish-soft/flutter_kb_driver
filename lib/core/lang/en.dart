@@ -169,5 +169,9 @@ const Map<String, String> enUS = {
       "Our team is currently reviewing your documents. "
       "This process may take some time depending on verification requirements.",
 
+
+  "textRequestedDeliveries": "Requested Deliveries",
+  "textActiveDeliveries": "Active Deliveries",
+
   //
 };

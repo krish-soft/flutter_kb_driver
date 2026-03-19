@@ -54,6 +54,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             const SizedBox(height: 16),
 
+            Row(
+              children: [
+                Expanded(
+                  child: _statCard(
+                    AppStrings.textRequestedDeliveries.tr,
+                    controller.requestedDeliveries.value.toString(),
+                    Icons.pending_actions,
+                    AppColors.warning,
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                Expanded(
+                  child: _statCard(
+                    AppStrings.textActiveDeliveries.tr,
+                    controller.activeDeliveries.value.toString(),
+                    Icons.local_shipping_sharp,
+                    AppColors.tripAssigned,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
             /// RATINGS
             Row(
               children: [
@@ -62,20 +88,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     AppStrings.textRating.tr,
                     controller.averageRating.value.toStringAsFixed(1),
                     Icons.star,
-                    Colors.orange,
+                    Colors.purpleAccent,
                   ),
                 ),
 
-                const SizedBox(width: 12),
+                // const SizedBox(width: 12),
 
-                Expanded(
-                  child: _statCard(
-                    AppStrings.textReviews.tr,
-                    controller.totalRatings.value.toString(),
-                    Icons.rate_review,
-                    Colors.blue,
-                  ),
-                ),
+                // Expanded(
+                //   child: _statCard(
+                //     AppStrings.textReviews.tr,
+                //     controller.totalRatings.value.toString(),
+                //     Icons.rate_review,
+                //     Colors.blue,
+                //   ),
+                // ),
               ],
             ),
 
@@ -102,7 +128,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           gradient: LinearGradient(
             colors: online
                 ? [const Color(0xff22c55e), const Color(0xff16a34a)]
-                : [const Color.fromARGB(255, 239, 26, 26), const Color.fromARGB(255, 242, 109, 109)],
+                : [
+                    const Color.fromARGB(255, 239, 26, 26),
+                    const Color.fromARGB(255, 242, 109, 109),
+                  ],
           ),
           borderRadius: BorderRadius.circular(16),
         ),

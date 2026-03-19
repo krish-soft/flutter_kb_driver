@@ -176,6 +176,8 @@ class AppStrings {
   static const textKycUnderReview = "textKycUnderReview";
   static const textKycDetailsSubmitted = "textKycDetailsSubmitted";
   
+  static const textRequestedDeliveries = "textRequestedDeliveries";
+  static const textActiveDeliveries = "textActiveDeliveries";
 
 
   //

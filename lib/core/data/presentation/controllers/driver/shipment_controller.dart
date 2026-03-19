@@ -1,10 +1,14 @@
 import 'package:get/get.dart';
 import 'package:kb_driver/core/data/models/api_response_model.dart';
+import 'package:kb_driver/core/data/presentation/controllers/user/dashboard_controller.dart';
 import 'package:kb_driver/core/data/repositories/driver/shipment_repository.dart';
 import 'package:kb_driver/utils/message_manager.dart';
 
 class ShipmentController extends GetxController {
   final ShipmentRepository _repo = ShipmentRepository();
+
+  final DashboardController _dashboardController =
+      Get.put<DashboardController>(DashboardController());
 
   /// loading state
   var isLoading = false.obs;
@@ -27,6 +31,11 @@ class ShipmentController extends GetxController {
     isLoading.value = false;
 
     return res;
+  }
+
+  // refresh dashboard data
+  void refreshDashboard() {
+    _dashboardController.getDashboardData();
   }
 
   // =========================================================
@@ -84,6 +93,9 @@ class ShipmentController extends GetxController {
 
       /// refresh active deliveries
       loadNeedToDeliverShipments();
+
+      /// refresh dashboard
+      refreshDashboard();
     } else {
       MessageManager.showError(res.message.toString());
     }
@@ -105,6 +117,9 @@ class ShipmentController extends GetxController {
 
       /// refresh list
       loadRequestedShipments();
+
+      /// refresh dashboard
+      refreshDashboard();
     } else {
       MessageManager.showError(res.message.toString());
     }
@@ -148,6 +163,9 @@ class ShipmentController extends GetxController {
 
       /// refresh active deliveries
       loadNeedToDeliverShipments();
+
+      /// refresh dashboard
+      refreshDashboard();
     } else {
       MessageManager.showError(res.message.toString());
     }
