@@ -337,15 +337,18 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
               ),
 
               const SizedBox(height: 12),
-
-              _addressCard(
-                title: AppStrings.textDeliveryAddress.tr,
-                icon: Icons.home,
-                color: AppColors.success,
-                address: buildAddress(destination),
-                lat: destination["lat"],
-                lng: destination["lng"],
-              ),
+              ...[
+                destination != null
+                    ? _addressCard(
+                        title: AppStrings.textDeliveryAddress.tr,
+                        icon: Icons.home,
+                        color: AppColors.success,
+                        address: buildAddress(destination),
+                        lat: destination["lat"],
+                        lng: destination["lng"],
+                      )
+                    : Text('No Destination Address Provided'),
+              ],
 
               const SizedBox(height: 16),
             ],

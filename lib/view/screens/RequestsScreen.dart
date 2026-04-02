@@ -51,6 +51,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
             final origin = shipment["origin"];
             final destination = shipment["destination"];
             final payable = shipment["shipment_payable"];
+            final amount = payable?["final_payable_amount"] ?? 0;
 
             return Container(
               margin: const EdgeInsets.only(bottom: 18),
@@ -138,7 +139,9 @@ class _RequestsScreenState extends State<RequestsScreen> {
                             children: [
                               /// PICKUP
                               Text(
-                                "${origin["line1"]}, ${origin["village"]}, ${origin["city"]}",
+                                origin != null
+                                    ? "${origin["line1"] ?? ""}, ${origin["village"] ?? ""}, ${origin["city"] ?? ""}"
+                                    : "Origin not provided",
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   color: AppColors.textPrimary,
@@ -150,7 +153,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                               /// DROP
                               Text(
                                 destination != null
-                                    ? "${destination["line1"]},  ${destination["village"]}, ${destination["city"]}"
+                                    ? "${destination["line1"] ?? ""}, ${destination["village"] ?? ""}, ${destination["city"] ?? ""}"
                                     : "Destination not provided",
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
@@ -196,32 +199,33 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     const SizedBox(height: 18),
 
                     /// EARNINGS BOX
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: AppColors.success.withOpacity(.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.currency_rupee,
-                            color: AppColors.success,
-                          ),
-
-                          const SizedBox(width: 6),
-
-                          Text(
-                            "You Earn ₹${payable["final_payable_amount"]}",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                    if ((payable?["final_payable_amount"] ?? 0) > 0)
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppColors.success.withOpacity(.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.currency_rupee,
                               color: AppColors.success,
                             ),
-                          ),
-                        ],
+
+                            const SizedBox(width: 6),
+
+                            Text(
+                              "You Earn ₹${payable?["final_payable_amount"] ?? 0}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: AppColors.success,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
 
                     const SizedBox(height: 20),
 

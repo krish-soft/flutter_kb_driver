@@ -49,12 +49,15 @@ class ApiRoutes {
   static const String completeShipment = "$shipmentPrefix/completed";
 
   // update package staus
-  static const String updatePkgBuyerStatus =
-      "$shipmentPrefix/package/update-status/buyer";
-  static const String updatePkgSellerStatus =
-      "$shipmentPrefix/package/update-status/seller";
-  static const String updatePkgTransferStatus =
-      "$shipmentPrefix/package/update-status/transfer";
+  static const String updatePkgStatus =
+      "$shipmentPrefix/package/update-status";
+
+  // static const String updatePkgBuyerStatus =
+  //     "$shipmentPrefix/package/update-status/buyer";
+  // static const String updatePkgSellerStatus =
+  //     "$shipmentPrefix/package/update-status/seller";
+  // static const String updatePkgTransferStatus =
+  //     "$shipmentPrefix/package/update-status/transfer";
 
   // user profile
   static const String getProfile = "$baseUrl/user/profile";

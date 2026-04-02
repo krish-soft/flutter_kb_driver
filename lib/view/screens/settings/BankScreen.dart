@@ -290,7 +290,7 @@ class _BankScreenState extends State<BankScreen> {
 
             AppButton(
               title: AppStrings.textUpdateBankDetails.tr,
-              loading: _controller.isLoading.value,
+              // loading: _controller.isLoading.value,
               background: AppColors.primary,
               onPressed: confirmUpdate,
             ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kb_driver/constants/app_colors.dart';
+import 'package:kb_driver/core/data/models/api_response_model.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
+import 'package:kb_driver/utils/message_manager.dart';
 import 'package:kb_driver/utils/vibrate_manager.dart';
 import 'package:kb_driver/view/components/cmp_app_bar.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/shipment_controller.dart';
@@ -17,40 +19,44 @@ class ShipmentPackagesScreen extends StatefulWidget {
 
 class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
   final ShipmentController controller = Get.find<ShipmentController>();
-
-  final VibrateManager _vibrateManager = VibrateManager();
+  final VibrateManager vibrate = VibrateManager();
 
   late List packages;
   late String shipmentType;
-  late String driverShipmentStatus;
+
+  int selectedIndex = 0;
+  bool loading = false;
 
   @override
   void initState() {
     super.initState();
 
-    packages = widget.shipment["shipmentPackages"];
-    shipmentType = widget.shipment["shipment_type"];
-    driverShipmentStatus = widget.shipment["driver_shipment_status"];
+    packages = widget.shipment["shipmentPackages"] ?? [];
+    shipmentType = widget.shipment["shipment_type"] ?? "";
   }
 
-  bool get shipmentCompleted =>
-      driverShipmentStatus == "completed" ||
-      driverShipmentStatus == "delivered";
+  String getMainNumber(pkg) {
+    if (shipmentType.contains("pickup")) {
+      if (shipmentType.contains("market")) {
+        return pkg["package_number_market"] ?? pkg["package_number"] ?? "-";
+      }
 
-  String getMainStatus(pkg) {
+      return pkg["package_number_seller"] ?? pkg["package_number"] ?? "-";
+    }
+
+    if (shipmentType.contains("dispatch")) {
+      if (shipmentType.contains("market")) {
+        return pkg["package_number_market"] ?? pkg["package_number"] ?? "-";
+      }
+
+      return pkg["package_number_buyer"] ?? pkg["package_number"] ?? "-";
+    }
+
+    return pkg["package_number"] ?? "-";
+  }
+
+  String getStatus(pkg) {
     return pkg["shipment_package_status"] ?? "pending";
-  }
-
-  String getTypeStatus(pkg) {
-    if (shipmentType == "pickup") {
-      return pkg["shipment_package_seller_status"] ?? "pending";
-    }
-
-    if (shipmentType == "dispatch") {
-      return pkg["shipment_package_buyer_status"] ?? "pending";
-    }
-
-    return pkg["shipment_package_transfer_status"] ?? "pending";
   }
 
   Color statusColor(String status) {
@@ -60,177 +66,241 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
   }
 
   List<String> getOptions() {
-    if (shipmentType == "pickup") {
+    if (shipmentType.contains("pickup")) {
       return ["picked_up", "not_picked_up"];
     }
 
-    if (shipmentType == "dispatch") {
-      return ["delivered"];
+    if (shipmentType.contains("dispatch")) {
+      return ["delivered", "not_delivered"]; // temporary option
     }
 
     return ["received", "not_received"];
   }
 
-  /// API Update
-  Future<void> updateStatus(
-    int driverShipmentId,
-    int packageId,
-    String status,
-    int index,
-  ) async {
-    if (shipmentCompleted) return;
+  Future<void> updateStatus(String status) async {
+    if (loading) return;
 
-    if (shipmentType == "pickup") {
-      await controller.updatePkgSellerStatus(
-        driverShipmentId,
-        packageId,
+    final pkg = packages[selectedIndex];
+
+    vibrate.vibrateMedium();
+
+    setState(() {
+      loading = true;
+    });
+
+    try {
+      ApiResponseModel res = await controller.updatePkgStatus(
+        widget.shipment["driver_shipment_id"],
+        pkg["shipment_package_id"],
         status,
       );
 
-      packages[index]["shipment_package_seller_status"] = status;
-    } else if (shipmentType == "dispatch") {
-      await controller.updatePkgBuyerStatus(
-        driverShipmentId,
-        packageId,
-        status,
-      );
-
-      packages[index]["shipment_package_buyer_status"] = status;
-    } else {
-      await controller.updatePkgTransferStatus(
-        driverShipmentId,
-        packageId,
-        status,
-      );
-
-      packages[index]["shipment_package_transfer_status"] = status;
+      if (res.isSuccess == true) {
+        packages[selectedIndex]["shipment_package_status"] = status;
+        vibrate.vibrateSelection();
+      }
+    } catch (e) {
+      MessageManager.showError(AppStrings.textStatusUpdateFailed.tr);
+      // Get.snackbar(
+      //   AppStrings.textError.tr,
+      //   e.toString(),
+      //   snackPosition: SnackPosition.BOTTOM,
+      // );
     }
 
-    setState(() {});
+    setState(() {
+      loading = false;
+    });
   }
 
-  /// Confirm Dialog
-  void confirmUpdate(pkg, status, index) {
-    Get.dialog(
-      AlertDialog(
-        title: const Text("Confirm Status"),
-        content: Text("Update package ${pkg["package_number"]} to '$status'?"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              _vibrateManager.vibrateMedium();
-              Get.back();
+  /// LEFT PANEL
+  Widget packageList() {
+    return Container(
+      width: 190,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(right: BorderSide(color: Colors.black12)),
+      ),
+      child: ListView.builder(
+        itemCount: packages.length,
+        itemBuilder: (context, index) {
+          final pkg = packages[index];
+          final status = getStatus(pkg);
+
+          return GestureDetector(
+            onTap: () {
+              vibrate.vibrateMedium();
+
+              setState(() => selectedIndex = index);
             },
-            child: Text(AppStrings.textCancel.tr),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(
+                color: selectedIndex == index
+                    ? AppColors.primary.withOpacity(.08)
+                    : Colors.white,
+                border: const Border(bottom: BorderSide(color: Colors.black12)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    getMainNumber(pkg),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  Text(
+                    "${pkg["pack_size"]} ${pkg["unit"]}",
+                    style: const TextStyle(fontSize: 14),
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: statusColor(status),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Text(
+                      status,
+                      style: const TextStyle(color: Colors.white, fontSize: 11),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  /// RIGHT PANEL BLOCK
+  Widget infoBlock(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            value,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              _vibrateManager.vibrateMedium();
-              Get.back();
-              await updateStatus(
-                widget.shipment["driver_shipment_id"],
-                pkg["shipment_package_id"],
-                status,
-                index,
-              );
-            },
-            child: Text(AppStrings.textConfirm.tr),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, color: Colors.black54),
           ),
         ],
       ),
     );
   }
 
-  /// Bottom sheet selector
-  void openStatusSelector(pkg, index) {
-    final options = getOptions();
+  /// RIGHT PANEL
+  Widget packageDetails() {
+    final pkg = packages[selectedIndex];
+    final status = getStatus(pkg);
 
-    Get.bottomSheet(
-      Container(
-        padding: const EdgeInsets.all(20),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(22),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              AppStrings.textSelectStatus.tr,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    infoBlock(
+                      AppStrings.textPackage.tr,
+                      pkg["package_number"] ?? "-",
+                    ),
+
+                    infoBlock(
+                      AppStrings.textSeller.tr,
+                      pkg["package_number_seller"] ?? "-",
+                    ),
+
+                    infoBlock(
+                      AppStrings.textBuyer.tr,
+                      pkg["package_number_buyer"] ?? "-",
+                    ),
+
+                    infoBlock(
+                      AppStrings.textMarket.tr,
+                      pkg["package_number_market"] ?? "-",
+                    ),
+
+                    infoBlock(AppStrings.textShipmentType.tr, shipmentType),
+
+                    infoBlock(
+                      AppStrings.textPackSize.tr,
+                      "${pkg["pack_size"]} ${pkg["unit"]}",
+                    ),
+
+                    Row(
+                      children: [
+                        Text(
+                          AppStrings.textStatus.tr,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 10),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: statusColor(status),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            status,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
 
-            const SizedBox(height: 15),
+            const Divider(),
 
-            ...options.map((status) {
-              return ListTile(
-                title: Text(status),
-                leading: Icon(Icons.circle, color: statusColor(status)),
-                onTap: () {
-                  _vibrateManager.vibrateButton();
-                  Get.back();
-                  confirmUpdate(pkg, status, index);
-                },
-              );
-            }),
-
-            const SizedBox(height: 10),
+            if (loading)
+              const Center(child: CircularProgressIndicator())
+            else
+              Column(
+                children: getOptions().map((s) {
+                  return Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: ElevatedButton(
+                      onPressed: () => updateStatus(s),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: statusColor(s),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      child: Text(s.replaceAll("_", " ").toUpperCase()),
+                    ),
+                  );
+                }).toList(),
+              ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget badge(String status) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: statusColor(status),
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        status,
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Widget statusTable(mainStatus, typeStatus) {
-    return Container(
-      margin: const EdgeInsets.only(top: 10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              children: [
-                const Text("Main Status", style: TextStyle(fontSize: 12)),
-                const SizedBox(height: 4),
-                badge(mainStatus),
-              ],
-            ),
-          ),
-
-          Expanded(
-            child: Column(
-              children: [
-                Text(
-                  "$shipmentType Status",
-                  style: const TextStyle(fontSize: 12),
-                ),
-                const SizedBox(height: 4),
-                badge(typeStatus),
-              ],
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -239,86 +309,11 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-
       appBar: CommonAppBar(
         title: AppStrings.textShipmentPackages.tr,
         showBack: true,
       ),
-
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: packages.length,
-
-        itemBuilder: (context, index) {
-          final pkg = packages[index];
-
-          final mainStatus = getMainStatus(pkg);
-          final typeStatus = getTypeStatus(pkg);
-
-          return GestureDetector(
-            onTap: shipmentCompleted
-                ? null
-                : () {
-                    _vibrateManager.vibrateButton();
-                    openStatusSelector(pkg, index);
-                  },
-
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(16),
-
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(color: AppColors.shadow, blurRadius: 6),
-                ],
-              ),
-
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-
-                children: [
-                  /// HEADER
-                  Row(
-                    children: [
-                      const Icon(Icons.inventory_2, color: AppColors.primary),
-
-                      const SizedBox(width: 10),
-
-                      Expanded(
-                        child: Text(
-                          pkg["package_number"],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-
-                      Text(
-                        "${pkg["pack_size"]} ${pkg["unit"]}",
-                        style: const TextStyle(color: AppColors.textSecondary),
-                      ),
-                    ],
-                  ),
-
-                  /// STATUS TABLE
-                  statusTable(mainStatus, typeStatus),
-
-                  const SizedBox(height: 6),
-
-                  if (!shipmentCompleted)
-                    Text(
-                      AppStrings.textTapToUpdateStatus.tr,
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+      body: Row(children: [packageList(), packageDetails()]),
     );
   }
 }

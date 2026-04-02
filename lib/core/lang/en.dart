@@ -169,13 +169,26 @@ const Map<String, String> enUS = {
       "Our team is currently reviewing your documents. "
       "This process may take some time depending on verification requirements.",
 
-
   "textRequestedDeliveries": "Requested Deliveries",
   "textActiveDeliveries": "Active Deliveries",
 
   "textRequestOtp": "Request OTP",
 
   "textAskReceiverOtp": "Ask receiver for OTP before confirming delivery",
+  "textStatus": "Status",
+
+  "textShipmentPackageNumber": "Shipment Pkg Number",
+  "textShipmentPackageNumberTrace": "Trace",
+
+  "textPackage": "Package",
+  "textSeller": "Seller",
+  "textBuyer": "Buyer",
+  "textMarket": "Market",
+  "textShipmentType": "Shipment Type",
+  "textPackSize": "Pack Size",
+
+  "textError": "Error",
+  "textStatusUpdateFailed": "Failed to update status. Please try again.",
 
   //
 };

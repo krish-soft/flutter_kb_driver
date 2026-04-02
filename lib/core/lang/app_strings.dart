@@ -155,7 +155,7 @@ class AppStrings {
   static const textExistingBankAccount = "textExistingBankAccount";
   static const textAccountHolderName = "textAccountHolderName";
 
-  // 
+  //
   static const textDashboard = "textDashboard";
   static const textWelcomeBack = "textWelcomeBack";
   static const textDeliveryOverview = "textDeliveryOverview";
@@ -163,23 +163,41 @@ class AppStrings {
   static const textRating = "textRating";
   static const textReviews = "textReviews";
 
-  static const textOnline = "textOnline"; 
-  static const textOffline = "textOffline"; 
-  static const textReadyToReceiveDeliveryRequests = "textReadyToReceiveDeliveryRequests";
-  static const textSwitchOnlineToReceiveDeliveries = "textSwitchOnlineToReceiveDeliveries";
+  static const textOnline = "textOnline";
+  static const textOffline = "textOffline";
+  static const textReadyToReceiveDeliveryRequests =
+      "textReadyToReceiveDeliveryRequests";
+  static const textSwitchOnlineToReceiveDeliveries =
+      "textSwitchOnlineToReceiveDeliveries";
 
-    static const textTotalDeliveries = "textTotalDeliveries"; 
+  static const textTotalDeliveries = "textTotalDeliveries";
 
   static const textAvailableEarnings = "textAvailableEarnings";
   static const textPendingSettlement = "textPendingSettlement";
 
   static const textKycUnderReview = "textKycUnderReview";
   static const textKycDetailsSubmitted = "textKycDetailsSubmitted";
-  
+
   static const textRequestedDeliveries = "textRequestedDeliveries";
   static const textActiveDeliveries = "textActiveDeliveries";
   static const textRequestOtp = "textRequestOtp";
   static const textAskReceiverOtp = "textAskReceiverOtp";
+
+  static const textShipmentPackageNumber = "textShipmentPackageNumber";
+  static const textShipmentPackageNumberTrace =
+      "textShipmentPackageNumberTrace";
+
+  static const textPackage = "textPackage";
+  static const textSeller = "textSeller";
+  static const textBuyer = "textBuyer";
+  static const textMarket = "textMarket";
+  static const textShipmentType = "textShipmentType";
+  static const textPackSize = "textPackSize";
+
+
+  static const textError = "textError";
+  static const textStatusUpdateFailed = "textStatusUpdateFailed";
+
 
 
   //

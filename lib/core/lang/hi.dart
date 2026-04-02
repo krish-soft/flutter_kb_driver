@@ -172,5 +172,20 @@ const Map<String, String> hiIN = {
   "textRequestOtp": "OTP अनुरोध करें",
   "textAskReceiverOtp": "डिलिवरी पुष्टि करने से पहले रिसीवर से OTP पूछें",
 
+  "textStatus": "स्थिति",
+
+  "textShipmentPackageNumber": "शिपमेंट पैकेज नंबर",
+  "textShipmentPackageNumberTrace": "ट्रेस",
+
+  "textPackage": "पैकेज",
+  "textSeller": "विक्रेता",
+  "textBuyer": "खरीदार",
+  "textMarket": "बाजार",
+  "textShipmentType": "शिपमेंट प्रकार",
+  "textPackSize": "पैक आकार",
+
+  "textError": "त्रुटि",
+  "textStatusUpdateFailed": "स्थिति अपडेट करने में विफल। कृपया पुनः प्रयास करें।",
+
   //
 };

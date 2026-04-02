@@ -154,7 +154,9 @@ class _ActiveDeliveryScreenState extends State<ActiveDeliveryScreen> {
                                 children: [
                                   /// PICKUP
                                   Text(
-                                    "${origin["line1"]}, ${origin["village"] ?? ''}, ${origin["city"] ?? ''}",
+                                    origin != null
+                                        ? "${origin["line1"] ?? ''}, ${origin["village"] ?? ''}, ${origin["city"] ?? ''}"
+                                        : "N/A",
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.textPrimary,
@@ -165,7 +167,9 @@ class _ActiveDeliveryScreenState extends State<ActiveDeliveryScreen> {
 
                                   /// DELIVERY
                                   Text(
-                                    "${destination["line1"] ?? ''}, ${destination["village"] ?? ''}, ${destination["city"] ?? ''}",
+                                    destination != null
+                                        ? "${destination["line1"] ?? ''}, ${destination["village"] ?? ''}, ${destination["city"] ?? ''}"
+                                        : "N/A",
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: AppColors.textPrimary,

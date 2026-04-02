@@ -178,7 +178,7 @@ class ShipmentController extends GetxController {
   }
 
   // Package status update (pickup/delivery)
-  Future<ApiResponseModel> updatePkgBuyerStatus(
+  Future<ApiResponseModel> updatePkgStatus(
     int driverShipmentId,
     int shipmentPackageId,
     String status,
@@ -191,7 +191,7 @@ class ShipmentController extends GetxController {
       'status': status,
     };
 
-    ApiResponseModel res = await _repo.updatePkgBuyerStatus(payload);
+    ApiResponseModel res = await _repo.updatePkgStatus(payload);
 
     isLoading.value = false;
 
@@ -207,63 +207,93 @@ class ShipmentController extends GetxController {
     return res;
   }
 
-  Future<ApiResponseModel> updatePkgSellerStatus(
-    int driverShipmentId,
-    int shipmentPackageId,
-    String status,
-  ) async {
-    isLoading.value = true;
 
-    final Map<String, dynamic> payload = {
-      'driver_shipment_id': driverShipmentId,
-      'shipment_package_id': shipmentPackageId,
-      'status': status,
-    };
+  // Future<ApiResponseModel> updatePkgBuyerStatus(
+  //   int driverShipmentId,
+  //   int shipmentPackageId,
+  //   String status,
+  // ) async {
+  //   isLoading.value = true;
 
-    ApiResponseModel res = await _repo.updatePkgSellerStatus(payload);
+  //   final Map<String, dynamic> payload = {
+  //     'driver_shipment_id': driverShipmentId,
+  //     'shipment_package_id': shipmentPackageId,
+  //     'status': status,
+  //   };
 
-    isLoading.value = false;
+  //   ApiResponseModel res = await _repo.updatePkgBuyerStatus(payload);
 
-    if (res.isSuccess == true) {
-      // MessageManager.showSuccess(res.message);
+  //   isLoading.value = false;
 
-      /// refresh active deliveries
-      loadNeedToDeliverShipments();
-    } else {
-      MessageManager.showError(res.message);
-    }
+  //   if (res.isSuccess == true) {
+  //     // MessageManager.showSuccess(res.message);
 
-    return res;
-  }
+  //     /// refresh active deliveries
+  //     loadNeedToDeliverShipments();
+  //   } else {
+  //     MessageManager.showError(res.message);
+  //   }
 
-  Future<ApiResponseModel> updatePkgTransferStatus(
-    int driverShipmentId,
-    int shipmentPackageId,
-    String status,
-  ) async {
-    isLoading.value = true;
+  //   return res;
+  // }
 
-    final Map<String, dynamic> payload = {
-      'driver_shipment_id': driverShipmentId,
-      'shipment_package_id': shipmentPackageId,
-      'status': status,
-    };
+  // Future<ApiResponseModel> updatePkgSellerStatus(
+  //   int driverShipmentId,
+  //   int shipmentPackageId,
+  //   String status,
+  // ) async {
+  //   isLoading.value = true;
 
-    ApiResponseModel res = await _repo.updatePkgTransferStatus(payload);
+  //   final Map<String, dynamic> payload = {
+  //     'driver_shipment_id': driverShipmentId,
+  //     'shipment_package_id': shipmentPackageId,
+  //     'status': status,
+  //   };
 
-    isLoading.value = false;
+  //   ApiResponseModel res = await _repo.updatePkgSellerStatus(payload);
 
-    if (res.isSuccess == true) {
-      // MessageManager.showSuccess(res.message);
+  //   isLoading.value = false;
 
-      /// refresh active deliveries
-      loadNeedToDeliverShipments();
-    } else {
-      MessageManager.showError(res.message);
-    }
+  //   if (res.isSuccess == true) {
+  //     // MessageManager.showSuccess(res.message);
 
-    return res;
-  }
+  //     /// refresh active deliveries
+  //     loadNeedToDeliverShipments();
+  //   } else {
+  //     MessageManager.showError(res.message);
+  //   }
+
+  //   return res;
+  // }
+
+  // Future<ApiResponseModel> updatePkgTransferStatus(
+  //   int driverShipmentId,
+  //   int shipmentPackageId,
+  //   String status,
+  // ) async {
+  //   isLoading.value = true;
+
+  //   final Map<String, dynamic> payload = {
+  //     'driver_shipment_id': driverShipmentId,
+  //     'shipment_package_id': shipmentPackageId,
+  //     'status': status,
+  //   };
+
+  //   ApiResponseModel res = await _repo.updatePkgTransferStatus(payload);
+
+  //   isLoading.value = false;
+
+  //   if (res.isSuccess == true) {
+  //     // MessageManager.showSuccess(res.message);
+
+  //     /// refresh active deliveries
+  //     loadNeedToDeliverShipments();
+  //   } else {
+  //     MessageManager.showError(res.message);
+  //   }
+
+  //   return res;
+  // }
 
   //  request delivery confirmation OTP for buyer
   Future<ApiResponseModel> requestDeliveryConfirmationOtp(

@@ -174,5 +174,20 @@ const Map<String, String> guIN = {
 
   "textAskReceiverOtp": "ડિલિવરી પુષ્ટિ કરતા પહેલા રિસીવરને OTP પૂછો",
 
+  "textStatus": "સ્થિતિ",
+
+  "textShipmentPackageNumber": "શિપમેન્ટ પેકેજ નંબર",
+  "textShipmentPackageNumberTrace": "ટ્રેસ",
+
+  "textPackage": "પેકેજ",
+  "textSeller": "વિક્રેતા",
+  "textBuyer": "ખરીદદાર",
+  "textMarket": "બજાર",
+  "textShipmentType": "શિપમેન્ટ પ્રકાર",
+  "textPackSize": "પેક સાઇઝ",
+
+  "textError": "ત્રુટિ",
+  "textStatusUpdateFailed": "સ્થિતિ અપડેટ કરવામાં નિષ્ફળ. કૃપા કરીને ફરી પ્રયાસ કરો.",
+
   ///
 };
