@@ -60,6 +60,9 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
   }
 
   Color statusColor(String status) {
+    if (status.contains("return")) return AppColors.warning;
+    if (status.contains("damage")) return AppColors.danger;
+    if (status.contains("lost")) return AppColors.danger;
     if (status.contains("not")) return AppColors.danger;
     if (status.contains("pending")) return AppColors.warning;
     return AppColors.success;
@@ -71,10 +74,11 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
     }
 
     if (shipmentType.contains("dispatch")) {
-      return ["delivered", "not_delivered"]; // temporary option
+      return ["delivered", "damaged", "lost"]; // temporary option
     }
 
-    return ["received", "not_received"];
+    return ["picked_up", "delivered"];
+    // return ["received", "not_received"];
   }
 
   Future<void> updateStatus(String status) async {
