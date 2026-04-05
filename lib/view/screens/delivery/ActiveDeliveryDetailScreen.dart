@@ -354,42 +354,45 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
             ],
 
             /// Shipment Information
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    AppStrings.textShipmentInformation.tr,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
+            // Container(
+            //   padding: const EdgeInsets.all(16),
+            //   decoration: BoxDecoration(
+            //     color: AppColors.white,
+            //     borderRadius: BorderRadius.circular(12),
+            //   ),
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text(
+            //         AppStrings.textShipmentInformation.tr,
+            //         style: const TextStyle(
+            //           fontWeight: FontWeight.bold,
+            //           fontSize: 16,
+            //         ),
+            //       ),
 
-                  const SizedBox(height: 10),
+            //       const SizedBox(height: 10),
 
-                  _infoRow(
-                    AppStrings.textTotalPackages.tr,
-                    "${updatedShipment["total_packages"]}",
-                  ),
+            //       _infoRow(
+            //         AppStrings.textTotalPackages.tr,
+            //         "${updatedShipment["total_packages"]}",
+            //       ),
 
-                  _infoRow(
-                    AppStrings.textTotalWeight.tr,
-                    "${payable["total_weight"]} kg",
-                  ),
+            //       _infoRow(
+            //         AppStrings.textTotalWeight.tr,
+            //         "${payable["total_weight"]} kg",
+            //       ),
 
-                  _infoRow(
-                    AppStrings.textTotalQuantity.tr,
-                    "${payable["total_quantity"]}",
-                  ),
-                ],
-              ),
-            ),
+            //       _infoRow(
+            //         AppStrings.textTotalQuantity.tr,
+            //         "${payable["total_quantity"]}",
+            //       ),
+            //     ],
+            //   ),
+            // ),
+
+            // const SizedBox(height: 16),
+            _shipmentPackagesSummaryBlock(updatedShipment),
 
             const SizedBox(height: 16),
 
@@ -439,6 +442,415 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
       );
     });
   }
+
+  Widget _shipmentPackagesSummaryBlock(dynamic shipment) {
+    final List summary =
+        (shipment?["shipment_packages_summary"] as List?) ?? [];
+
+    if (summary.isEmpty) {
+      return const SizedBox();
+    }
+
+    num safeNum(dynamic v) {
+      if (v == null) return 0;
+      if (v is int || v is double) return v;
+      return num.tryParse(v.toString()) ?? 0;
+    }
+
+    /// OVERALL TOTALS
+    num totalPackages = 0;
+    Map<String, num> unitTotals = {};
+
+    for (final item in summary) {
+      final packSize = safeNum(item["pack_size"]);
+      final qty = safeNum(item["total_packages"]);
+      final unit = item["pack_unit"] ?? "";
+
+      final total = packSize * qty;
+
+      totalPackages += qty;
+
+      unitTotals[unit] = (unitTotals[unit] ?? 0) + total;
+    }
+
+    String totalWeightText = unitTotals.entries
+        .map((e) => "${e.value} ${e.key}")
+        .join(" + ");
+
+    /// STATUS TOTALS
+    Map<String, num> statusPackages = {};
+    Map<String, Map<String, num>> statusUnits = {};
+
+    for (final item in summary) {
+      final packSize = safeNum(item["pack_size"]);
+      final unit = item["pack_unit"] ?? "";
+      final statusMap = (item["status_summary"] as Map?) ?? {};
+
+      statusMap.forEach((status, qtyValue) {
+        final qty = safeNum(qtyValue);
+
+        statusPackages[status] = (statusPackages[status] ?? 0) + qty;
+
+        statusUnits.putIfAbsent(status, () => {});
+
+        final weight = packSize * qty;
+
+        statusUnits[status]![unit] = (statusUnits[status]![unit] ?? 0) + weight;
+      });
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: const [BoxShadow(color: AppColors.shadow, blurRadius: 4)],
+      ),
+      child: DefaultTabController(
+        length: 2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            /// BLOCK TITLE
+            const Text(
+              "Shipment Packages Summary",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 12),
+
+            const TabBar(
+              labelColor: Colors.black,
+              indicatorColor: Colors.blue,
+              tabs: [
+                Tab(text: "Overall"),
+                Tab(text: "Status"),
+              ],
+            ),
+
+            const SizedBox(height: 10),
+
+            SizedBox(
+              height: 220,
+              child: TabBarView(
+                children: [
+                  /// OVERALL TAB
+                  Scrollbar(
+                    child: ListView(
+                      children: [
+                        ...summary.map((item) {
+                          final productName = item["product_name"] ?? "-";
+                          final packType = item["pack_type_unit"] ?? "-";
+
+                          final packSize = safeNum(item["pack_size"]);
+                          final qty = safeNum(item["total_packages"]);
+                          final unit = item["pack_unit"] ?? "";
+
+                          final total = packSize * qty;
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: Text(
+                                    productName,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+
+                                Expanded(
+                                  flex: 4,
+                                  child: Text(
+                                    "$qty $packType × ${packSize}$unit",
+                                  ),
+                                ),
+
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    "$total $unit",
+                                    textAlign: TextAlign.right,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+
+                        Divider(color: Colors.grey.shade300),
+
+                        /// TOTAL ROW
+                        Row(
+                          children: [
+                            const Expanded(
+                              flex: 4,
+                              child: Text(
+                                "TOTAL",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+
+                            Expanded(
+                              flex: 4,
+                              child: Text(
+                                "$totalPackages Packages",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+
+                            Expanded(
+                              flex: 2,
+                              child: Text(
+                                totalWeightText,
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  /// STATUS TAB
+                  Scrollbar(
+                    child: ListView(
+                      children: statusPackages.entries.map((entry) {
+                        final status = entry.key;
+                        final pkgCount = entry.value;
+
+                        final unitMap = statusUnits[status] ?? {};
+
+                        final weightText = unitMap.entries
+                            .map((e) => "${e.value} ${e.key}")
+                            .join(" + ");
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 4,
+                                child: Text(
+                                  status.toUpperCase(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+
+                              Expanded(
+                                flex: 4,
+                                child: Text("$pkgCount Packages"),
+                              ),
+
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  weightText,
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  // Widget _shipmentPackagesSummaryBlock(dynamic shipment) {
+  //   final List summary =
+  //       (shipment?["shipment_packages_summary"] as List?) ?? [];
+
+  //   if (summary.isEmpty) {
+  //     return const SizedBox();
+  //   }
+
+  //   num safeNum(dynamic v) {
+  //     if (v == null) return 0;
+  //     if (v is int || v is double) return v;
+  //     return num.tryParse(v.toString()) ?? 0;
+  //   }
+
+  //   return Container(
+  //     padding: const EdgeInsets.all(12),
+  //     decoration: BoxDecoration(
+  //       color: AppColors.white,
+  //       borderRadius: BorderRadius.circular(12),
+  //       boxShadow: const [BoxShadow(color: AppColors.shadow, blurRadius: 4)],
+  //     ),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         /// TITLE
+  //         const Text(
+  //           "Product Summary",
+  //           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+  //         ),
+
+  //         const SizedBox(height: 12),
+
+  //         /// SCROLL AREA
+  //         SingleChildScrollView(
+  //           scrollDirection: Axis.horizontal,
+  //           child: SizedBox(
+  //             width: 430,
+  //             child: Column(
+  //               children: [
+  //                 /// HEADER
+  //                 Container(
+  //                   padding: const EdgeInsets.symmetric(vertical: 8),
+  //                   decoration: BoxDecoration(
+  //                     color: Colors.grey.shade100,
+  //                     borderRadius: BorderRadius.circular(6),
+  //                   ),
+  //                   child: const Row(
+  //                     children: [
+  //                       SizedBox(
+  //                         width: 150,
+  //                         child: Text(
+  //                           "Product",
+  //                           style: TextStyle(fontWeight: FontWeight.bold),
+  //                         ),
+  //                       ),
+
+  //                       SizedBox(
+  //                         width: 80,
+  //                         child: Text(
+  //                           "Type",
+  //                           style: TextStyle(fontWeight: FontWeight.bold),
+  //                         ),
+  //                       ),
+
+  //                       SizedBox(
+  //                         width: 60,
+  //                         child: Text(
+  //                           "Size",
+  //                           style: TextStyle(fontWeight: FontWeight.bold),
+  //                         ),
+  //                       ),
+
+  //                       SizedBox(
+  //                         width: 60,
+  //                         child: Text(
+  //                           "Qty",
+  //                           style: TextStyle(fontWeight: FontWeight.bold),
+  //                         ),
+  //                       ),
+
+  //                       SizedBox(
+  //                         width: 80,
+  //                         child: Text(
+  //                           "Total",
+  //                           style: TextStyle(fontWeight: FontWeight.bold),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+
+  //                 const SizedBox(height: 6),
+
+  //                 /// ROWS
+  //                 ...summary.map((item) {
+  //                   final productName = item?["product_name"] ?? "-";
+  //                   final packType = item?["pack_type_unit"] ?? "-";
+
+  //                   final packSize = safeNum(item?["pack_size"]);
+  //                   final qty = safeNum(item?["total_packages"]);
+
+  //                   final packUnit = item?["pack_unit"] ?? "";
+
+  //                   final total = packSize * qty;
+
+  //                   return Container(
+  //                     padding: const EdgeInsets.symmetric(vertical: 10),
+  //                     decoration: BoxDecoration(
+  //                       border: Border(
+  //                         bottom: BorderSide(color: Colors.grey.shade200),
+  //                       ),
+  //                     ),
+  //                     child: Row(
+  //                       children: [
+  //                         SizedBox(
+  //                           width: 150,
+  //                           child: Text(
+  //                             productName,
+  //                             overflow: TextOverflow.ellipsis,
+  //                           ),
+  //                         ),
+
+  //                         SizedBox(width: 80, child: Text(packType)),
+
+  //                         SizedBox(width: 60, child: Text(packSize.toString())),
+
+  //                         SizedBox(
+  //                           width: 60,
+  //                           child: Container(
+  //                             alignment: Alignment.center,
+  //                             padding: const EdgeInsets.symmetric(vertical: 4),
+  //                             decoration: BoxDecoration(
+  //                               color: Colors.blue.shade50,
+  //                               borderRadius: BorderRadius.circular(4),
+  //                             ),
+  //                             child: Text(qty.toString()),
+  //                           ),
+  //                         ),
+
+  //                         SizedBox(
+  //                           width: 80,
+  //                           child: Container(
+  //                             alignment: Alignment.center,
+  //                             padding: const EdgeInsets.symmetric(vertical: 4),
+  //                             decoration: BoxDecoration(
+  //                               color: Colors.green.shade50,
+  //                               borderRadius: BorderRadius.circular(4),
+  //                             ),
+  //                             child: Text(
+  //                               "$total $packUnit",
+  //                               style: const TextStyle(
+  //                                 fontWeight: FontWeight.w600,
+  //                               ),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   );
+  //                 }).toList(),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _addressCard({
     required String title,

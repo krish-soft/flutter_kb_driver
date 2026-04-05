@@ -79,16 +79,6 @@ void onStart(ServiceInstance service) async {
   Timer? locationTimer;
   bool currentActiveState = false;
 
-  final bool isLoggedIn = await AppUtils.isUserLoggedIn();
-
-  // Check user logged in then work othersie stop service
-  if (!isLoggedIn) {
-    service.stopSelf();
-    // Also remove notifications if any
-    await flutterLocalNotificationsPlugin.cancelAll();
-    return;
-  }
-
   void startLocationTimer(bool isActiveDelivery) {
     locationTimer?.cancel();
 
@@ -127,6 +117,15 @@ void onStart(ServiceInstance service) async {
   /// ===== SHIPMENT CHECK TIMER =====
   Timer.periodic(const Duration(seconds: 60), (timer) async {
     print("Background checking shipments...");
+
+    final bool isLoggedIn = await AppUtils.isUserLoggedIn();
+
+    if (!isLoggedIn) {
+      locationTimer?.cancel();
+      timer.cancel(); // stop shipment polling
+      service.stopSelf();
+      return;
+    }
 
     bool hasNewShipment = false;
     bool hasActiveDelivery = false;
