@@ -197,6 +197,7 @@ class AppStrings {
 
   static const textError = "textError";
   static const textStatusUpdateFailed = "textStatusUpdateFailed";
+  static const textProductName = "textProductName";
 
 
 

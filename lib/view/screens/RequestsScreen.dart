@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/shipment_controller.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
+import 'package:kb_driver/utils/vibrate_manager.dart';
 import 'package:kb_driver/view/components/app_button.dart';
 import 'package:kb_driver/view/components/cmp_app_bar.dart';
 
@@ -15,6 +16,8 @@ class RequestsScreen extends StatefulWidget {
 
 class _RequestsScreenState extends State<RequestsScreen> {
   late ShipmentController controller;
+
+  final VibrateManager _vibrateManager = VibrateManager();
 
   @override
   void initState() {
@@ -237,6 +240,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                             title: AppStrings.textReject.tr,
                             background: AppColors.danger,
                             onPressed: () {
+                              _vibrateManager.vibrateMedium();
                               controller.rejectShipment(
                                 shipment["driver_shipment_id"],
                               );
@@ -251,6 +255,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                             title: AppStrings.textAccept.tr,
                             background: AppColors.primary,
                             onPressed: () {
+                              _vibrateManager.vibrateMedium();
                               controller.acceptShipment(
                                 shipment["driver_shipment_id"],
                               );

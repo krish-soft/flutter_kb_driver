@@ -186,6 +186,7 @@ const Map<String, String> hiIN = {
 
   "textError": "त्रुटि",
   "textStatusUpdateFailed": "स्थिति अपडेट करने में विफल। कृपया पुनः प्रयास करें।",
+  "textProductName": "उत्पाद का नाम",
 
   //
 };

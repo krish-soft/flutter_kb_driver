@@ -193,7 +193,7 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
         children: [
           Text(
             value,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 2),
           Text(
@@ -241,12 +241,23 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
                       pkg["package_number_market"] ?? "-",
                     ),
 
-                    infoBlock(AppStrings.textShipmentType.tr, shipmentType),
+                    //  Divider
+                    const Divider(height: 30, thickness: 1),
+
+                    infoBlock(
+                      AppStrings.textProductName.tr,
+                      "${pkg["product"]['name']}",
+                    ),
 
                     infoBlock(
                       AppStrings.textPackSize.tr,
                       "${pkg["pack_size"]} ${pkg["unit"]}",
                     ),
+
+                    //  Divider
+                    const Divider(height: 30, thickness: 1),
+
+                    infoBlock(AppStrings.textShipmentType.tr, shipmentType),
 
                     Row(
                       children: [

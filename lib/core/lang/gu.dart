@@ -188,6 +188,7 @@ const Map<String, String> guIN = {
 
   "textError": "ત્રુટિ",
   "textStatusUpdateFailed": "સ્થિતિ અપડેટ કરવામાં નિષ્ફળ. કૃપા કરીને ફરી પ્રયાસ કરો.",
+  "textProductName": "ઉત્પાદનનું નામ",
 
   ///
 };

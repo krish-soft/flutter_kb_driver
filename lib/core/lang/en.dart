@@ -190,5 +190,8 @@ const Map<String, String> enUS = {
   "textError": "Error",
   "textStatusUpdateFailed": "Failed to update status. Please try again.",
 
+  "textProductName": "Product Name",
+  
+
   //
 };

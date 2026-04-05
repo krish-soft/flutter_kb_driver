@@ -6,6 +6,7 @@ import 'package:kb_driver/core/data/models/api_response_model.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/driver_controller.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/shipment_controller.dart';
 import 'package:kb_driver/core/services/location_service.dart';
+import 'package:kb_driver/utils/app_utils.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -77,6 +78,16 @@ void onStart(ServiceInstance service) async {
   /// ===== LOCATION TIMER CONTROL =====
   Timer? locationTimer;
   bool currentActiveState = false;
+
+  final bool isLoggedIn = await AppUtils.isUserLoggedIn();
+
+  // Check user logged in then work othersie stop service
+  if (!isLoggedIn) {
+    service.stopSelf();
+    // Also remove notifications if any
+    await flutterLocalNotificationsPlugin.cancelAll();
+    return;
+  }
 
   void startLocationTimer(bool isActiveDelivery) {
     locationTimer?.cancel();

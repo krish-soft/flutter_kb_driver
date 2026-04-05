@@ -55,11 +55,11 @@ class APIClient {
     );
 
     /// DEBUG LOGGING ONLY
-    if (kDebugMode) {
-      _dio.interceptors.add(
-        LogInterceptor(requestBody: true, responseBody: true),
-      );
-    }
+    // if (kDebugMode) {
+    //   _dio.interceptors.add(
+    //     LogInterceptor(requestBody: true, responseBody: true),
+    //   );
+    // }
   }
 
   // ===============================================================
