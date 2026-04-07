@@ -26,98 +26,94 @@ class _DashboardScreenState extends State<DashboardScreen> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        return ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            /// WELCOME
-            Text(
-              AppStrings.textWelcomeBack.tr,
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-
-            const SizedBox(height: 4),
-
-            Text(
-              AppStrings.textDeliveryOverview.tr,
-              style: TextStyle(color: Colors.grey),
-            ),
-
-            const SizedBox(height: 20),
-
-            /// STATUS
-            _statusCard(),
-
-            const SizedBox(height: 20),
-
-            /// DELIVERIES FIRST
-            _deliveriesCard(),
-
-            const SizedBox(height: 16),
-
-            Row(
-              children: [
-                Expanded(
-                  child: _statCard(
-                    AppStrings.textRequestedDeliveries.tr,
-                    controller.requestedDeliveries.value.toString(),
-                    Icons.pending_actions,
-                    AppColors.warning,
-                  ),
+        return RefreshIndicator(
+          onRefresh: () async {
+            await controller.getDashboardData();
+          },
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              /// WELCOME
+              Text(
+                AppStrings.textWelcomeBack.tr,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
                 ),
+              ),
 
-                const SizedBox(width: 12),
+              const SizedBox(height: 4),
 
-                Expanded(
-                  child: _statCard(
-                    AppStrings.textActiveDeliveries.tr,
-                    controller.activeDeliveries.value.toString(),
-                    Icons.local_shipping_sharp,
-                    AppColors.tripAssigned,
+              Text(
+                AppStrings.textDeliveryOverview.tr,
+                style: const TextStyle(color: Colors.grey),
+              ),
+
+              const SizedBox(height: 20),
+
+              /// STATUS
+              _statusCard(),
+
+              const SizedBox(height: 20),
+
+              /// EARNINGS (MOVED UP)
+              _earningsCard(),
+
+              const SizedBox(height: 20),
+
+              /// DELIVERY STATS
+              Row(
+                children: [
+                  Expanded(
+                    child: _statCard(
+                      AppStrings.textRequestedDeliveries.tr,
+                      controller.requestedDeliveries.value.toString(),
+                      Icons.pending_actions,
+                      Colors.orange,
+                    ),
                   ),
-                ),
-              ],
-            ),
 
-            const SizedBox(height: 16),
+                  const SizedBox(width: 8),
 
-            /// EARNINGS
-            _earningsCard(),
-
-            const SizedBox(height: 16),
-
-            /// RATINGS
-            Row(
-              children: [
-                Expanded(
-                  child: _statCard(
-                    AppStrings.textRating.tr,
-                    controller.averageRating.value.toStringAsFixed(1),
-                    Icons.star,
-                    Colors.purpleAccent,
+                  Expanded(
+                    child: _statCard(
+                      AppStrings.textActiveDeliveries.tr,
+                      controller.activeDeliveries.value.toString(),
+                      Icons.local_shipping,
+                      Colors.blue,
+                    ),
                   ),
-                ),
 
-                // const SizedBox(width: 12),
+                  const SizedBox(width: 8),
 
-                // Expanded(
-                //   child: _statCard(
-                //     AppStrings.textReviews.tr,
-                //     controller.totalRatings.value.toString(),
-                //     Icons.rate_review,
-                //     Colors.blue,
-                //   ),
-                // ),
-              ],
-            ),
+                  Expanded(
+                    child: _statCard(
+                      AppStrings.textTotalDeliveries.tr,
+                      controller.totalDeliveries.value.toString(),
+                      Icons.inventory,
+                      Colors.green,
+                    ),
+                  ),
+                ],
+              ),
 
-            const SizedBox(height: 40),
-          ],
+              const SizedBox(height: 16),
+
+              /// SMALL RATING CARD
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(width: 120, child: _ratingCard()),
+              ),
+
+              const SizedBox(height: 40),
+            ],
+          ),
         );
       }),
     );
   }
 
-  /// STATUS CARD WITH RIPPLE
+  /// STATUS CARD
   Widget _statusCard() {
     return Obx(() {
       bool online = statusController.isOnline.value;
@@ -137,9 +133,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
         child: Row(
           children: [
-            RippleDot(color: Colors.white),
+            const Icon(Icons.circle, color: Colors.white, size: 10),
 
-            const SizedBox(width: 12),
+            const SizedBox(width: 10),
 
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,64 +165,62 @@ class _DashboardScreenState extends State<DashboardScreen> {
     });
   }
 
-  /// DELIVERIES BIG CARD
-  Widget _deliveriesCard() {
+  /// DELIVERY STAT CARD
+  Widget _statCard(String title, String value, IconData icon, Color color) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.05)),
-        ],
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
         children: [
-          const Icon(Icons.local_shipping, size: 36, color: Colors.blue),
+          Icon(icon, color: color, size: 22),
 
-          const SizedBox(height: 10),
+          const SizedBox(height: 6),
 
           Text(
-            controller.totalDeliveries.value.toString(),
-            style: const TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
+            value,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 4),
 
           Text(
-            AppStrings.textTotalDeliveries.tr,
-            style: const TextStyle(color: Colors.grey),
+            title,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 11, color: Colors.black54),
           ),
         ],
       ),
     );
   }
 
-  /// SMALL STAT CARD
-  Widget _statCard(String title, String value, IconData icon, Color color) {
+  /// SMALL RATING CARD
+  Widget _ratingCard() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.purple.withOpacity(0.1),
         borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(blurRadius: 8, color: Colors.black.withOpacity(0.05)),
-        ],
       ),
       child: Column(
         children: [
-          Icon(icon, color: color),
-
-          const SizedBox(height: 8),
-
-          Text(
-            value,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
+          const Icon(Icons.star, color: Colors.purple, size: 20),
 
           const SizedBox(height: 4),
 
-          Text(title, style: const TextStyle(color: Colors.grey)),
+          Text(
+            controller.averageRating.value.toStringAsFixed(1),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+
+          Text(
+            AppStrings.textRating.tr,
+            style: const TextStyle(fontSize: 11, color: Colors.black54),
+          ),
         ],
       ),
     );
@@ -254,7 +248,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       return Container(
         padding: const EdgeInsets.all(22),
         decoration: BoxDecoration(
-          // color: AppColors.primary,
           gradient: _balanceGradient(controller.availableBalance.value),
           borderRadius: BorderRadius.circular(16),
         ),
@@ -287,77 +280,5 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       );
     });
-  }
-}
-
-/// RIPPLE DOT ANIMATION
-class RippleDot extends StatefulWidget {
-  final Color color;
-
-  const RippleDot({super.key, required this.color});
-
-  @override
-  State<RippleDot> createState() => _RippleDotState();
-}
-
-class _RippleDotState extends State<RippleDot>
-    with SingleTickerProviderStateMixin {
-  late AnimationController controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 24,
-      height: 24,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          AnimatedBuilder(
-            animation: controller,
-            builder: (_, __) {
-              double scale = 1 + controller.value;
-              double opacity = 1 - controller.value;
-
-              return Transform.scale(
-                scale: scale,
-                child: Container(
-                  width: 16,
-                  height: 16,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: widget.color.withOpacity(opacity * 0.4),
-                  ),
-                ),
-              );
-            },
-          ),
-
-          Container(
-            width: 10,
-            height: 10,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: widget.color,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

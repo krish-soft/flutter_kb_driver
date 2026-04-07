@@ -7,6 +7,7 @@ class AppColors {
 
   /// Primary = Main tractor green
   static const Color primary = Color(0xFF2E7D32); // Farm Green
+  static const Color primaryDark = Color(0xFF1B5E20); // Darker Farm Green
 
   /// Secondary = Fresh leaf green
   static const Color secondary = Color(0xFF66BB6A); // Light Green

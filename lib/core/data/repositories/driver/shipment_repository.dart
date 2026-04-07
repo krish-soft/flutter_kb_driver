@@ -90,6 +90,8 @@ class ShipmentRepository extends BaseRepository {
     String proofImagePath,
     String? otp,
     String? requestId,
+    double? lat,
+    double? lng,
   ) {
     return execute(
       () async =>
@@ -101,6 +103,8 @@ class ShipmentRepository extends BaseRepository {
                 body: {
                   if (otp != null) 'otp': otp,
                   if (requestId != null) 'request_id': requestId,
+                  if (lat != null) 'latitude': lat,
+                  if (lng != null) 'longitude': lng,
                 },
 
                 /// ✅ FILE

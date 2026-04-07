@@ -46,229 +46,234 @@ class _RequestsScreenState extends State<RequestsScreen> {
           );
         }
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: controller.shipments.length,
-          itemBuilder: (context, index) {
-            final shipment = controller.shipments[index];
-            final origin = shipment["origin"];
-            final destination = shipment["destination"];
-            final payable = shipment["shipment_payable"];
-            final amount = payable?["final_payable_amount"] ?? 0;
-
-            return Container(
-              margin: const EdgeInsets.only(bottom: 18),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(14),
-                boxShadow: const [
-                  BoxShadow(
-                    color: AppColors.shadow,
-                    blurRadius: 6,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /// HEADER
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          shipment["shipment_number"],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: AppColors.textPrimary,
-                          ),
-                        ),
-
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.tripAssigned.withOpacity(.15),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Text(
-                            "REQUESTED",
-                            style: TextStyle(
-                              color: AppColors.tripAssigned,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
+        return RefreshIndicator(
+          onRefresh: () async {
+            await controller.loadRequestedShipments();
+          },
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: controller.shipments.length,
+            itemBuilder: (context, index) {
+              final shipment = controller.shipments[index];
+              final origin = shipment["origin"];
+              final destination = shipment["destination"];
+              final payable = shipment["shipment_payable"];
+              final amount = payable?["final_payable_amount"] ?? 0;
+          
+              return Container(
+                margin: const EdgeInsets.only(bottom: 18),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: AppColors.shadow,
+                      blurRadius: 6,
+                      offset: Offset(0, 3),
                     ),
-
-                    const SizedBox(height: 14),
-
-                    /// ROUTE
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          children: [
-                            const Icon(
-                              Icons.circle,
-                              size: 10,
-                              color: AppColors.success,
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// HEADER
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            shipment["shipment_number"],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: AppColors.textPrimary,
                             ),
-                            Container(
-                              width: 2,
-                              height: 32,
-                              color: AppColors.divider,
+                          ),
+          
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
                             ),
-                            const Icon(
-                              Icons.location_on,
-                              size: 16,
-                              color: AppColors.danger,
+                            decoration: BoxDecoration(
+                              color: AppColors.tripAssigned.withOpacity(.15),
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                          ],
-                        ),
-
-                        const SizedBox(width: 10),
-
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              /// PICKUP
-                              Text(
-                                origin != null
-                                    ? "${origin["line1"] ?? ""}, ${origin["village"] ?? ""}, ${origin["city"] ?? ""}"
-                                    : "Origin not provided",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textPrimary,
-                                ),
+                            child: const Text(
+                              "REQUESTED",
+                              style: TextStyle(
+                                color: AppColors.tripAssigned,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
                               ),
-
-                              const SizedBox(height: 12),
-
-                              /// DROP
+                            ),
+                          ),
+                        ],
+                      ),
+          
+                      const SizedBox(height: 14),
+          
+                      /// ROUTE
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            children: [
+                              const Icon(
+                                Icons.circle,
+                                size: 10,
+                                color: AppColors.success,
+                              ),
+                              Container(
+                                width: 2,
+                                height: 32,
+                                color: AppColors.divider,
+                              ),
+                              const Icon(
+                                Icons.location_on,
+                                size: 16,
+                                color: AppColors.danger,
+                              ),
+                            ],
+                          ),
+          
+                          const SizedBox(width: 10),
+          
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                /// PICKUP
+                                Text(
+                                  origin != null
+                                      ? "${origin["line1"] ?? ""}, ${origin["village"] ?? ""}, ${origin["city"] ?? ""}"
+                                      : "Origin not provided",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                ),
+          
+                                const SizedBox(height: 12),
+          
+                                /// DROP
+                                Text(
+                                  destination != null
+                                      ? "${destination["line1"] ?? ""}, ${destination["village"] ?? ""}, ${destination["city"] ?? ""}"
+                                      : "Destination not provided",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+          
+                      const SizedBox(height: 18),
+          
+                      /// PACKAGE INFO
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppColors.surface,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.inventory_2,
+                              size: 18,
+                              color: AppColors.primary,
+                            ),
+                          ),
+          
+                          const SizedBox(width: 10),
+          
+                          Text(
+                            "${shipment["total_packages"]} ${AppStrings.textTotalPackages.tr}",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+          
+                      const SizedBox(height: 18),
+          
+                      /// EARNINGS BOX
+                      if ((payable?["final_payable_amount"] ?? 0) > 0)
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: AppColors.success.withOpacity(.1),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.currency_rupee,
+                                color: AppColors.success,
+                              ),
+          
+                              const SizedBox(width: 6),
+          
                               Text(
-                                destination != null
-                                    ? "${destination["line1"] ?? ""}, ${destination["village"] ?? ""}, ${destination["city"] ?? ""}"
-                                    : "Destination not provided",
+                                "You Earn ₹${payable?["final_payable_amount"] ?? 0}",
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: AppColors.success,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 18),
-
-                    /// PACKAGE INFO
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: AppColors.surface,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(
-                            Icons.inventory_2,
-                            size: 18,
-                            color: AppColors.primary,
-                          ),
-                        ),
-
-                        const SizedBox(width: 10),
-
-                        Text(
-                          "${shipment["total_packages"]} ${AppStrings.textTotalPackages.tr}",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 18),
-
-                    /// EARNINGS BOX
-                    if ((payable?["final_payable_amount"] ?? 0) > 0)
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: AppColors.success.withOpacity(.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.currency_rupee,
-                              color: AppColors.success,
+          
+                      const SizedBox(height: 20),
+          
+                      /// ACTION BUTTONS
+                      Row(
+                        children: [
+                          Expanded(
+                            child: AppButton(
+                              title: AppStrings.textReject.tr,
+                              background: AppColors.danger,
+                              onPressed: () {
+                                _vibrateManager.vibrateMedium();
+                                controller.rejectShipment(
+                                  shipment["driver_shipment_id"],
+                                );
+                              },
                             ),
-
-                            const SizedBox(width: 6),
-
-                            Text(
-                              "You Earn ₹${payable?["final_payable_amount"] ?? 0}",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: AppColors.success,
-                              ),
+                          ),
+          
+                          const SizedBox(width: 12),
+          
+                          Expanded(
+                            child: AppButton(
+                              title: AppStrings.textAccept.tr,
+                              background: AppColors.primary,
+                              onPressed: () {
+                                _vibrateManager.vibrateMedium();
+                                controller.acceptShipment(
+                                  shipment["driver_shipment_id"],
+                                );
+                              },
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-
-                    const SizedBox(height: 20),
-
-                    /// ACTION BUTTONS
-                    Row(
-                      children: [
-                        Expanded(
-                          child: AppButton(
-                            title: AppStrings.textReject.tr,
-                            background: AppColors.danger,
-                            onPressed: () {
-                              _vibrateManager.vibrateMedium();
-                              controller.rejectShipment(
-                                shipment["driver_shipment_id"],
-                              );
-                            },
-                          ),
-                        ),
-
-                        const SizedBox(width: 12),
-
-                        Expanded(
-                          child: AppButton(
-                            title: AppStrings.textAccept.tr,
-                            background: AppColors.primary,
-                            onPressed: () {
-                              _vibrateManager.vibrateMedium();
-                              controller.acceptShipment(
-                                shipment["driver_shipment_id"],
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       }),
     );

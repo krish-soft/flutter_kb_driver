@@ -7,9 +7,18 @@ import 'package:kb_driver/core/controllers/locale_controller.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver_status_controller.dart';
 import 'package:kb_driver/core/lang/translations.dart';
 import 'package:kb_driver/core/services/driver_background_service.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // For secure storage
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: AppColors.primaryDark, // your green
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.dark,
+    ),
+  );
 
   await GetStorage.init();
 

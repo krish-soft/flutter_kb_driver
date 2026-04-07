@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:kb_driver/core/data/models/api_response_model.dart';
 import 'package:kb_driver/core/data/presentation/controllers/user/dashboard_controller.dart';
 import 'package:kb_driver/core/data/repositories/driver/shipment_repository.dart';
+import 'package:kb_driver/core/services/location_service.dart';
 import 'package:kb_driver/utils/message_manager.dart';
 
 class ShipmentController extends GetxController {
@@ -153,11 +154,28 @@ class ShipmentController extends GetxController {
   ) async {
     isLoading.value = true;
 
+    double? lat = null;
+    double? lng = null;
+
+    try {
+      // Get Location
+      final position = await DriverLocationService.getCurrentLocation();
+
+      if (position != null) {
+         lat = position.latitude;
+         lng = position.longitude;
+      }
+    } catch (e) {
+      // print("Location error: $e");
+    }
+
     ApiResponseModel res = await _repo.completeShipment(
       driverShipmentId,
       proofImagePath,
       otp,
       requestId,
+      lat,
+      lng,
     );
 
     isLoading.value = false;
@@ -206,7 +224,6 @@ class ShipmentController extends GetxController {
 
     return res;
   }
-
 
   // Future<ApiResponseModel> updatePkgBuyerStatus(
   //   int driverShipmentId,

@@ -84,9 +84,11 @@ void onStart(ServiceInstance service) async {
 
     final interval = isActiveDelivery ? 15 : 30;
 
-    print("Starting location timer: $interval sec");
+    // print("Starting location timer: $interval sec");
 
-    locationTimer = Timer.periodic(Duration(seconds: interval), (timer) async {
+    locationTimer = Timer.periodic(Duration(seconds: interval * 3), (
+      timer,
+    ) async {
       print("Background location checking...");
 
       final position = await DriverLocationService.getCurrentLocation();
@@ -95,7 +97,7 @@ void onStart(ServiceInstance service) async {
         final lat = position.latitude;
         final lng = position.longitude;
 
-        print("Lat: $lat, Lng: $lng");
+        // print("Lat: $lat, Lng: $lng");
 
         /// 👉 CALL YOUR API HERE
         await driverController.updateLastLocation(lat, lng, null);
@@ -115,17 +117,18 @@ void onStart(ServiceInstance service) async {
   startLocationTimer(false);
 
   /// ===== SHIPMENT CHECK TIMER =====
-  Timer.periodic(const Duration(seconds: 60), (timer) async {
+  Timer.periodic(const Duration(seconds: 60 * 2), (timer) async {
     print("Background checking shipments...");
 
-    final bool isLoggedIn = await AppUtils.isUserLoggedIn();
+    // final bool isLoggedIn = await AppUtils.isUserLoggedIn() ?? true;
 
-    if (!isLoggedIn) {
-      locationTimer?.cancel();
-      timer.cancel(); // stop shipment polling
-      service.stopSelf();
-      return;
-    }
+    // print("Login check from background: $isLoggedIn");
+    // if (!isLoggedIn) {
+    //   locationTimer?.cancel();
+    //   timer.cancel(); // stop shipment polling
+    //   service.stopSelf();
+    //   return;
+    // }
 
     bool hasNewShipment = false;
     bool hasActiveDelivery = false;
@@ -162,7 +165,7 @@ void onStart(ServiceInstance service) async {
             knownShipmentIds.add(id);
             hasNewShipment = true;
 
-            print("NEW SHIPMENT DETECTED → $id");
+            // print("NEW SHIPMENT DETECTED → $id");
           }
         }
 

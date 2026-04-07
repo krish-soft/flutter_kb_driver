@@ -41,208 +41,213 @@ class _ActiveDeliveryScreenState extends State<ActiveDeliveryScreen> {
           return Center(child: Text(AppStrings.textNoShipments.tr));
         }
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: controller.activeShipments.length,
+        return RefreshIndicator(
+          onRefresh: () async {
+            await controller.loadNeedToDeliverShipments();
+          },
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: controller.activeShipments.length,
 
-          itemBuilder: (context, index) {
-            final shipment = controller.activeShipments[index];
-            final origin = shipment["origin"];
-            final destination = shipment["destination"];
+            itemBuilder: (context, index) {
+              final shipment = controller.activeShipments[index];
+              final origin = shipment["origin"];
+              final destination = shipment["destination"];
 
-            return GestureDetector(
-              onTap: () {
-                _vibrateManager.vibrateButton();
-                Get.to(() => ActiveDeliveryDetailScreen(shipment: shipment));
-              },
+              return GestureDetector(
+                onTap: () {
+                  _vibrateManager.vibrateButton();
+                  Get.to(() => ActiveDeliveryDetailScreen(shipment: shipment));
+                },
 
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 16),
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 16),
 
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: AppColors.shadow,
-                      blurRadius: 8,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      /// HEADER
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            shipment["shipment_number"],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-
-                          CommonChip(text: shipment["shipment_status"]),
-                          // Container(
-                          //   padding: const EdgeInsets.symmetric(
-                          //     horizontal: 10,
-                          //     vertical: 4,
-                          //   ),
-
-                          //   decoration: BoxDecoration(
-                          //     color: AppColors.tripAssigned.withOpacity(.15),
-                          //     borderRadius: BorderRadius.circular(20),
-                          //   ),
-
-                          //   child: Text(
-                          //     shipment["shipment_status"],
-                          //     style: const TextStyle(
-                          //       color: AppColors.tripAssigned,
-                          //       fontSize: 12,
-                          //       fontWeight: FontWeight.bold,
-                          //     ),
-                          //   ),
-                          // ),
-                        ],
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: AppColors.shadow,
+                        blurRadius: 8,
+                        offset: Offset(0, 4),
                       ),
+                    ],
+                  ),
 
-                      if (shipment["shipment_status"]
-                              .toString()
-                              .toLowerCase() !=
-                          "completed") ...[
-                        const SizedBox(height: 14),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
 
-                        /// ROUTE VISUAL
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        /// HEADER
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
-                              children: [
-                                const Icon(
-                                  Icons.circle,
-                                  size: 10,
-                                  color: AppColors.success,
-                                ),
-
-                                Container(
-                                  width: 2,
-                                  height: 30,
-                                  color: AppColors.divider,
-                                ),
-
-                                const Icon(
-                                  Icons.location_on,
-                                  size: 16,
-                                  color: AppColors.danger,
-                                ),
-                              ],
+                            Text(
+                              shipment["shipment_number"],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: AppColors.textPrimary,
+                              ),
                             ),
 
-                            const SizedBox(width: 10),
+                            CommonChip(text: shipment["shipment_status"]),
+                            // Container(
+                            //   padding: const EdgeInsets.symmetric(
+                            //     horizontal: 10,
+                            //     vertical: 4,
+                            //   ),
 
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            //   decoration: BoxDecoration(
+                            //     color: AppColors.tripAssigned.withOpacity(.15),
+                            //     borderRadius: BorderRadius.circular(20),
+                            //   ),
+
+                            //   child: Text(
+                            //     shipment["shipment_status"],
+                            //     style: const TextStyle(
+                            //       color: AppColors.tripAssigned,
+                            //       fontSize: 12,
+                            //       fontWeight: FontWeight.bold,
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        ),
+
+                        if (shipment["shipment_status"]
+                                .toString()
+                                .toLowerCase() !=
+                            "completed") ...[
+                          const SizedBox(height: 14),
+
+                          /// ROUTE VISUAL
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
                                 children: [
-                                  /// PICKUP
-                                  Text(
-                                    origin != null
-                                        ? "${origin["line1"] ?? ''}, ${origin["village"] ?? ''}, ${origin["city"] ?? ''}"
-                                        : "N/A",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textPrimary,
-                                    ),
+                                  const Icon(
+                                    Icons.circle,
+                                    size: 10,
+                                    color: AppColors.success,
                                   ),
 
-                                  const SizedBox(height: 12),
+                                  Container(
+                                    width: 2,
+                                    height: 30,
+                                    color: AppColors.divider,
+                                  ),
 
-                                  /// DELIVERY
-                                  Text(
-                                    destination != null
-                                        ? "${destination["line1"] ?? ''}, ${destination["village"] ?? ''}, ${destination["city"] ?? ''}"
-                                        : "N/A",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textPrimary,
-                                    ),
+                                  const Icon(
+                                    Icons.location_on,
+                                    size: 16,
+                                    color: AppColors.danger,
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                      const SizedBox(height: 16),
 
-                      /// FOOTER INFO
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          /// TYPE
-                          CommonChip(
-                            text: shipment["shipment_type"].toUpperCase(),
-                            isType: true,
-                          ),
-                          // Container(
-                          //   padding: const EdgeInsets.symmetric(
-                          //     horizontal: 10,
-                          //     vertical: 6,
-                          //   ),
+                              const SizedBox(width: 10),
 
-                          //   decoration: BoxDecoration(
-                          //     color: AppColors.tripPickup.withOpacity(.15),
-                          //     borderRadius: BorderRadius.circular(20),
-                          //   ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    /// PICKUP
+                                    Text(
+                                      origin != null
+                                          ? "${origin["line1"] ?? ''}, ${origin["village"] ?? ''}, ${origin["city"] ?? ''}"
+                                          : "N/A",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.textPrimary,
+                                      ),
+                                    ),
 
-                          //   child: Text(
-                          //     shipment["shipment_type"].toUpperCase(),
-                          //     style: const TextStyle(
-                          //       color: AppColors.tripPickup,
-                          //       fontWeight: FontWeight.w600,
-                          //       fontSize: 12,
-                          //     ),
-                          //   ),
-                          // ),
+                                    const SizedBox(height: 12),
 
-                          /// PACKAGES
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.inventory_2,
-                                size: 18,
-                                color: AppColors.primary,
-                              ),
-
-                              const SizedBox(width: 6),
-
-                              Text(
-                                "${shipment["total_packages"]} Packages",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.textSecondary,
+                                    /// DELIVERY
+                                    Text(
+                                      destination != null
+                                          ? "${destination["line1"] ?? ''}, ${destination["village"] ?? ''}, ${destination["city"] ?? ''}"
+                                          : "N/A",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.textPrimary,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-
-                          const Icon(Icons.arrow_forward_ios, size: 16),
                         ],
-                      ),
-                    ],
+                        const SizedBox(height: 16),
+
+                        /// FOOTER INFO
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            /// TYPE
+                            CommonChip(
+                              text: shipment["shipment_type"].toUpperCase(),
+                              isType: true,
+                            ),
+                            // Container(
+                            //   padding: const EdgeInsets.symmetric(
+                            //     horizontal: 10,
+                            //     vertical: 6,
+                            //   ),
+
+                            //   decoration: BoxDecoration(
+                            //     color: AppColors.tripPickup.withOpacity(.15),
+                            //     borderRadius: BorderRadius.circular(20),
+                            //   ),
+
+                            //   child: Text(
+                            //     shipment["shipment_type"].toUpperCase(),
+                            //     style: const TextStyle(
+                            //       color: AppColors.tripPickup,
+                            //       fontWeight: FontWeight.w600,
+                            //       fontSize: 12,
+                            //     ),
+                            //   ),
+                            // ),
+
+                            /// PACKAGES
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.inventory_2,
+                                  size: 18,
+                                  color: AppColors.primary,
+                                ),
+
+                                const SizedBox(width: 6),
+
+                                Text(
+                                  "${shipment["total_packages"]} Packages",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            const Icon(Icons.arrow_forward_ios, size: 16),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       }),
     );
