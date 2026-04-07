@@ -58,19 +58,23 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> appCheck() async {
-    final ApiResponseModel resp = await _metaRepo.getAppMeta();
+    final resp = await _metaRepo.getAppMeta();
 
     if (resp.isSuccess != true) {
       await _navigateByAuth();
       return;
     }
 
-    //
+    final Map<String, dynamic> data = resp.data ?? {};
 
-    final data = resp.data;
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    final String currentVersion = info.version;
 
     final bool isMaintenance = data['is_maintenance_mode'] ?? false;
-    final bool isForceUpdate = data['is_force_android_update'] ?? false;
+    final bool isForceUpdate = data['is_force_driver_android_update'] ?? false;
+    final String serverAppVersionNeed =
+        data['driver_android_app_version'] ?? '1.0.0';
+
     _maintenanceMessage = data['maintenance_message'];
 
     if (isMaintenance) {
@@ -78,10 +82,25 @@ class _SplashScreenState extends State<SplashScreen> {
       return;
     }
 
-    if (isForceUpdate) {
+    if (isForceUpdate && isVersionLower(currentVersion, serverAppVersionNeed)) {
       setState(() => _state = SplashState.forceUpdate);
       return;
     }
+  }
+
+  bool isVersionLower(String current, String required) {
+    List<int> c = current.split('.').map(int.parse).toList();
+    List<int> r = required.split('.').map(int.parse).toList();
+
+    for (int i = 0; i < r.length; i++) {
+      int cv = i < c.length ? c[i] : 0;
+      int rv = r[i];
+
+      if (cv < rv) return true;
+      if (cv > rv) return false;
+    }
+
+    return false;
   }
 
   Future<void> _boot() async {
