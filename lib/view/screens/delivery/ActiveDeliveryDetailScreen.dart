@@ -195,52 +195,103 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
                   ),
 
                 const SizedBox(height: 20),
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
 
-                /// CONFIRM BUTTON
-                AppButton(
-                  title: AppStrings.textConfirmDelivery.tr,
-                  background: AppColors.success,
-                  onPressed: () async {
-                    _vibratorManager.vibrateButton();
-                    if (imagePath == null) {
-                      // Get.snackbar("Error", AppStrings.textPhotoRequired.tr);
-                      MessageManager.showError(AppStrings.textPhotoRequired.tr);
-                      return;
-                    }
+                  return AppButton(
+                    title: AppStrings.textConfirmDelivery.tr,
+                    background: AppColors.success,
+                    onPressed: () async {
+                      _vibratorManager.vibrateButton();
 
-                    if (otpEnabled && otpController.text.isEmpty) {
-                      // Get.snackbar("Error", AppStrings.textOtpRequired.tr);
-                      MessageManager.showError(AppStrings.textOtpRequired.tr);
-                      return;
-                    }
-
-                    controller.isLoading.value = true;
-
-                    // Get.back();
-
-                    final ApiResponseModel res = await controller
-                        .completeShipment(
-                          shipment["driver_shipment_id"],
-                          imagePath!,
-                          otpEnabled ? otpController.text.trim() : null,
-                          otpEnabled ? requestIdController.text.trim() : null,
+                      if (imagePath == null) {
+                        MessageManager.showError(
+                          AppStrings.textPhotoRequired.tr,
                         );
+                        return;
+                      }
 
-                    controller.isLoading.value = false;
+                      if (otpEnabled && otpController.text.isEmpty) {
+                        MessageManager.showError(AppStrings.textOtpRequired.tr);
+                        return;
+                      }
 
-                    /// Refresh shipment list
-                    // controller.loadNeedToDeliverShipments();
-                    if (res.isSuccess == true) {
-                      Get.back(); // close bottom sheet
+                      controller.isLoading.value = true;
 
-                      controller.loadNeedToDeliverShipments();
+                      final ApiResponseModel res = await controller
+                          .completeShipment(
+                            shipment["driver_shipment_id"],
+                            imagePath!,
+                            otpEnabled ? otpController.text.trim() : null,
+                            otpEnabled ? requestIdController.text.trim() : null,
+                          );
 
-                      Get.back(); // go back screen ONLY on success
-                    } else {
-                      MessageManager.showError(res.message.toString());
-                    }
-                  },
-                ),
+                      controller.isLoading.value = false;
+
+                      if (res.isSuccess == true) {
+                        Get.back(); // close bottom sheet
+                        controller.loadNeedToDeliverShipments();
+                        Get.back(); // go back screen
+                      } else {
+                        MessageManager.showError(res.message.toString());
+                      }
+                    },
+                  );
+                }), 
+
+                // ORG
+                // /// CONFIRM BUTTON
+                // AppButton(
+                //   title: AppStrings.textConfirmDelivery.tr,
+                //   background: AppColors.success,
+                //   onPressed: () async {
+                //     _vibratorManager.vibrateButton();
+                //     if (imagePath == null) {
+                //       // Get.snackbar("Error", AppStrings.textPhotoRequired.tr);
+                //       MessageManager.showError(AppStrings.textPhotoRequired.tr);
+                //       return;
+                //     }
+
+                //     if (otpEnabled && otpController.text.isEmpty) {
+                //       // Get.snackbar("Error", AppStrings.textOtpRequired.tr);
+                //       MessageManager.showError(AppStrings.textOtpRequired.tr);
+                //       return;
+                //     }
+
+                //     controller.isLoading.value = true;
+
+                //     // Get.back();
+
+                //     final ApiResponseModel res = await controller
+                //         .completeShipment(
+                //           shipment["driver_shipment_id"],
+                //           imagePath!,
+                //           otpEnabled ? otpController.text.trim() : null,
+                //           otpEnabled ? requestIdController.text.trim() : null,
+                //         );
+
+                //     controller.isLoading.value = false;
+
+                //     /// Refresh shipment list
+                //     // controller.loadNeedToDeliverShipments();
+                //     if (res.isSuccess == true) {
+                //       Get.back(); // close bottom sheet
+
+                //       controller.loadNeedToDeliverShipments();
+
+                //       Get.back(); // go back screen ONLY on success
+                //     } else {
+                //       MessageManager.showError(res.message.toString());
+                //     }
+                //   },
+                // ),
               ],
             ),
           );
@@ -277,10 +328,6 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
       final bool canStart = status == "pending" || status == "accepted";
       final bool canComplete = status == "in_transit";
       final bool delivered = status == "delivered" || status == "completed";
-
-      if (controller.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
 
       return Scaffold(
         backgroundColor: AppColors.background,

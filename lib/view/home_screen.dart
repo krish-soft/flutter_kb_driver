@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:get/get.dart';
+import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/core/data/models/api_response_model.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/driver_controller.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver/shipment_controller.dart';
@@ -238,81 +240,167 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// UI
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(child: _screens[_currentIndex]),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        // statusBarColor: Colors.transparent,
+        statusBarColor: AppColors.primaryDark,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.light,
+      ),
+      child: Scaffold(
+        body: SafeArea(
+          child: IndexedStack(index: _currentIndex, children: _screens),
+        ),
 
-      /// FAB
-      floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        child: FloatingActionButton(
-          shape: const CircleBorder(),
-          elevation: 12,
-          backgroundColor: _isOnline ? Colors.green : Colors.red,
-          onPressed: _toggleDriverStatus,
-          child: Icon(
-            _isOnline ? Icons.drive_eta : Icons.no_transfer,
-            size: 28,
-            color: Colors.white,
+        /// FAB
+        floatingActionButton: Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          child: FloatingActionButton(
+            shape: const CircleBorder(),
+            elevation: 12,
+            backgroundColor: _isOnline ? Colors.green : Colors.red,
+            onPressed: _toggleDriverStatus,
+            child: Icon(
+              _isOnline ? Icons.drive_eta : Icons.no_transfer,
+              size: 28,
+              color: Colors.white,
+            ),
           ),
         ),
-      ),
 
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-      /// Bottom Bar
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 12,
-              offset: Offset(0, -3),
-            ),
-          ],
-        ),
-        child: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 12,
-          elevation: 6,
-          child: SizedBox(
-            height: 70,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _navItem(
-                  Icons.dashboard_customize,
-                  AppStrings.screenDashboard.tr,
-                  0,
-                ),
+        /// Bottom Bar
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 12,
+                offset: Offset(0, -3),
+              ),
+            ],
+          ),
+          child: BottomAppBar(
+            shape: const CircularNotchedRectangle(),
+            notchMargin: 12,
+            elevation: 6,
+            child: SizedBox(
+              height: 70,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _navItem(
+                    Icons.dashboard_customize,
+                    AppStrings.screenDashboard.tr,
+                    0,
+                  ),
 
-                _navItem(
-                  Icons.assignment_outlined,
-                  AppStrings.screenRequests.tr,
-                  1,
-                  showBadge: _hasRequest,
-                  badgeCount: _numberOfRequests,
-                ),
+                  _navItem(
+                    Icons.assignment_outlined,
+                    AppStrings.screenRequests.tr,
+                    1,
+                    showBadge: _hasRequest,
+                    badgeCount: _numberOfRequests,
+                  ),
 
-                const SizedBox(width: 40),
+                  const SizedBox(width: 40),
 
-                _navItem(
-                  Icons.local_shipping_outlined,
-                  AppStrings.screenActiveDelivery.tr,
-                  2,
-                  showBadge: _hasActiveDelivery,
-                  badgeCount: _numberOfActiveDelivery,
-                ),
+                  _navItem(
+                    Icons.local_shipping_outlined,
+                    AppStrings.screenActiveDelivery.tr,
+                    2,
+                    showBadge: _hasActiveDelivery,
+                    badgeCount: _numberOfActiveDelivery,
+                  ),
 
-                _navItem(Icons.menu, AppStrings.screenMore.tr, 3),
-              ],
+                  _navItem(Icons.menu, AppStrings.screenMore.tr, 3),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     body: SafeArea(child: _screens[_currentIndex]),
+
+  //     /// FAB
+  //     floatingActionButton: Container(
+  //       margin: const EdgeInsets.only(bottom: 8),
+  //       child: FloatingActionButton(
+  //         shape: const CircleBorder(),
+  //         elevation: 12,
+  //         backgroundColor: _isOnline ? Colors.green : Colors.red,
+  //         onPressed: _toggleDriverStatus,
+  //         child: Icon(
+  //           _isOnline ? Icons.drive_eta : Icons.no_transfer,
+  //           size: 28,
+  //           color: Colors.white,
+  //         ),
+  //       ),
+  //     ),
+
+  //     floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+  //     /// Bottom Bar
+  //     bottomNavigationBar: Container(
+  //       decoration: const BoxDecoration(
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: Colors.black26,
+  //             blurRadius: 12,
+  //             offset: Offset(0, -3),
+  //           ),
+  //         ],
+  //       ),
+  //       child: BottomAppBar(
+  //         shape: const CircularNotchedRectangle(),
+  //         notchMargin: 12,
+  //         elevation: 6,
+  //         child: SizedBox(
+  //           height: 70,
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //             children: [
+  //               _navItem(
+  //                 Icons.dashboard_customize,
+  //                 AppStrings.screenDashboard.tr,
+  //                 0,
+  //               ),
+
+  //               _navItem(
+  //                 Icons.assignment_outlined,
+  //                 AppStrings.screenRequests.tr,
+  //                 1,
+  //                 showBadge: _hasRequest,
+  //                 badgeCount: _numberOfRequests,
+  //               ),
+
+  //               const SizedBox(width: 40),
+
+  //               _navItem(
+  //                 Icons.local_shipping_outlined,
+  //                 AppStrings.screenActiveDelivery.tr,
+  //                 2,
+  //                 showBadge: _hasActiveDelivery,
+  //                 badgeCount: _numberOfActiveDelivery,
+  //               ),
+
+  //               _navItem(Icons.menu, AppStrings.screenMore.tr, 3),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   /// NAV ITEM WITH BADGE
   ///
