@@ -68,6 +68,8 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
     final TextEditingController requestIdController = TextEditingController();
 
     requestDeliveryConfirmOtp() async {
+      _vibratorManager.vibrateHeavy();
+
       ApiResponseModel res = await controller.requestDeliveryConfirmationOtp(
         shipment["driver_shipment_id"],
       );
@@ -212,6 +214,8 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
                       return;
                     }
 
+                    controller.isLoading.value = true;
+
                     // Get.back();
 
                     final ApiResponseModel res = await controller
@@ -221,6 +225,8 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
                           otpEnabled ? otpController.text.trim() : null,
                           otpEnabled ? requestIdController.text.trim() : null,
                         );
+
+                    controller.isLoading.value = false;
 
                     /// Refresh shipment list
                     // controller.loadNeedToDeliverShipments();
@@ -271,6 +277,10 @@ class ActiveDeliveryDetailScreen extends StatelessWidget {
       final bool canStart = status == "pending" || status == "accepted";
       final bool canComplete = status == "in_transit";
       final bool delivered = status == "delivered" || status == "completed";
+
+      if (controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
       return Scaffold(
         backgroundColor: AppColors.background,
