@@ -124,7 +124,8 @@ class APIClient {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
     final headers = <String, String>{
-      'Accept-Language': AppWebTranslations.apiLanguage, // e.g. 'en', 'hi', 'gu'
+      'Accept-Language':
+          AppWebTranslations.apiLanguage, // e.g. 'en', 'hi', 'gu'
       'X-API-KEY': AppConstants.API_KEY,
       'X-App-Version': packageInfo.version,
       'X-Platform': kIsWeb

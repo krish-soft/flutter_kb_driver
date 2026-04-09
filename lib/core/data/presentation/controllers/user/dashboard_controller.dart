@@ -12,7 +12,6 @@ class DashboardController extends GetxController {
   var requestedDeliveries = 0.obs;
   var activeDeliveries = 0.obs;
 
-
   var totalRatings = 0.obs;
   var averageRating = 0.0.obs;
 
@@ -26,30 +25,48 @@ class DashboardController extends GetxController {
   }
 
   Future<void> getDashboardData() async {
-    final ApiResponseModel res = await _repo.getDashboardData();
+    try {
+      final ApiResponseModel res = await _repo.getDashboardData();
 
-    if (res.isSuccess == true) {
-      final data = res.data;
+      if (res.isSuccess == true && res.data != null) {
+        final data = res.data;
 
-      totalDeliveries.value = data['summary']['total_deliveries'] ?? 0;
-      requestedDeliveries.value = data['summary']['requested_deliveries'] ?? 0;
-      activeDeliveries.value = data['summary']['active_deliveries'] ?? 0;
+        final summary = data['summary'] ?? {};
+        final earnings = data['earnings'] ?? {};
 
-      totalRatings.value = data['summary']['total_ratings'] ?? 0;
+        totalDeliveries.value = _toInt(summary['total_deliveries']);
+        requestedDeliveries.value = _toInt(summary['requested_deliveries']);
+        activeDeliveries.value = _toInt(summary['active_deliveries']);
 
-      averageRating.value = (data['summary']['average_rating'] ?? 0).toDouble();
+        totalRatings.value = _toInt(summary['total_ratings']);
 
-      if (data['earnings'] != null) {
-        availableBalance.value = (data['earnings']['available_balance'] ?? 0)
-            .toDouble();
+        averageRating.value = _toDouble(summary['average_rating']);
 
-        pendingBalance.value = (data['earnings']['pending_balance'] ?? 0)
-            .toDouble();
+        availableBalance.value = _toDouble(earnings['available_balance']);
+        pendingBalance.value = _toDouble(earnings['pending_balance']);
+      } else {
+        MessageManager.showError(res.message ?? "Dashboard error");
       }
-    } else {
-      MessageManager.showError(res.message ?? "Dashboard error");
+    } catch (e) {
+      MessageManager.showError("Dashboard parsing error");
     }
 
     isLoading.value = false;
+  }
+
+  double _toDouble(dynamic value) {
+    if (value == null) return 0.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
+  }
+
+  int _toInt(dynamic value) {
+    if (value == null) return 0;
+    if (value is int) return value;
+    if (value is double) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? 0;
+    return 0;
   }
 }

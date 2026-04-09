@@ -16,7 +16,7 @@ void main() async {
     const SystemUiOverlayStyle(
       statusBarColor: AppColors.primaryDark, // your green
       statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.dark,
+      // statusBarBrightness: Brightness.dark,
     ),
   );
 

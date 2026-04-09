@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kb_driver/constants/app_colors.dart';
 import 'package:kb_driver/core/data/presentation/controllers/driver_status_controller.dart';
 import 'package:kb_driver/core/data/presentation/controllers/user/dashboard_controller.dart';
 import 'package:kb_driver/core/lang/app_strings.dart';
