@@ -225,6 +225,69 @@ class ShipmentController extends GetxController {
     return res;
   }
 
+  Future<ApiResponseModel> updatePkgStatusBulk(
+    int driverShipmentId,
+    List<int> shipmentPackageIds,
+    String status,
+  ) async {
+    if (shipmentPackageIds.isEmpty) {
+      return ApiResponseModel(
+        isSuccess: false,
+        message: 'No package selected.',
+      );
+    }
+
+    isLoading.value = true;
+
+    int successCount = 0;
+    int failureCount = 0;
+    String? firstFailureMessage;
+
+    for (final shipmentPackageId in shipmentPackageIds) {
+      final Map<String, dynamic> payload = {
+        'driver_shipment_id': driverShipmentId,
+        'shipment_package_id': shipmentPackageId,
+        'status': status,
+      };
+
+      ApiResponseModel res = await _repo.updatePkgStatus(payload);
+
+      if (res.isSuccess == true) {
+        successCount++;
+      } else {
+        failureCount++;
+        firstFailureMessage ??= res.message?.toString();
+      }
+    }
+
+    isLoading.value = false;
+
+    if (successCount > 0) {
+      loadNeedToDeliverShipments();
+    }
+
+    if (failureCount == 0) {
+      return ApiResponseModel(
+        isSuccess: true,
+        message: 'Updated status for $successCount package(s).',
+        data: {
+          'successCount': successCount,
+          'failureCount': failureCount,
+        },
+      );
+    }
+
+    return ApiResponseModel(
+      isSuccess: successCount > 0,
+      message:
+          firstFailureMessage ?? 'Some package statuses could not be updated.',
+      data: {
+        'successCount': successCount,
+        'failureCount': failureCount,
+      },
+    );
+  }
+
   // Future<ApiResponseModel> updatePkgBuyerStatus(
   //   int driverShipmentId,
   //   int shipmentPackageId,

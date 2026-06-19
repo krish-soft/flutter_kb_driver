@@ -24,6 +24,8 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
   late List packages;
   late String shipmentType;
 
+  final Set<int> selectedPackageIds = <int>{};
+
   int selectedIndex = 0;
   bool loading = false;
 
@@ -81,6 +83,96 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
     // return ["received", "not_received"];
   }
 
+  int? getPackageId(dynamic pkg) {
+    final dynamic id = pkg["shipment_package_id"];
+
+    if (id is int) return id;
+    if (id is String) return int.tryParse(id);
+
+    return null;
+  }
+
+  bool isSelected(dynamic pkg) {
+    final id = getPackageId(pkg);
+    if (id == null) return false;
+
+    return selectedPackageIds.contains(id);
+  }
+
+  void togglePackageSelection(dynamic pkg) {
+    final id = getPackageId(pkg);
+    if (id == null) return;
+
+    setState(() {
+      if (selectedPackageIds.contains(id)) {
+        selectedPackageIds.remove(id);
+      } else {
+        selectedPackageIds.add(id);
+      }
+    });
+  }
+
+  void toggleSelectAll() {
+    final ids = packages
+        .map<int?>((p) => getPackageId(p))
+        .whereType<int>()
+        .toList();
+
+    setState(() {
+      if (ids.isNotEmpty && selectedPackageIds.length == ids.length) {
+        selectedPackageIds.clear();
+      } else {
+        selectedPackageIds
+          ..clear()
+          ..addAll(ids);
+      }
+    });
+  }
+
+  Future<void> updateBulkStatus(String status) async {
+    if (loading) return;
+
+    final packageIds = selectedPackageIds.toList();
+    if (packageIds.isEmpty) {
+      MessageManager.showError("Select at least one package.");
+      return;
+    }
+
+    vibrate.vibrateMedium();
+
+    setState(() {
+      loading = true;
+    });
+
+    try {
+      ApiResponseModel res = await controller.updatePkgStatusBulk(
+        widget.shipment["driver_shipment_id"],
+        packageIds,
+        status,
+      );
+
+      if (res.isSuccess == true) {
+        for (final pkg in packages) {
+          final id = getPackageId(pkg);
+          if (id != null && selectedPackageIds.contains(id)) {
+            pkg["shipment_package_status"] = status;
+          }
+        }
+
+        selectedPackageIds.clear();
+        vibrate.vibrateSelection();
+      } else {
+        MessageManager.showError(res.message);
+      }
+    } catch (e) {
+      MessageManager.showError(AppStrings.textStatusUpdateFailed.tr);
+    }
+
+    setState(() {
+      loading = false;
+    });
+  }
+
   Future<void> updateStatus(String status) async {
     if (loading) return;
 
@@ -119,71 +211,133 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
 
   /// LEFT PANEL
   Widget packageList() {
+    final selectableCount = packages
+        .map<int?>((p) => getPackageId(p))
+        .whereType<int>()
+        .length;
+    final allSelected =
+        selectableCount > 0 && selectedPackageIds.length == selectableCount;
+
     return Container(
       width: 190,
       decoration: const BoxDecoration(
         color: Colors.white,
         border: Border(right: BorderSide(color: Colors.black12)),
       ),
-      child: ListView.builder(
-        itemCount: packages.length,
-        itemBuilder: (context, index) {
-          final pkg = packages[index];
-          final status = getStatus(pkg);
-
-          return GestureDetector(
-            onTap: () {
-              vibrate.vibrateMedium();
-
-              setState(() => selectedIndex = index);
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              decoration: BoxDecoration(
-                color: selectedIndex == index
-                    ? AppColors.primary.withOpacity(.08)
-                    : Colors.white,
-                border: const Border(bottom: BorderSide(color: Colors.black12)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    getMainNumber(pkg),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.black12)),
+            ),
+            child: Row(
+              children: [
+                Checkbox(
+                  value: allSelected,
+                  onChanged: (_) => toggleSelectAll(),
+                ),
+                const Expanded(
+                  child: Text(
+                    "Select All",
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                   ),
-
-                  const SizedBox(height: 6),
-
-                  Text(
-                    "${pkg["pack_size"]} ${pkg["unit"]}",
-                    style: const TextStyle(fontSize: 14),
+                ),
+                Text(
+                  "${selectedPackageIds.length}",
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.w600,
                   ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: packages.length,
+              itemBuilder: (context, index) {
+                final pkg = packages[index];
+                final status = getStatus(pkg);
 
-                  const SizedBox(height: 8),
+                return GestureDetector(
+                  onTap: () {
+                    vibrate.vibrateMedium();
 
-                  Container(
+                    setState(() => selectedIndex = index);
+                  },
+                  child: Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 3,
+                      horizontal: 10,
+                      vertical: 12,
                     ),
                     decoration: BoxDecoration(
-                      color: statusColor(status),
-                      borderRadius: BorderRadius.circular(5),
+                      color: selectedIndex == index
+                          ? AppColors.primary.withOpacity(.08)
+                          : Colors.white,
+                      border: const Border(
+                        bottom: BorderSide(color: Colors.black12),
+                      ),
                     ),
-                    child: Text(
-                      status,
-                      style: const TextStyle(color: Colors.white, fontSize: 11),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Checkbox(
+                              value: isSelected(pkg),
+                              onChanged: (_) => togglePackageSelection(pkg),
+                            ),
+                            Expanded(
+                              child: Text(
+                                getMainNumber(pkg),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6),
+                          child: Text(
+                            "${pkg["pack_size"]} ${pkg["unit"]}",
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              color: statusColor(status),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              status,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                );
+              },
             ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
@@ -211,6 +365,14 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
 
   /// RIGHT PANEL
   Widget packageDetails() {
+    if (packages.isEmpty) {
+      return const Expanded(
+        child: Center(
+          child: Text("No packages found."),
+        ),
+      );
+    }
+
     final pkg = packages[selectedIndex];
     final status = getStatus(pkg);
 
@@ -292,6 +454,49 @@ class _ShipmentPackagesScreenState extends State<ShipmentPackagesScreen> {
             ),
 
             const Divider(),
+
+            if (selectedPackageIds.isNotEmpty)
+              Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withOpacity(.06),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: AppColors.primary.withOpacity(.2)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Bulk update for ${selectedPackageIds.length} package(s)",
+                      style: const TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: getOptions().map((s) {
+                        return ElevatedButton(
+                          onPressed: () => updateBulkStatus(s),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: statusColor(s),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 10,
+                            ),
+                            textStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                          child: Text(s.replaceAll("_", " ").toUpperCase()),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
 
             if (loading)
               const Center(child: CircularProgressIndicator())
